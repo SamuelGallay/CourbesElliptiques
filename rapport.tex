@@ -12,7 +12,7 @@
 \usepackage[french]{babel}     % Pour le support de la langue française
 
 \onehalfspacing
-
+%\doublespacing
 % Couleur des liens dans le document
 \hypersetup{
   colorlinks = true,
@@ -107,7 +107,9 @@ Commençons par compter le nombre de points de $E_0$ sur $\Fp$. Pour cela nous m
   En n'oubliant pas que le point à l'infini $O$ est aussi solution de $E$, et en utilisant le lemme, on obtient : $\#E(\Fp) = 2\frac{p-1}{2} + 1 + 1 = p+1$.
 \end{proof}
 
-À partir de maintenant on suppose que $p$ est un nombre premier impair congru à $2$ modulo $3$. Ainsi $\#E_0(\Fp) = p+1$. Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$. 
+À partir de maintenant on suppose que $p$ est un nombre premier impair congru à $2$ modulo $3$. 
+Ainsi $\#E_0(\Fp) = p+1$. 
+Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$. 
 
 \begin{thm}
   Soit $E/\F_q$ une courbe elliptique et posons $a = q + 1 - \#E(\F_q)$.
@@ -124,7 +126,7 @@ Commençons par compter le nombre de points de $E_0$ sur $\Fp$. Pour cela nous m
 Le théorème précédent permet de calculer le nombre de points de la courbe $E_0$ sur $\Fq$ en connaissant le nombre de points de la courbe sur $\Fp$.
 
 \begin{cor}
-$\#E(\Fq) = (p+1)^2$.
+$\#E_0(\Fq) = (p+1)^2$.
 \end{cor}
 
 \begin{proof}
@@ -155,18 +157,73 @@ Ainsi, pour prouver qu'une courbe elliptique est supersingulière, il suffit de 
 Considérons le morphisme de Frobenius $\pi : E_0/\Fq \to E_0^{(p)}/\Fq$, $(x, y) \mapsto (x^p, y^p)$. 
 Puisque $E_0$ est définie sur $\Fp$, $\pi$ est un endomorphisme de $E/\Fq$.
 
-Soit $j$ une racine de $X^2 + X + 1$. Par définition, $j$ appartient à $\Fq$. Dans quelles conditions est-ce que $j$ appartient à $\Fp$ ? $j^3 = -j^2 -j = 1$, donc $j$ est d'ordre $3$. Si $j\in \Fp$ alors $3\ |\ p-1$ par le théorème de Lagrange, soit $p\equiv 1[3]$. Par contraposition, si $p \equiv 2 [3]$ alors $j\in\Fq\setminus\Fp$.
+Soit $j$ une racine de $X^2 + X + 1$. 
+Par définition, $j$ appartient à $\Fq$. 
+Dans quelles conditions est-ce que $j$ appartient à $\Fp$ ? 
+$j^3 = -j^2 -j = 1$, donc $j$ est d'ordre $3$. 
+Si $j\in \Fp$ alors $3\ |\ p-1$ par le théorème de Lagrange, soit $p\equiv 1[3]$. 
+Par contraposition, si $p \equiv 2 [3]$ alors $j\in\Fq\setminus\Fp$.
 
 Considérons l'endomorphisme $\psi : E_0 \to E_0$, $(x, y) \mapsto (jx, y)$. 
 Remarquons que puisque $j^3 = 1$, $\psi$ est bien défini.
-De plus $\pi(\psi(x, y)) = \pi(jx, y) = (x^p, y^p)$, mais $\psi(\pi(x, y)) = \psi(x^p, y^p) = (jx^p, y^p)$. 
-Puisque $j\neq 1$, $\pi \circ \psi \neq \psi \circ \pi$, donc End($E$) n'est pas commutatif.
+De plus $\pi(\psi(x, y)) = \pi(jx, y) = (j^px^p, y^p)$, mais $\psi(\pi(x, y)) = \psi(x^p, y^p) = (jx^p, y^p)$. 
+Puisque $j^p\neq j$, $\pi \circ \psi \neq \psi \circ \pi$, donc End($E$) n'est pas commutatif.
 Ainsi $E$ est supersingulière.
 \end{proof}
 
+On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure des groupes de torsion dans la clôture algébrique de $\Fp$.
+\begin{deff}
+  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \left\{ P\in E/\overline{K} \ \vert\  mP = O \right\}$.
+\end{deff}
 
+\begin{thm}
+  Soit $m\neq0$. Si $char(K)\neq 0$ ou si char($K$) ne divise pas $m$, $$E[m] \simeq \frac{\Z}{m\Z} \times  \frac{\Z}{m\Z}$$
+\end{thm}
 
+\begin{proof}
+  Voir le corollaire III.6.4 dans le Silverman.
+\end{proof}
 
+Le théorème précédent nous permet d'identifier la structure du groupe abélien $E_0(\Fq)$.
 
+\begin{prop}
+  $$E_0(\F_{p^2}) \simeq \left(  \frac{\Z}{(p+1)\Z} \right)^2$$
+\end{prop}
+\begin{proof}
+  Utilisons à nouveau le théorème 1 en posant $q = p^2$. 
+  Posons $\phi : E(\overline{\F_p}) \to E(\overline{\F_p})$, $\left( x, y \right) \mapsto \left( x^{q}, y^{q} \right)$.
+  En constatant que $a=p^2 + 1 - \#E_0(\F_{p^2}) = p^2 + 1 - \left( p + 1 \right) ^2 = -2p$, on obtient que $\phi^2 + 2p\phi + [p^2] = 0$, donc que $\left( \phi + [p] \right) ^2 = 0$ dans End($E(\overline{\F_p})$). 
+  Par un argument de degré, cela implique que $\phi = -[p]$. 
+
+  Soit $P\in E(\overline(\F_{p})$. $P \in E(\F_{p^2}) \iff \phi(P) = P$, donc $E(\F_{p^2}) = \ker(\text{Id} - \phi) = \ker([1] + [p]) = \ker([p+1])$.
+  En utilisant la proposition précédente, puisque $p$ ne divise pas $p+1$, on obtient le résultat souhaité.
+\end{proof}
+
+On considère maintenant la décomposition de $p + 1$ suivante : $p + 1 = 2^a 3^b f$, avec $2 \nmid f$ et $3 \nmid f$. Puisque l'on a déjà supposé $p\ge 3$ et $p \equiv 2\ [3]$, on a $a, b\ge 1$. Avec ces notations, on s'intéresse à la $2^a$ et à la $3^b$-torsion de $E_0$. Pour éviter d'écrire deux fois la même chose, le couple $\left( l, e \right)$ désigne soit le couple $(2, a)$ soit le couple $(3, b)$ dans les preuves suivantes. 
+
+\begin{prop}
+  $$E_0(\Fq)[l^e] \simeq \left(  \frac{\Z}{l^e\Z} \right)^2 $$
+\end{prop}
+
+\begin{proof}
+  D'abord, par la proposition précédente, $\left(  \frac{\Z}{l^e\Z} \right)^2$ est isomorphe à un unique sous-groupe de $E_0(\Fq)$.
+  Il suffit donc de montrer une double inclusion entre deux sous-groupes de $E_0(\Fq)$.
+  
+  L'inclusion $E_0(\Fq)[l^e] \supseteq \left(  \frac{\Z}{l^e\Z} \right)^2$ est évidente en remarquant que tout élément de $\left(  \frac{\Z}{l^e\Z} \right)^2$ a un ordre qui divise $l^e$.
+  
+  Pour l'inclusion réciproque on peut par exemple utiliser les théorèmes de Sylow. Par définition, $E_0(\Fq)[l^e]$ est un $l$-sous-groupe de $E_0(\Fq)$, il est donc contenu dans un $l$-Sylow. Puisque $E_0(\Fq)$ est abélien, et puisque les $l$-Sylow sont conjugués, il existe un unique $l$-Sylow. En remarquant que $\left(  \frac{\Z}{l^e\Z} \right)^2$ est un $l$-Sylow par la proposition précédente, on démontre l'inclusion manquante et donc l'isomorphisme annoncé. 
+\end{proof}
+
+On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3^b$-torsion.
+
+\begin{prop}
+  $E_0(\Fq)[l^e]$ contient $l^{e-1}(l+1)$ sous-groupes cycliques d'ordre $l^e$.
+\end{prop}
+\begin{proof}
+  Comptons le nombre d'éléments d'ordre $l^e$ dans $\frac{\Z}{l^e\Z} \times \frac{\Z}{l^e\Z}$.
+  Soit $\left( x, y \right) \in \frac{\Z}{l^e\Z} \times \frac{\Z}{l^e\Z}$, $o((x, y)) =\textrm{ppcm}(o(x), o(y)) = \max(o(x),o(y))$.
+  Notons $\alpha = l^{e} - l^{e-1}$ le nombre de générateurs de $\frac{\Z}{l^e\Z}$. 
+  Ainsi le nombre de sous sous-groupes cycliques de la $2^a$-torsion est $\frac{2l^e\alpha -\alpha^2}{\alpha} = 2l^e-\alpha = l^e + l^{e-1} = l^{e-1}(l + 1)$.
+\end{proof}
 \end{document}
 
