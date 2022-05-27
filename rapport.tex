@@ -35,9 +35,11 @@
 \newtheorem{prop}{Proposition}
 \newtheorem{deff}{Définition}
 \newtheorem{lem}{Lemme}
+\newtheorem{cor}{Corollaire}
 
 \newcommand{\Fp}{\mathbb{F}_{p}}
 \newcommand{\Fq}{\mathbb{F}_{p^2}}
+\newcommand{\F}{\mathbb{F}}
 \newcommand{\Z}{\mathbb{Z}}
 
 % Pour les sous-sections dans le sommaire
@@ -56,37 +58,41 @@
 
 %\clearpage
 
-\section{Introduction}
+\section{Construction d'une courbe initiale}
 
-\begin{lem}
+L'objectif de cette partie est de construire une courbe elliptique supersingulière adaptée. 
+On souhaite que cette courbe ait pour cardinalité un entier possédant de petit facteurs premiers pour pouvoir calculer efficacement des isogénies. 
+On souhaite aussi pouvoir trouver des courbes de cardinalité arbitrairement grande pour pouvoir adapter la longueur des clefs, et donc la sécurité, du protocole cryptographique.
+Puisque toutes les courbes supersingulières sont définies sur $\Fp$ ou $\Fq$, on ne considérera que des courbes à coefficients dans $\Fq$ par la suite.
+Plus précisément, nous allons étudier la courbe $E_0 : y^2 = x^3 + b$ sur $\Fq$ avec $b\in\Fp^\times$ et montrer que sous certaines conditions sur $p$, cette courbe est supersingulière et de bonne cardinalité.
+
+
+Commençons par compter le nombre de points de $E_0$ sur $\Fp$. Pour cela nous montrons d'abord un résultat sur le nombre de carrés dans $\Fp$.
+
+\begin{prop}
   Soit $p$ un nombre premier impair. $\Fp$ contient $\frac{p+1}{2}$ carrés.
-\end{lem}
+\end{prop}
 
 \begin{proof}
   $\Fp^\times$ est un groupe cyclique d'ordre $p-1$. 
-  Notons $g$ un générateur de $\Fp^\times$. L'application 
-  \begin{align*}
-    \varphi \colon \frac{\Z}{(p-1)\Z} &\to \Fp^\times\\
-    [k] &\mapsto g^k
-  \end{align*}
+  Notons $g$ un générateur de $\Fp^\times$. 
+  
+  L'application $ \varphi \colon \frac{\Z}{(p-1)\Z} \to \Fp^\times$,
+  $[k] \mapsto g^k$
   est bien définie et est un isomorphisme de groupes.
   Soit $a\in \Fp^\times$, et soit $[k] = \psi^{-1}(a)$.
   Si $k$ est pair, ce qui a un sens puisque $p-1$ est pair, $a = g^k = (g^\frac{k}{2})^2$, donc $a$ est un carré.
   Réciproquement, si $a$ est un carré, il existe $[l]\in \Z/(p-1)\Z$ tel que $a = (g^l)^2 = g^{2l}$.
   Alors $[k] = [2l]$ donc $k$ est pair.
-
-  Il y a donc autant de carrés dans $\Fp^\times$ que de nombres pairs dans $\Z/(p-1)\Z$, soit $\frac{p-1}{2}$. 
+  Il y a donc autant de carrés dans $\Fp^\times$ que de nombres pairs dans $\frac{\Z}{(p-1)\Z}$, soit $\frac{p-1}{2}$. 
   En comptant $0$, il y a $\frac{p+1}{2}$ carrés dans $\Fp$. 
 \end{proof}
 
 \begin{prop}
-  ($p$ impair)
-Soit $E : y^2 = x^3 + b$ une courbe elliptique définie sur $\Fq$ avec $b \in \Fp^{\times}$.
-Si $p \equiv 2 [3]$, alors $\#E(\Fq) = (p+1)^2$.
+  Si $p$ est impair et si $p \equiv 2 [3]$, alors $\#E_0(\Fp) = p+1$.
 \end{prop}
 
 \begin{proof}
-  Commençons par compter le nombre de points de $E$ sur $\Fp$. 
   Considérons le morphisme de groupes $\varphi \colon \Fp^\times \to \Fp^\times$, $x \mapsto x^3$. 
   Soit $x\in \ker \varphi$, $x^3 = 1$, donc l'ordre de $x$ noté $o(x)$ divise $3$. 
   Par le théorème de Lagrange, $o(x)\ |\ \#\Fp^\times$, donc $o(x)\ |\ p-1$. 
@@ -100,4 +106,67 @@ Si $p \equiv 2 [3]$, alors $\#E(\Fq) = (p+1)^2$.
   Enfin si $x^3 + b$ n'est pas un carré de $\Fp$, $E$ ne possède pas de solution.
   En n'oubliant pas que le point à l'infini $O$ est aussi solution de $E$, et en utilisant le lemme, on obtient : $\#E(\Fp) = 2\frac{p-1}{2} + 1 + 1 = p+1$.
 \end{proof}
+
+À partir de maintenant on suppose que $p$ est un nombre premier impair congru à $2$ modulo $3$. Ainsi $\#E_0(\Fp) = p+1$. Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$. 
+
+\begin{thm}
+  Soit $E/\F_q$ une courbe elliptique et posons $a = q + 1 - \#E(\F_q)$.
+  \begin{itemize}
+    \item Le morphisme de Frobenius $\phi \colon E \to E$, $(x, y) \mapsto (x^q, y^q)$ vérifie $\phi^2 - a\phi + q = 0$.
+    \item Les deux racines complexes $\alpha$ et $\beta$ de $X^2 - aX + q$ vérifient $\#E(\F_{q^n}) = q^n + 1 - \alpha^n - \beta^n$ pour tout $n\ge1$. 
+  \end{itemize}
+\end{thm}
+
+\begin{proof}
+  La preuve de ce théorème est probablement due à Weil. Voir le théorème V.2.3.1 dans le Silverman.
+\end{proof}
+
+Le théorème précédent permet de calculer le nombre de points de la courbe $E_0$ sur $\Fq$ en connaissant le nombre de points de la courbe sur $\Fp$.
+
+\begin{cor}
+$\#E(\Fq) = (p+1)^2$.
+\end{cor}
+
+\begin{proof}
+  En utilisant la proposition 2, $a = 0$. $\alpha$ et $\beta$ sont les racines de $X^2 + p$, ainsi $\alpha^2 = \beta^2 = -p$. Donc $\#E(\Fq) = p^2 + 1 - \alpha^2 - \beta^2 = p^2 + 1 + 2p = (p+1)^2$.
+\end{proof}
+
+
+Montrons maintenant que la courbe $E_0$ est super singulière.
+
+\begin{thm}
+  Soit $K$ un corps de caractéristique $p\ge 2$, et soit $E/K$ une courbe elliptique. $\mathrm{End}(E)$ est isomorphe soit à un ordre d'un corps quadratique, soit à un ordre dans une algèbre de quaternions. 
+\end{thm}
+
+\begin{proof}
+  Voir le théorème V.3.1 dans le Silverman.
+\end{proof}
+
+\begin{deff}
+  Dans le premier cas on dit que $E$ est \textit{ordinaire} et dans le second cas qu'elle est \textit{supersingulière}.
+\end{deff}
+
+\begin{cor}
+  $E_0$ est supersingulière.
+\end{cor}
+
+\begin{proof}
+Ainsi, pour prouver qu'une courbe elliptique est supersingulière, il suffit de trouver deux endomorphismes qui ne commutent pas.
+Considérons le morphisme de Frobenius $\pi : E_0/\Fq \to E_0^{(p)}/\Fq$, $(x, y) \mapsto (x^p, y^p)$. 
+Puisque $E_0$ est définie sur $\Fp$, $\pi$ est un endomorphisme de $E/\Fq$.
+
+Soit $j$ une racine de $X^2 + X + 1$. Par définition, $j$ appartient à $\Fq$. Dans quelles conditions est-ce que $j$ appartient à $\Fp$ ? $j^3 = -j^2 -j = 1$, donc $j$ est d'ordre $3$. Si $j\in \Fp$ alors $3\ |\ p-1$ par le théorème de Lagrange, soit $p\equiv 1[3]$. Par contraposition, si $p \equiv 2 [3]$ alors $j\in\Fq\setminus\Fp$.
+
+Considérons l'endomorphisme $\psi : E_0 \to E_0$, $(x, y) \mapsto (jx, y)$. 
+Remarquons que puisque $j^3 = 1$, $\psi$ est bien défini.
+De plus $\pi(\psi(x, y)) = \pi(jx, y) = (x^p, y^p)$, mais $\psi(\pi(x, y)) = \psi(x^p, y^p) = (jx^p, y^p)$. 
+Puisque $j\neq 1$, $\pi \circ \psi \neq \psi \circ \pi$, donc End($E$) n'est pas commutatif.
+Ainsi $E$ est supersingulière.
+\end{proof}
+
+
+
+
+
 \end{document}
+
