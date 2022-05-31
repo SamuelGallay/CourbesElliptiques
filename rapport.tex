@@ -5,24 +5,23 @@
 \usepackage{natbib}            % Pour une liste de références plus française
 \usepackage{hyperref}          % Pour des liens vers les références
 \usepackage{geometry}          % Pour régler les marges
-\usepackage{amsfonts, amsmath, amsthm, amssymb} % Pour des symboles de maths
+\usepackage{amsfonts, amsmath}
+\usepackage{amsthm, amssymb} % Pour des symboles de maths
 \usepackage{pgfplots}          % Pour les figures
 \usepackage{mathtools}         % Des fractions dans des accolades  
 \usepackage{setspace}
 \usepackage[french]{babel}     % Pour le support de la langue française
 
 \onehalfspacing
-%\doublespacing
 % Couleur des liens dans le document
 \hypersetup{
   colorlinks = true,
   breaklinks,
   citecolor = [rgb]{.12,.54,.11},
-  linkcolor = {blue},
+  linkcolor = {black},
   urlcolor = {blue},
 }
 
-% pgfplots version
 \pgfplotsset{compat=1.18}
 \usepgfplotslibrary{external}
 \tikzexternalize
@@ -30,17 +29,24 @@
 % Pour les marges
 \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=0.7in,rmargin=1.1in}
 
-% Théorèmes
-\newtheorem{thm}{Théorème}
-\newtheorem{prop}{Proposition}
-\newtheorem{deff}{Définition}
-\newtheorem{lem}{Lemme}
-\newtheorem{cor}{Corollaire}
+% Math Environments
+\theoremstyle{plain}% default
+\newtheorem{thm}{Théorème}[section] 
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{deff}[thm]{Définition}
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{cor}[thm]{Corollaire}
+\theoremstyle{definition}% default
+\newtheorem{ex}[thm]{Exemple}
 
 \newcommand{\Fp}{\mathbb{F}_{p}}
 \newcommand{\Fq}{\mathbb{F}_{p^2}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\tr}{tr}
 
 % Pour les sous-sections dans le sommaire
 \setcounter{tocdepth}{2}
@@ -49,14 +55,99 @@
 \author{Samuel \textsc{Gallay}}
 \date{\today}
 
-
 \begin{document}
 
 \maketitle
-%\tableofcontents
 
 
-%\clearpage
+\section{Étude du graphe des isogénies}
+
+Le but de cette partie est de montrer que le graphes des isogénies des courbes supersingulières est connexe.
+
+\begin{deff}
+  Soit $\phi\in \End(E)$, et soit $l$ un nombre premier. $\phi$ induit un endomorphisme $\phi_l : E[l] \to E[l]$. Si $l\neq p$, $\phi_l$ est un endomorphisme du $\Z/l\Z$-espace vectoriel de dimension $2$ $E[l]$. 
+\end{deff}
+
+\begin{prop}
+  \label{dettr}
+  Soit $\phi$ un endomorphisme de $E$, $l$ un nombre premier différent de $p$, et $\phi_p$ l'endomorphisme induit par $\phi$ sur $E[l]$. Alors $\det(\phi_l) = \deg(\phi)$, et $\tr(\phi_l) = 1 + \deg(\phi) - \deg(1-\phi)$, ce qui montre que la trace et le déterminant de $\phi$ peuvent être définis indépendamment du choix de $l$.
+\end{prop}
+
+\begin{proof}
+  Pairing de Weil.
+
+  Soit $ A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ une matrice $2\times 2$. $\det(1-A) = (1-a)(1-d) - bc = 1 -a -b + ad -bc = 1 - \tr(A) + \det(A)$. Ainsi, en utilisant cette égalité et le lien entre le degré et le déterminant d'un endomorphisme on obtient bien $tr(\phi_l) = 1 + deg(\phi) - deg(1-\phi)$.   
+\end{proof}
+
+\begin{prop}
+  \label{degpi}
+  Soit $E$ une courbe elliptique définie sur $\F_q$, et soit $\pi_q$ le morphisme de Frobenius $\pi_q : E \to E^{(q)}, (x, y) \mapsto (x^q, y^q)$. Alors $\pi_q$ est purement inséparable et $\deg(\pi_q) =q$.
+\end{prop}
+
+\begin{proof}
+  Silverman II.2.11.
+\end{proof}
+
+\begin{prop}
+  \label{cardpi}
+  Avec les mêmes notations que la proposition précédente, le morphisme $1-\pi_q$ est séparable, et $\#E(\F_q) = deg(1 - \pi_q)$.
+\end{prop}
+
+\begin{proof}
+  Pour la séparabilité de $1-\pi_q$, voir Silverman III.5.5. Pour le cardinal, utiliser III.4.10c.
+\end{proof}
+
+\begin{prop}
+  Soit $E/\F_q$ une courbe elliptique et $\pi_q$ l'endomorphisme de Frobenius. Posons $t=q+1-\#E(\F_q)$. Alors $X^2 -tX + q = 0$ annule $\pi_p$.
+\end{prop}
+
+\begin{proof}
+  En utilisant \ref{degpi} et \ref{cardpi}, $t$ se réécrit $t = 1 + \deg(\pi_q) - \deg(1-\pi_q)$. On reconnait l'expression de la trace de $\pi_q$ donnée en \ref{dettr}, et donc $t = \tr(\pi_q)$. Soit $\pi_{q, l}$ l'endomorphisme induit par $\pi_q$ sur $E[l]$. Le polynôme caractéristique de $\phi_l$ est $X^2 -\tr(\pi_{q,l}) X + \det(\pi_{q, l})$, donc $\pi_{q,l}^2 - t\pi_{q,l}+q = 0$. En appliquant une dernière fois \ref{dettr}, on obtient $\deg(\pi_{q}^2 - t\pi_{q}+q ) = \det (\pi_{q,l}^2 - t\pi_{q,l}+q ) = \det(0) = 0$, et donc par définition du degré on obtient l'égalité souhaitée.
+\end{proof}
+
+Le résultat ci-dessus est une partie du théorème \ref{weil}.
+
+\begin{deff}
+  $E$ est dite supersingulière si $E[p]$ est réduit à $O$. 
+\end{deff}
+
+\begin{prop}
+  \label{pihatsep}
+  Soit $E/\F_q$ une courbe elliptique. La courbe $E$ est supersingulière si et seulement si $\widehat{\pi_q}$ est (purement) inséparable.
+\end{prop}
+
+\begin{proof}
+   En utilisant le théorème III.6.2 dans le Silverman (il faudrait quand même introduire l'isogénie duale un jour\ldots), on obtient $\widehat{\pi_p} \pi_p = [\deg \pi_p] = [p]$.
+
+  Supposons que $E/\F_q$ soit supersingulière. Ainsi, $\ker (\widehat{\pi_p}\pi_p) = \ker [p] = 0$ (à finir).
+\end{proof}
+
+\begin{prop}
+  $E/\F_q$ est supersingulière si et seulement si $\tr(\pi_q) \equiv 0\ [p]$. 
+\end{prop}
+
+\begin{proof}
+  $[\deg(1-\pi_q)] = (\widehat{[1] - \pi_q})([1]-\pi_q) = [1] - \widehat{\pi_q} - \pi_q + \widehat{\pi_q}\pi_q  $, donc $ \widehat{\pi_q} + \pi_q = [1] + [\deg\pi_q] - [\deg(1-\pi_q)] = [tr(\pi_q)]  $ 
+  L'endomorphisme $\pi_q$ est purement inséparable par \ref{degpi}, donc $[\tr(\pi_q)]$ est inséparable si et seulement si $\widehat{\pi_q}$ est inséparable, si et seulement si $E$ est supersingulière par \ref{pihatsep}. De plus, puisque $\deg[\tr \pi_q] =(\tr \pi_q)^2$ et puisque $p$ est premier, $E$ est supersingulière si et seulement si $p$ divise $\tr\pi_q$. 
+\end{proof}
+
+
+\begin{thm}[Hasse]
+  Soit $E$ une courbe elliptique définie sur $\F_q$. Posons $t = \tr(\pi_q) = \# E(\F_q) - q -1$. Alors $|t| \le 2\sqrt{q}$.
+\end{thm}
+
+\begin{proof}
+  Cauchy-Schwarz, voir Silverman V.1.1.  
+\end{proof}
+
+\begin{prop}
+  Toute courbe elliptique $E/\overline{\F_p}$ a son $j$-invariant dans $\F_{p^2}$, donc une telle courbe est $\overline{\F_p}$-isomorphe à une courbe définie sur $\F_{p^2}$. 
+\end{prop}
+
+\begin{prop}
+  Soit $E/\F_{p^2}$ une courbe supersingulière définie sur $\F_{p^2}$. 
+\end{prop}
+
 
 \section{Construction d'une courbe initiale}
 
@@ -112,6 +203,7 @@ Ainsi $\#E_0(\Fp) = p+1$.
 Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$. 
 
 \begin{thm}
+  \label{weil}
   Soit $E/\F_q$ une courbe elliptique et posons $a = q + 1 - \#E(\F_q)$.
   \begin{itemize}
     \item Le morphisme de Frobenius $\phi \colon E \to E$, $(x, y) \mapsto (x^q, y^q)$ vérifie $\phi^2 - a\phi + q = 0$.
@@ -190,7 +282,7 @@ Le théorème précédent nous permet d'identifier la structure du groupe abéli
   $$E_0(\F_{p^2}) \simeq \left(  \frac{\Z}{(p+1)\Z} \right)^2$$
 \end{prop}
 \begin{proof}
-  Utilisons à nouveau le théorème 1 en posant $q = p^2$. 
+  Utilisons à nouveau le théorème \ref{weil} en posant $q = p^2$. 
   Posons $\phi : E(\overline{\F_p}) \to E(\overline{\F_p})$, $\left( x, y \right) \mapsto \left( x^{q}, y^{q} \right)$.
   En constatant que $a=p^2 + 1 - \#E_0(\F_{p^2}) = p^2 + 1 - \left( p + 1 \right) ^2 = -2p$, on obtient que $\phi^2 + 2p\phi + [p^2] = 0$, donc que $\left( \phi + [p] \right) ^2 = 0$ dans End($E(\overline{\F_p})$). 
   Par un argument de degré, cela implique que $\phi = -[p]$. 
@@ -208,10 +300,12 @@ On considère maintenant la décomposition de $p + 1$ suivante : $p + 1 = 2^a 3^
 \begin{proof}
   D'abord, par la proposition précédente, $\left(  \frac{\Z}{l^e\Z} \right)^2$ est isomorphe à un unique sous-groupe de $E_0(\Fq)$.
   Il suffit donc de montrer une double inclusion entre deux sous-groupes de $E_0(\Fq)$.
+  L'inclusion \allowbreak$E_0(\Fq)[l^e] \supseteq \left(\frac{\Z}{l^e\Z} \right)^2$ est évidente en remarquant que tout élément de $\left(  \frac{\Z}{l^e\Z} \right)^2$ a un ordre qui divise $l^e$.
   
-  L'inclusion $E_0(\Fq)[l^e] \supseteq \left(  \frac{\Z}{l^e\Z} \right)^2$ est évidente en remarquant que tout élément de $\left(  \frac{\Z}{l^e\Z} \right)^2$ a un ordre qui divise $l^e$.
-  
-  Pour l'inclusion réciproque on peut par exemple utiliser les théorèmes de Sylow. Par définition, $E_0(\Fq)[l^e]$ est un $l$-sous-groupe de $E_0(\Fq)$, il est donc contenu dans un $l$-Sylow. Puisque $E_0(\Fq)$ est abélien, et puisque les $l$-Sylow sont conjugués, il existe un unique $l$-Sylow. En remarquant que $\left(  \frac{\Z}{l^e\Z} \right)^2$ est un $l$-Sylow par la proposition précédente, on démontre l'inclusion manquante et donc l'isomorphisme annoncé. 
+  Pour l'inclusion réciproque on peut par exemple utiliser les théorèmes de Sylow. 
+  Par définition, $E_0(\Fq)[l^e]$ est un $l$-sous-groupe de $E_0(\Fq)$, il est donc contenu dans un $l$-Sylow. 
+  Puisque $E_0(\Fq)$ est abélien, et puisque les $l$-Sylow sont conjugués, il existe un unique $l$-Sylow. 
+  En remarquant que $\left(  \frac{\Z}{l^e\Z} \right)^2$ est un $l$-Sylow par la proposition précédente, on démontre l'inclusion manquante et donc l'isomorphisme annoncé. 
 \end{proof}
 
 On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3^b$-torsion.
@@ -223,7 +317,90 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
   Comptons le nombre d'éléments d'ordre $l^e$ dans $\frac{\Z}{l^e\Z} \times \frac{\Z}{l^e\Z}$.
   Soit $\left( x, y \right) \in \frac{\Z}{l^e\Z} \times \frac{\Z}{l^e\Z}$, $o((x, y)) =\textrm{ppcm}(o(x), o(y)) = \max(o(x),o(y))$.
   Notons $\alpha = l^{e} - l^{e-1}$ le nombre de générateurs de $\frac{\Z}{l^e\Z}$. 
-  Ainsi le nombre de sous sous-groupes cycliques de la $2^a$-torsion est $\frac{2l^e\alpha -\alpha^2}{\alpha} = 2l^e-\alpha = l^e + l^{e-1} = l^{e-1}(l + 1)$.
+  Ainsi le nombre de sous sous-groupes cycliques de la $l^e$-torsion est $\frac{2l^e\alpha -\alpha^2}{\alpha} = 2l^e-\alpha = l^e + l^{e-1} = l^{e-1}(l + 1)$.
 \end{proof}
+
+\begin{prop}
+  Soient $P$ et $Q$ deux éléments de $\frac{\Z}{l^e\Z} \times \frac{\Z}{l^e\Z}$. 
+  $(P, Q)$ est $\frac{\Z}{l^e\Z}$-libre ssi $(l^{e-1}P, l^{e-1}Q)$ est $\frac{\Z}{l\Z}$-libre. 
+\end{prop}
+
+\begin{proof}
+  L'équivalence précédente se réécrit :
+  $$\left( \forall a, b \in \Z,\ aP + bQ = 0 \Rightarrow a \equiv b \equiv 0\ [l^e] \right) \iff \left( \forall a, b \in \Z,\ a l^{e-1}P + b l^{e-1}Q = 0 \Rightarrow a \equiv b \equiv 0\ [l] \right) $$
+  Montrons l'implication directe. Soient $a, b\in \Z$ tels que $a l^{e-1}P + b l^{e-1}Q = 0$. 
+  Par hypothèse, $l^{e-1}a \equiv l^{e-1}b \equiv 0\ [l^e]$, ce qui montre directement que $a \equiv b \equiv 0\ [l]$. 
+
+  Montrons maintenant l'implication réciproque. Soient $a, b \in \Z$ tels que $aP + bQ = 0$. 
+  Dans le cas où $a$ et $b$ sont non nuls, on réécrit $a = a' l^{v_l(a)}$ et $b = b' l^{v_l(b)}$ avec $v_l(a)$ et $v_l(b)$ les valuations $l$-adiques de $a$ et de $b$. 
+  Ainsi, $a' l^{v_l(a)}P + b' l^{v_l(b)}Q = 0$. 
+  Sans perte de généralité, on peut supposer que $v_l(a) \le v_l(b)$. 
+  Si $v_l(a) \le e-1$, en multipliant l'équation précédente par $l^{e-1-v_l(a)}$ on obtient $a' l^{e-1}P + b' l^{e-1 + v_l(b) - v_l(a)}Q = 0$, et ainsi $a' \equiv 0\ [l]$, ce qui contredit la définition de $v_l(a)$. 
+  Ainsi $v_l(b) \ge v_l(a) \ge e$, donc $a \equiv b \equiv 0\ [l^e]$. Le cas $a=b=0$ est trivial. Dans le cas où $a\neq0$ et $b=0$ par exemple, la preuve précédente reste correcte en écrivant $b = 0\cdot l^{v_l(a)}$.
+\end{proof}
+
+
+
+
+
+
+\section{Courbes elliptiques}
+
+\subsection{Définitions}
+
+Je donne en dessous deux définitions de ce qu'est une courbe elliptique. La première est plus générale puisqu'elle ne mentionne pas la  caractéristique du corps. La deuxième est plus pratique puisqu'elle permet de stocker une courbe dans un ordinateur, et d'effectuer des calculs dessus. Nous allons montrer que dans un corps de caractéristique différente de $2$ et de $3$, ces deux définitions sont équivalentes.
+
+\begin{deff}[Formelle]
+  Une courbe elliptique est une courbe projective lisse de genre $1$ dont a spécifié un point.
+\end{deff}
+
+\begin{deff}[Pratique]
+  Soit $k$ un corps de caractéristique différente de $2$ et de $3$. Une courbe elliptique sur $k$ est un couple $(a, b)$ d'éléments de $k$ tel que la quantité $\Delta =-16(4a^3+ 27b^2)$ soit non nulle.
+\end{deff}
+
+Fixons pour cette partie un corps corps $k$ caractéristique différente de $2$ et de $3$ et notons $\overline{k}$ une de ses clôtures algébriques. Essayons maintenant de comprendre la définition plus formelle. Le premier terme à comprendre est le mot \emph{projectif}.
+
+\begin{deff}
+  L'espace projectif $\mathbb{P}^2$ est l'ensemble $$\frac{\overline{k}^3\setminus(0, 0, 0)}{\sim},\text{\ \ où\ \ } (x, y, z) \sim (x', y', z') \iff \exists \lambda \in \overline{k}^\times \text{ tel que } (x, y, z) = (\lambda x', \lambda y', \lambda z')$$
+\end{deff}
+
+\begin{deff}
+  Une courbe (projective) est une variété de dimension $1$ de l'espace (projectif).
+\end{deff}
+
+\begin{deff}
+  Un ensemble est dit algébrique s'il est de la forme $$V(I) = \{ P\in \mathbb{P}^2 : f(P) = 0 \text{ pour tout } f \text{ homogène de } I \}$$ pour un certain $I$, où $I$ est un idéal de $\overline{k}[X, Y, Z]$ homogène (c'est à dire engendré par des polynômes homogènes).
+\end{deff}
+
+\begin{deff}
+  À un ensemble algébrique $V$, on associe un idéal :
+  $$I(V) = \{ f\in \overline{k}[X, Y, Z] : f \text{ est homogène et } f(P) = 0 \text{ pour tout } P\in V \}$$
+  Si $I(V)$ est premier dans $ \overline{k}[X, Y, Z] $, on dit que $V$ est une variété (projective). Si $I(V)$ est engendré par des polynômes homogènes de $k[X, Y, Z]$, on dit que $V$ est définie sur $k$.  
+\end{deff}
+
+
+
+\begin{ex}
+  Soit $f$ un polynôme de homogène irréductible de $k[X, Y, Z]$. Posons $V = V(\langle f \rangle)$, et montrons que $V$ est une variété. 
+  Il est toujours vrai que $I \subseteq I(V(I))$, donc $\langle f \rangle \subseteq I(V)$. 
+  Dans ce cas particulier, la réciproque est vraie. Soit $g\in I(V)$ : par la version forte du théorème des zéros de Hilbert, il existe $n\in\N^*$ tel que $g^n\in \langle f \rangle$.
+  Puisque $\overline{k}$ est factoriel et puisque $f$ est irréductible,  $\langle f \rangle$ est premier. Ainsi $g\in \langle f \rangle$ et donc $I(V) = \langle f \rangle$.
+  On en déduit que $V$ est une variété (projective) définie sur $k$.
+\end{ex}
+
+\begin{ex}
+  Posons $f = Y^2 Z - X^3 -aXZ^2 -b Z^3$ avec $a$ et $b$ dans $k$. $f$ est irréductible (je ne l'ai pas vraiment écrit en projectif\ldots), donc $V(\langle f \rangle)$ est une variété définie sur $k$.
+\end{ex}
+
+On voit apparaître le lien entre les deux définitions. Étant donné un couple d'éléments de $k$, on construit comme ci-dessus une variété projective. La condition sur $\Delta$ implique que cette variété est lisse. Même si je n'ai pas défini la dimension, intuitivement cette variété est de dimension $1$. Enfin, une telle courbe est de genre $1$. Le point spécifié est le point $[0, 1, 0]$. Ceci "justifie" qu'une courbe elliptique au sens de la définition $1$ est bien une courbe elliptique au sens de la définition $1$. 
+
+Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens de la première définition est bien une courbe elliptique au sens de la seconde\ldots. L'outil clef est le théorème de Riemann-Roch.
+
+\subsection{Mais pourquoi s'intéresse-t-on aux courbes elliptiques}
+
+
+
+
+
 \end{document}
 
