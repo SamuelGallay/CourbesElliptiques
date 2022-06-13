@@ -1,20 +1,19 @@
 \documentclass{article}
 
-\usepackage[utf8]{inputenc}    % Encodage d'entrée
-\usepackage[T1]{fontenc}       % Sinon Babel n'est pas content 
-\usepackage{natbib}            % Pour une liste de références plus française
-\usepackage{hyperref}          % Pour des liens vers les références
-\usepackage{geometry}          % Pour régler les marges
+\usepackage[utf8]{inputenc}     % Encodage d'entrée
+\usepackage[T1]{fontenc}        % Sinon Babel n'est pas content 
+\usepackage{natbib}             % Pour une liste de références plus française
+\usepackage{hyperref}           % Pour des liens vers les références
+\usepackage{geometry}           % Pour régler les marges
 \usepackage{amsfonts, amsmath}
-\usepackage{amsthm, amssymb} % Pour des symboles de maths
-%\usepackage{pgfplots}          % Pour les figures
-\usepackage{xcolor}
-\usepackage{mathtools}         % Des fractions dans des accolades  
-\usepackage{setspace}
-\usepackage{tikz}
-\usepackage[french]{babel}     % Pour le support de la langue française
+\usepackage{amsthm, amssymb}    % Pour des symboles de maths
+\usepackage{pgfplots}           % Pour les figures
+\usepackage{mathtools}          % Des fractions dans des accolades  
+\usepackage{setspace}           % Pour les interlignes
+\usepackage[french]{babel}      % Pour le support de la langue française
 
 \onehalfspacing
+
 % Couleur des liens dans le document
 \hypersetup{
   colorlinks = true,
@@ -24,9 +23,9 @@
   urlcolor = {blue},
 }
 
-%\pgfplotsset{compat=1.18}
-%\usepgfplotslibrary{external}
-%\tikzexternalize
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{external}
+%\tikzexternalize % Bug avec les diagrammes commutatifs
 \usetikzlibrary{cd}
 
 % Pour les marges
@@ -41,14 +40,20 @@
 \newtheorem{cor}[thm]{Corollaire}
 \theoremstyle{definition}% default
 \newtheorem{ex}[thm]{Exemple}
+\newtheorem{rem}[thm]{Remarque}
 
 \newcommand{\Fp}{\mathbb{F}_{p}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\U}{\mathbb{U}}
+\newcommand{\h}{\widehat}
 
 \DeclareMathOperator{\End}{End}
 \DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Ker}{Ker}
+
 
 % Pour les sous-sections dans le sommaire
 \setcounter{tocdepth}{2}
@@ -68,6 +73,8 @@
 \section{Courbes elliptiques}
 
 \subsection{Définitions}
+
+{\color{red} À ne pas lire, c'est pas très propre}
 
 Je donne en dessous deux définitions de ce qu'est une courbe elliptique. La première est plus générale puisqu'elle ne mentionne pas la  caractéristique du corps. La deuxième est plus pratique puisqu'elle permet de stocker une courbe dans un ordinateur, et d'effectuer des calculs dessus. Nous allons montrer que dans un corps de caractéristique différente de $2$ et de $3$, ces deux définitions sont équivalentes.
 
@@ -121,8 +128,171 @@ Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens 
 
 Il y a une loi de groupe.
 
-\section{Étude du graphe des isogénies}
+\subsection{Isogénies}
+\begin{deff}
+  Morphisme 
+\end{deff}
 
+\begin{prop}
+  Un morphisme est constant ou surjectif.
+\end{prop}
+
+\begin{deff}
+  Isogénie : morphisme non constant qui envoie $O$ sur $O$.
+\end{deff}
+
+\begin{prop}
+  Une isogénie est un morphisme de groupe.
+\end{prop}
+
+\begin{deff}
+  L'application $[m] : E \to E, P \mapsto mP$ est une isogénie. 
+\end{deff}
+
+\begin{deff}
+  $E[m] = \Ker([m])$
+\end{deff}
+
+\begin{prop}
+  $[m]$ commute avec toute les isogénies
+\end{prop}
+
+\begin{deff}
+  Degré d'une isogénie. Soit $\phi : E_1 \to E_2$ une isogénie. La fonction $\phi^* : K(E_2) \to K(E_1)$ définie par $\phi^*(f) = f \circ \phi$ est une injection entre deux corps. On peut montrer que l'extension $K(E_1)/\phi^*(K(E_2))$ est finie (voir R. Hartstone, Algebraic Geometry...). On définit le degré de $\phi$ comme le degré de cette extension.
+\end{deff}
+
+Le degré d'une extension finie $L/K$ est la dimension de $L$ en temps que $K$-espace vectoriel et est noté $[L : K$].
+
+\begin{prop}
+  Le degré est multiplicatif. Soient $\phi : E_1\to E_2$ et $\psi : E_2\to E_3$ deux isogénies. Alors $\deg(\psi \circ \phi) = \deg(\psi)\deg(\phi)$ 
+\end{prop}
+
+\begin{proof}
+  Cela vient directement de la multiplicativité du degré d'une extension de corps : $\deg(\psi \circ \phi) = [K(E_3) :K(E_1)] = [K(E_3):K(E_2)][K(E_2):K(E_1)] = \deg(\psi)\deg(\phi)$. La multiplicativité du degré d'extensions finies peut se faire de façon élémentaire en considérant des bases $(e_i)_i$ et $(f_j)_j$ des deux extensions et en montrant que la famille $(e_if_j)_{ij}$ forme une base.
+\end{proof}
+
+On cherche maintenant à avoir une forme canonique pour effectuer des calculs sur les isogénies, et pour pouvoir calculer plus facilement leur degré.
+
+\begin{prop}
+  Une isogénie $\phi$ peut toujours se mettre sous la forme $\phi(x, y) = (r_1(x), r_2(x)y)$ avec $r_1$ et $r_2$ des fonctions rationnelles (i.e. des quotients de polynômes en $x$).
+\end{prop}
+
+\begin{proof}
+  Soit $R(x, y)$ une fonction rationnelle. Puisque les points de $E$ vérifient $y^2 = x^3 + ax + b$, on peut éliminer les puissances de $y$ plus grande que $2$ au numérateur et au dénominateur de $R$. On peut donc supposer $R$ de la forme : $$R(x, y) = \frac{p_1(x) + p_2(x)y}{p_3(x)+p_4(x)y} = \frac{(p_1(x) + p_2(x)y)(p_3(x)-p_4(x)y)}{p_3(x)^2 - p_4(x)^2y^2} = \frac{q_1(x) +q_2(x)y}{q_3(x)} $$
+ On a multiplié le dénominateur et le numérateur par la quantité conjuguée $(p_3-p_4y)$ et réutilisé l'équation de la courbe pour éliminer $y$ au dénominateur.
+
+ L'isogénie $\phi$ peut se mettre sous la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ de la forme donnée ci-dessus. Puisque $\phi$ est un morphisme de groupes, 
+ $(R_1(x, -y), R_2(x, -y)) = \phi(x, -y) = \phi(-(x, y)) = -\phi(x, y) = (R_1(x, y), -R_2(x, y))$, donc on peut réécrire $R_1(x, y) = p_1(x) / q_1(x)$ et $R_2(x, y) = p_2(x)y/q_2(x)$. On obtient bien la forme désirée. {\color{red}Il faut que je donne la formule de l'opposé d'un point sur une courbe.}
+\end{proof}
+
+\begin{rem}
+  Si deux fractions rationnelles en $x$ prennent les mêmes valeurs sur une infinité de points alors elles sont égales. Les isogénies sont définies sur $E(\overline{K})$ (les points de la courbe elliptique sur la clôture algébrique de $K$) qui est infini, donc l'écriture précédente est unique.
+\end{rem}
+
+La proposition suivante va nous permettre de lire le degré d'une isogénie sur son expression canonique définie précédemment.
+
+\begin{prop}
+  \label{caracdeg}
+  Soit $\phi = (r_1(x), r_2(x)y)$ une isogénie. La fonction rationnelle $r_1$ peut se mettre sous la forme $r_1(x) = p(x) / q(x)$ avec $p$ et $q$ des polynômes premiers entre eux. Le degré de $\phi$ est alors égal au maximum des degrés de $p$ et de $q$. 
+\end{prop}
+
+\begin{proof}
+  Admise. 
+\end{proof}
+
+Avec le degré, une autre propriété importante des isogénies est leur caractère séparable ou non.
+
+\begin{deff}
+  Une isogénie $\phi$ est dite séparable, inséparable, ou purement inséparable si c'est le cas de l'extension $K(E_1) / \phi^*(K(E_2))$.
+\end{deff}
+
+On rappelle brièvement la notion de séparabilité pour une extension de corps. Une extension algébrique $L/K$ est dite séparable si pour tout $a\in L$, le polynôme minimal de $a$ à coefficients dans $K$ ne contient que des racines simples (dans $\overline{K}$). On dit qu'une extension est inséparable quand elle n'est pas séparable, c'est à dire quand il existe un élément dont le polynôme minimal sur $K$ n'est pas à racines simples dans $\overline{K}$. Les extensions purement inséparables sont un cas particulier d'extensions séparables où tous les éléments $a\in L \setminus K$ ont un polynôme qui n'est pas à racines simples.
+
+Ici encore, la forme canonique donnée aux isogénies précédemment permet de donner caractérisation plus simple de la séparabilité.
+
+\begin{prop}
+  \label{caracsep}
+  Une isogénie $\phi(x, y) = (r_1(x), r_2(x)y)$ est séparable si et seulement si $r_1'(x) \neq 0$.
+\end{prop}
+
+Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plus important d'isogénie inséparable.
+
+\begin{deff}
+  Soit $E/\F_q : y^2 = x^3 + ax + b$ une courbe elliptique avec $q = p^n$. Pour tout $r$ puissance de $p$ on définit la courbe $E^{(r)}$ par l'équation $y^2 = x^3 + a^r x + b^r$. On appelle morphisme de Frobenius l'application $\pi_r : E \to E^{(r)}$ qui à $(x, y)$ associe $(x^r, y^r)$. On remarque que si $r$ est une puissance de $q$, $\pi_r$ est un endomorphisme.
+\end{deff}
+
+
+\begin{rem}
+  \label{degpi}
+  Par les propositions \ref{caracdeg} et \ref{caracsep}, on déduit immédiatement que $\pi_r$ est une isogénie inséparable de degré $r$. Les propositions et corollaire suivants vont montrer que toute isogénie de $E/\F_q$ peut s'écrire comme la composition d'une isogénie séparable 
+\end{rem}
+
+
+
+\begin{prop}
+  Soit $k$ un corps de caractéristique $p$. Soit $\phi(x, y) = (r_1(x), r_2(x)y)$ une isogénie avec $r_1(x) = u(x)/v(x)$, $p$ et $q$ étant des polynômes de $\overline{K}[x]$ premiers entre eux. Alors $\phi$ est inséparable si et seulement si il existe deux polynômes $f$ et $g$ tels que $u(x) = f(x^p)$ et $v(x) = f(x^p)$.
+\end{prop}
+
+
+\begin{proof}
+  Supposons $\phi$ inséparable, soit $r_1' = 0$ par \ref{caracsep}. Puisque $0 = r_1' = \frac{u'v -uv'}{v^2}$ on obtient que $u'v = uv'$, et puisque $u$ et $v$ sont premiers entre eux, $u$ divise $u'$, ce qui implique que $u' = 0$ pour des raisons de degré.  En notant $u(x) = \sum_{k=0}^{+\infty} a_kx^k$, on obtient $0 = u'(x) = \sum_{k=0}^{+\infty} ka_kx^{k-1}$ et donc $\forall k\in \N, ka_k = 0$. Puisque $\overline{K}$ est de caractéristique $p$, cela implique que $a_k = 0$ si $p\not\equiv 0\ [p]$. Ainsi il existe bien $f$ tel que $u(x) = f(x^p)$. De même, $v = g(x^p)$. 
+
+  Réciproquement, si $u(x) = f(x^p)$ et $v(x) = f(x^p)$, $u'(x) = f'(x^p)\cdot px^{p-1} = 0$ et de même pour $v$, donc $u' = v' = 0$. Alors $r_1' = (\frac{u}{v})' =  \frac{u'v -uv'}{v^2} = 0$, et donc $\phi$ est inséparable par \ref{caracsep}.
+\end{proof}
+
+
+
+\begin{cor}
+  Soit $E_1/\F_q$ une courbe elliptique. Toute isogénie $\phi : E_1 \to E_2 $ peut s'écrire $\phi = \psi \circ \pi_p^n$ avec $n\in \N$ et $\psi$ une isogénie séparable.
+\end{cor}
+
+\begin{proof}
+  Si $\phi$ est séparable, il n'y a rien à démontrer. Supposons $\phi$ inséparable : par la proposition précédente il existe $\psi_1$ tel que $\phi = \psi_1 \circ \pi_p$. Tant que $\psi_k$ est inséparable, on réapplique la proposition $\psi_k$ et on a donc $\phi = \psi_k \circ \pi_p^k$. 
+  Par multiplicativité du degré $\deg(\phi) = \deg(\psi_k)\deg(\pi_p^k) = \deg(\psi_k)\cdot p^k$.
+  Ainsi le processus termine, et donc il existe $\psi$ séparable et $n\in \N$ tels que $\phi = \psi \circ \pi_p^n$.
+\end{proof}
+
+\begin{rem}
+  Cette expression est unique. Supposons que $\phi = \psi_a \circ \pi_p^{n_a} = \psi_b \circ \pi_p^{n_b}$ comme dans le corollaire précédent. Sans perte de généralité on peut supposer que $n_a \le n_b$. Alors $(\psi_a - \psi_b \circ \pi_p^{n_b - n_a}) \circ \pi_p^{n_a} = 0$, donc en utilisant la multiplicativité du degré et la convention $\deg(0) = 0$, on obtient $\psi_a = \psi_b \circ \pi_p^{n_b - n_a}$. Puisque $\psi_a$ est séparable, en utilisant la proposition $\ref{caracsep}$ on en déduit que $n_a = n_b$, et donc $\psi_a = \psi_b$.
+\end{rem}
+
+\begin{thm}
+  \label{existence_duale}
+  Soit $\phi : E_1\to E_2$ une isogénie (non constante). Il existe une unique isogénie $\h\phi : E_2\to E_1$ telle que $\h\phi \circ \phi = [\deg\phi]$. Elle est appelée l'isogénie duale de $\phi$.
+\end{thm}
+
+\begin{proof}
+  Admise. 
+\end{proof}
+
+\begin{rem}
+  Dans le cas où $\phi = [0]$, on définit $\h\phi = [0]$. {\color{red} Il faut que je décide si j'autorise les isogénies à être constantes dans ma définition}.
+\end{rem}
+
+\begin{prop}
+  Soit $\phi : E_1 \to E_2$ une isogénie et $\h\phi$ sa duale.  
+  \begin{enumerate}
+    \item $\h\phi\circ\phi = [\deg{\phi}]$ sur $E_1$ et $\phi\circ\h\phi = [\deg{\phi}]$ sur $E_2$.
+    \item Soit $\lambda :E_2\to E_3$ une autre isogénie. Alors $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
+    \item Soit $\psi :E_1\to E_2$ une autre isogénie. Alors $\h{\phi+\psi} = \h\phi + \h\psi$.
+    \item Pour tout $m\in\Z$, $\h{[m]} = [m]$ et $\deg([m]) = m^2$.
+    \item $\deg\h\phi = \deg\phi$ et $\h{\h\phi} = \phi$.
+  \end{enumerate}
+\end{prop}
+
+\begin{proof}
+  On va admettre beaucoup de choses pour le moment.
+  \begin{enumerate}
+    \item Par le théorème \ref{existence_duale} la propriété $\h\phi\circ\phi = [\deg{\phi}]_{E_1}$ est la définition de l'isogénie duale. Pour la deuxième partie, on observe que $(\phi\circ\h\phi)\circ\phi = \phi\circ(\h\phi\circ\phi) = \phi\circ[\deg{\phi}]_{E_1} = [\deg{\phi}]_{E_2}\circ\phi$ et donc $\phi$ étant surjective, on obtient bien $\phi\circ\h\phi = [\deg{\phi}]_{E_2}$.
+    \item En remarquant que $(\h\phi\circ\h\lambda)\circ(\lambda\circ\phi) = \h\phi\circ [\deg\lambda]_{E_2} \circ\phi = [\deg\lambda]_{E_1}\circ\h\phi\circ\phi = [\deg\lambda]_{E_1}\circ [\deg\phi]_{E_1} = [\deg(\lambda)\deg(\phi)] = [\deg(\lambda\circ\phi)]$ et en utilisant le théorème \ref{existence_duale}, on montre que $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
+    \item Je ne le démontre pas car la démonstration est un peu technique.
+    \item {\color{blue} Il me manque $\deg[-1] = \deg[1] = 1$} Montrons d'abord par récurrence que pour $m\in\N$, $\h{[m]} = [m]$. Le cas $m=0$ est vrai par définition (voir la remarque précédente), et le cas où $m=1$ (i.e. $[m] = \id$) est évident par le théorème \ref{existence_duale}. La propriété étant vraie à un certain rang $m$, le point $2$ montre l'hérédité : $\h{[m+1]} = \h{[m] + [1]} = \h{[m]} + \h{[1]} = [m] + [1] = [m+1]$. Pour les valeurs de $m$ négatives, on commence par montrer que $\h{[-1]} = [-1]$ parce que $[-1] \circ [-1] = [1]$, puis on procède par récurrence pour les autres valeurs.
+      Enfin $[\deg [m]] = \h{[m]} \circ [m] = [m] \circ [m] = [m^2]$ montre la deuxième partie de l'assertion.
+    \item Par le point précédent, $ (\deg\phi)^2=\deg([\deg\phi])=\deg(\h\phi\circ\phi) = (\deg\h\phi)(\deg\phi)$, donc $\deg\h\phi = \deg\phi$. Avec le point $1$, $\phi\circ\h\phi = [\deg\phi] = [\deg \h\phi]$, donc en réutilisant le théorème \ref{existence_duale} on obtient bien $\h{\h\phi} = \phi$.
+  \end{enumerate}
+\end{proof}
+
+\section{Étude du graphe des isogénies}
 Le but de cette partie est de montrer que le graphes des isogénies entre $\overline{\F_p}$-isomorphismes de courbes elliptiques supersingulières définies sur $\F_{p^2}$ est connexe. Il me manque encore un bon nombre de définitions et de propriétés : introduire ce qu'est une isogénie, son degré, la notion d'isogénie duale, le pairing de Weil\ldots
 
 \begin{deff}
@@ -130,43 +300,123 @@ Le but de cette partie est de montrer que le graphes des isogénies entre $\over
 \end{deff}
 
 \begin{prop}
+  \label{pairing}
+  Il existe une forme bilinéaire alternée non dégénérée 
+  $e_l : E[l] \times E[l] \to \mathbb{U}_l$ telle que pour toute isogénie $\phi$, $\phi$ et $\h\phi$ soient adjoints pour $e_l$.
+  Ici, $\mathbb{U}_l \subset \mathbb{C}$ 
+  désigne l'ensemble des racines $l$-èmes de l'unité.
+\end{prop}
+
+\begin{proof}
+  Admise.
+\end{proof}
+
+\begin{prop}
+  \label{surj_el}
+  Soit $S\in E[l]$ non nul. L'application $e_l(S,\cdot):E[l] \to \mathbb{U}_l$ est surjective.
+\end{prop}
+
+\begin{proof}
+  Ici $l$ est un nombre premier différent de $p$. L'image de  $e_l(S,\cdot)$ est un sous groupe de $\mathbb{U}_l$ : cela ne peut être que \{1\} ou $\U_l$. Mais puisque $S$ est non nul, le caractère non dégénéré du pairing de Weil $e_l$ implique que l'image ne peut pas être réduite à \{1\}. L'application est donc surjective.
+\end{proof}
+
+\begin{prop}
+  \label{pairing_base}
+  Soient $v_1, v_2\in E[l]$ tels que $e(v_1, v_2)$ soit une racine $l$-ème primitive de l'unité. Alors $(v_1, v_2)$ est une base de $E[l]$. 
+\end{prop}
+
+\begin{proof}
+  Puisque $E[l]$ est de dimension $2$ {\color{red} (À démontrer!)}, il suffit de montrer que $(v_1, v_2)$ est libre. Par bilinéarité de $e_l$, $v_1$ et $v_2$ sont non nuls. Soient $a, b\in\Z$ tels que $av_1 + bv_2 = 0$. Alors $av_1 = -bv_2$, donc $1 = e_l(av_1, -bv_2) = e_l(v_1, v_2)^{-ab} = e_l(v_1, v_2)^{ab}$. Puisque par hypothèse $e_l(v_1, v_2)$ est une racine $l$-ème primitive de l'unité, cela implique que $l$ divise $ab$. Puisque $l$ est premier, on peut supposer sans perte de généralité que $l$ divise $a$. Ainsi $av_1 = 0$ (dans $E[l]$), et donc $bv_2=-av_1=0$. Puisque $E[l]$ est un $\Z/l\Z$ espace vectoriel et puisque $v_1$ et $v_2$ sont non nuls, cela signifie que $a=b=0$ dans $\Z/l\Z$.
+\end{proof}
+
+\begin{prop}
   \label{dettr}
-  Soit $\phi$ un endomorphisme de $E$, $l$ un nombre premier différent de $p$, et $\phi_p$ l'endomorphisme induit par $\phi$ sur $E[l]$. Alors $\det(\phi_l) = \deg(\phi)$, et $\tr(\phi_l) = 1 + \deg(\phi) - \deg(1-\phi)$, ce qui montre que la trace et le déterminant de $\phi$ peuvent être définis indépendamment du choix de $l$.
+  Soit $\phi$ un endomorphisme de $E$, $l$ un nombre premier différent de $p$, et $\phi_l$ l'endomorphisme induit par $\phi$ sur $E[l]$. Alors $\det(\phi_l) = [\deg(\phi)]_l$, et $\tr(\phi_l) = [1 + \deg(\phi) - \deg(1-\phi)]_l$, où pour tout $m\in\Z$, $[m]_l$ désigne la classe de $m$ modulo $l$. 
+\end{prop}
+
+La proposition précédente montre qu'il fait sens de définir la trace de $\phi$ par $\tr(\phi) = 1 + \deg(\phi) - \deg(1-\phi)$.
+
+\begin{proof}
+  Par la proposition \ref{surj_el}, il est possible de choisir $v_1$ et $v_2$ dans $E[l]$ tels que $e_l(v_1, v_2)$ soit une racine $l$-ème primitive de l'unité. Par la proposition \ref{pairing_base}, cela montre que $(v_2, v_2)$ est une $\Z/l\Z$-base de la $l$-torsion $E[l] \simeq \Z/l\Z\times\Z/l\Z$. 
+  Soit $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ la matrice de $\phi_l$ dans la base $(v_1, v_2)$.
+  \begin{align*}
+  e_l(v_1, v_2)^{\deg\phi} 
+  &= e_l([\deg\phi]v_1, v_2) & \text{Linéarité à gauche} \\
+  &= e_l(\h\phi_l(\phi_l(v_1)), v_2) & \text{Définition de $\h\phi$} \\
+  &= e_l(\phi_l(v_1), \phi_l(v_2)) & \text{Caractère adjoint de $\h\phi$} \\
+  &= e_l(av_1+cv_2, bv_1+dv_2) & \text{Écriture dans la base $(v_1, v_2)$} \\
+  &= e_l(v_1, v_1)^{ab} e_l(v_1, v_2)^{ad} e_l(v_2, v_1)^{bc} e_l(v_2, v_2)^{cd} & \text{Bilinéarité} \\
+  &= e_l(v_1, v_2)^{ad} e_l(v_2, v_1)^{bc} = e_l(v_1, v_2)^{ad-bc} & \text{Caractère alterné de $e_l$} \\
+  &= e_l(v_1, v_2)^{\det\phi_l} & \text{Définition de $\det(\phi_l)$}
+  \end{align*}
+  Puisque $e_l(v_1, v_2)$ est une racine $l$-ème primitive de l'unité, on peut conclure que $\det\phi_l$ est égal à la classe de $\deg\phi$ modulo $l$.
+
+   L'égalité suivante est vraie pour toute matrices $2\times 2$ : $\det(1-A) = (1-a)(1-d) - bc = 1 -a -d + ad -bc = 1 - \tr(A) + \det(A)$. Ainsi, en utilisant cette égalité et le lien entre le degré et le déterminant d'un endomorphisme on obtient bien $tr(\phi_l) = 1 + deg(\phi) - deg(1-\phi)$.   
+\end{proof}
+
+%\begin{prop}
+%  \label{degpi}
+%  Soit $E$ une courbe elliptique définie sur $\F_q$, et soit $\pi_q$ le morphisme de Frobenius $\pi_q : E \to E^{(q)}, (x, y) \mapsto (x^q, y^q)$. Alors $\pi_q$ est purement inséparable et $\deg(\pi_q) =q$.
+%\end{prop}
+%
+%\begin{proof}
+%  Silverman II.2.11.
+%\end{proof}
+
+\begin{prop}
+  Soit $\phi:E_1\to E_2$ une isogénie séparable. Alors $\# \Ker(\phi) = \deg(\phi)$.  
 \end{prop}
 
 \begin{proof}
-  Pairing de Weil.
-
-  Soit $ A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ une matrice $2\times 2$. $\det(1-A) = (1-a)(1-d) - bc = 1 -a -b + ad -bc = 1 - \tr(A) + \det(A)$. Ainsi, en utilisant cette égalité et le lien entre le degré et le déterminant d'un endomorphisme on obtient bien $tr(\phi_l) = 1 + deg(\phi) - deg(1-\phi)$.   
+  {\color{red} Ce serait bien de trouver une démonstration pour celle-là !}
 \end{proof}
 
-\begin{prop}
-  \label{degpi}
-  Soit $E$ une courbe elliptique définie sur $\F_q$, et soit $\pi_q$ le morphisme de Frobenius $\pi_q : E \to E^{(q)}, (x, y) \mapsto (x^q, y^q)$. Alors $\pi_q$ est purement inséparable et $\deg(\pi_q) =q$.
-\end{prop}
-
-\begin{proof}
-  Silverman II.2.11.
-\end{proof}
-
-\begin{prop}
+\begin{lem}
   \label{cardpi}
-  Avec les mêmes notations que la proposition précédente, le morphisme $1-\pi_q$ est séparable, et $\#E(\F_q) = deg(1 - \pi_q)$.
-\end{prop}
+  Soit $E/\F_q$ une courbe elliptique. Le morphisme $1-\pi_q$ est séparable, et $\#E(\F_q) = deg(1 - \pi_q)$.
+\end{lem}
 
 \begin{proof}
-  Pour la séparabilité de $1-\pi_q$, voir Silverman III.5.5. Pour le cardinal, utiliser III.4.10c.
+  L'expression canonique du morphisme $1-\pi_q$ est $(1-\pi_q)(x, y) = (x-x^q, y-y^q)$. La dérivée par rapport à $x$ de la première composante est constante égale à $1$ et est donc non nulle. Par les propriétés \ref{caracsep} et \ref{caracdeg} on montre que $\deg(1-\pi_q) = q$ {\color{red} (Alerte ! Ce que je viens d'écrire doit être faux, mais je ne vois pas encore pourquoi !)} et que $1-\pi_q$ est séparable.
+
+  Puisque $1-\pi_q$ est séparable, par la proposition précédente $\deg(1-\pi_q) = \# \Ker(1-\pi_q)$. Or $\Ker(1-\pi_q) = \{(x, y) \in E(\overline{\F_p}) : (x, y) = (x^q, y^q) \} = E(\F_q)$. Ainsi $\# E(\F_q) = \deg(1-\pi_q)$.
 \end{proof}
 
-\begin{prop}
+\begin{thm}
+  \label{polcarac}
   Soit $E/\F_q$ une courbe elliptique et $\pi_q$ l'endomorphisme de Frobenius. Posons $t=q+1-\#E(\F_q)$. Alors $X^2 -tX + q = 0$ annule $\pi_q$.
-\end{prop}
+\end{thm}
 
 \begin{proof}
   En utilisant \ref{degpi} et \ref{cardpi}, $t$ se réécrit $t = 1 + \deg(\pi_q) - \deg(1-\pi_q)$. On reconnait l'expression de la trace de $\pi_q$ donnée en \ref{dettr}, et donc $t = \tr(\pi_q)$. Soit $\pi_{q, l}$ l'endomorphisme induit par $\pi_q$ sur $E[l]$. Le polynôme caractéristique de $\phi_l$ est $X^2 -\tr(\pi_{q,l}) X + \det(\pi_{q, l})$, donc $\pi_{q,l}^2 - t\pi_{q,l}+q = 0$. En appliquant une dernière fois \ref{dettr}, on obtient $\deg(\pi_{q}^2 - t\pi_{q}+q ) = \det (\pi_{q,l}^2 - t\pi_{q,l}+q ) = \det(0) = 0$, et donc par définition du degré on obtient l'égalité souhaitée.
 \end{proof}
 
 Le résultat ci-dessus est une partie du théorème \ref{weil}.
+
+\begin{lem}
+  Soit $A$ une matrice $2\times 2$ à coefficients dans un corps $K$. Pour tout $n\in\N$, $\tr(A^{n+2}) = \tr(A)\tr(A^{n+1}) - \det(A)\tr(A^n)$.
+\end{lem}
+
+\begin{proof}
+  La trace et le déterminant restent inchangés si l'on considère la matrice $A$ comme étant à coefficients dans une extension de $K$. En prenant la clôture algébrique de $K$ on peut donc se ramener au cas où $K$ est algébriquement clos. De plus, la trace et le déterminant sont invariants par changement de base, donc on peut supposer la matrice $A$ triangulaire supérieure ($A$ est trigonalisable si et seulement si son polynôme caractéristique est scindé, ce qui est le cas en supposant $K$ algébriquement clos.) En posant $A = \begin{pmatrix} \alpha & * \\ 0 & \beta \end{pmatrix}$, on vérifie immédiatement que $\tr(A^{n+2}) = \alpha^{n+2} + \beta^{n+2} = (\alpha + \beta)(\alpha^{n+1} + \beta^{n+1}) - \alpha\beta(\alpha^n + \beta^n) = \tr(A)\tr(A^{n+1}) - \det(A)\tr(A^n)$.
+\end{proof}
+
+\begin{thm}
+  Soit $\phi$ un endomorphisme de $E/\F_q$ une courbe elliptique et $\pi_q$ le morphisme de Frobenius. Pour $n\in\N$ notons $t_n = \tr(\pi_{q^n}) = \tr(\pi_q^n)$. Alors pour tout $n\in\N$, $t_{n+2} = t_1t_{n+1} - qt_n$.
+\end{thm}
+
+\begin{proof}
+  Soit $n\in\N$. Soit $\phi$ un endomorphisme. Pour tout entier $l$ premier différent de $p$, 
+  \begin{align*} 
+    [\tr\phi^{n+2}]_l 
+    &= \tr(\phi_l^{n+2}) 
+    = \tr(\phi_l)\tr(\phi_l^{n+1})-\det(\phi_l)\tr(\phi_l^n) \\
+    &= [\tr(\phi)]_l [\tr(\phi^{n+1})]_l-[\deg(\phi)]_l[\tr(\phi_l)]_l \\
+    &= [\tr(\phi)\tr(\phi^{n+1})-\deg(\phi)\tr(\phi^n)]_l 
+  \end{align*}
+  Cette égalité étant vraie pour une infinité d'entiers $l$, on obtient $\tr\phi^{n+2} =  \tr(\phi)\tr(\phi^{n+1})-\deg(\phi)\tr(\phi^n)$. En appliquant cette égalité à $\phi = \pi_q$ et sachant que $\deg(\pi_q)=q$, on obtient bien $t_{n+2} = t_1t_{n+1}-qt_n$. 
+
+\end{proof}
 
 \begin{deff}
   $E$ est dite supersingulière si $E[p]$ est réduit à $O$. 
@@ -178,9 +428,11 @@ Le résultat ci-dessus est une partie du théorème \ref{weil}.
 \end{prop}
 
 \begin{proof}
-   En utilisant le théorème III.6.2 dans le Silverman (il faudrait quand même introduire l'isogénie duale un jour\ldots), on obtient $\widehat{\pi_p} \pi_p = [\deg \pi_p] = [p]$.
+  Notons $q = p^r$. 
 
-  Supposons que $E/\F_q$ soit supersingulière. Ainsi, $\ker (\widehat{\pi_p}\pi_p) = \ker [p] = 0$ (à finir).
+  Supposons que $E/\F_q$ soit supersingulière, c'est à dire que $E[p] = \{0\}$. Alors $1 = \#E[p] = \deg_s[p] = \deg_s(\h{\pi_{p}} \circ \pi_{p}) = \deg_s(\h{\pi_{p}})$. Ainsi $\deg_s(\h{\pi_{q}}) =  \deg_s(\h{\pi_{p}})^r= 1$, donc $\h{\pi_{p^r}}$ est purement inséparable.
+
+  Supposons que $E$ ne soit pas supersingulière et montrons que $\h{\pi_{q}}$ est séparable. Puisque $E[p] \neq \{0\}$, $p$ divise $\#E[p] = \deg_s(\h{\pi_p})$. Or $\deg_s(\h{\pi_p})$ divise $\deg(\h{\pi_p}) = \deg({\pi_p}) = p$. Donc $\deg_s(\h{\pi_p}) = \deg(\h{\pi_p}) =p$, ce qui montre que $\h{\pi_p}$ est séparable, et donc que $\h{\pi_q}$ est séparable.
 \end{proof}
 
 \begin{prop}
@@ -225,7 +477,7 @@ Le résultat ci-dessus est une partie du théorème \ref{weil}.
       Comptons le nombre de points de $\#E(\F_{p^2}) + \#E'(\F_{p^2})$. $E'$ se réécrit encore $E' : u^2 (u^2 y)^2 = (u^2 x)^3 + a (u^2 x) + b$. Puisque $u^2\in \F_{p^2}^\times$, $\#E'(\F_{p^2}) = \#E''(\F_{p^2})$ avec $E'' : u^2 y^2 = x^3 + a x + b$, soit encore $E'' : y^2 = u^{-2} (x^3 + ax + b)$.
       La multiplication par $u^2$ est une bijection entre les carrés de $\F_{p^2}^\times$ et les éléments qui ne sont pas des carrés de $\F_{p^2}^\times$. 
       Ainsi, si $x^3 + ax + b$ est un carré non nul de $\F_{p^2}$, $E$ possède deux solutions pour un tel $x$ et $E'$ aucune. Si ce n'est pas un carré, $E$ ne possède pas de solutions et $E'$ en possède deux. Enfin si cette quantité est nulle, $E$ et $E'$ possèdent chacune une solution. En n'oubliant que le point à l'infini appartient aussi aux deux courbes, on obtient :
-      $ \#E(\F_{p^2}) + \#E'(\F_{p^2}) = (p^2 - 1) + (p^2 -1) + 2 + 2 = 2(p^2 + 1)$. Ainsi $\#E'(\F_{p^2}) = p^2 + 1 + tr(\pi_{p^2}) = p^2 + 1 + 2p$. 
+      $ \#E(\F_{p^2}) + \#E'(\F_{p^2}) = (p^2 - 1) + (p^2 -1) + 2 + 2 = 2(p^2 + 1)$. Ainsi $\#E'(\F_{p^2}) = p^2 + 1 + \tr(\pi_{p^2}) = p^2 + 1 + 2p$. 
       {\color{red} (Il faut que $\F_{p^2} \to \F_{p^2} : x \mapsto x^3 + ax +b$ soit bijective pour que cette démonstration soit correcte, ce qui est vrai si $3$ ne divise pas $p^2 - 1=(p+1)(p-1)$, ça semble pas bien parti... En fait c'est bon, j'ai compris, il faut juste que je le rédige mieux.)}
 
 \vspace{1em}
@@ -323,13 +575,13 @@ Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$.
   \label{weil}
   Soit $E/\F_q$ une courbe elliptique et posons $a = q + 1 - \#E(\F_q)$.
   \begin{itemize}
-    \item Le morphisme de Frobenius $\phi \colon E \to E$, $(x, y) \mapsto (x^q, y^q)$ vérifie $\phi^2 - a\phi + q = 0$.
+    \item Le morphisme de Frobenius $\pi_q \colon E \to E$, $(x, y) \mapsto (x^q, y^q)$ vérifie $\pi_q^2 - a\pi_q + q = 0$.
     \item Les deux racines complexes $\alpha$ et $\beta$ de $X^2 - aX + q$ vérifient $\#E(\F_{q^n}) = q^n + 1 - \alpha^n - \beta^n$ pour tout $n\ge1$. 
   \end{itemize}
 \end{thm}
 
 \begin{proof}
-  La preuve de ce théorème est probablement due à Weil. Voir le théorème V.2.3.1 dans le Silverman.
+  La preuve de ce théorème est probablement due à Weil. Voir le théorème V.2.3.1 dans le Silverman. Le premier point du théorème a déjà été prouvé en \ref{polcarac}.
 \end{proof}
 
 Le théorème précédent permet de calculer le nombre de points de la courbe $E_0$ sur $\F_{p^2}$ en connaissant le nombre de points de la courbe sur $\F_{p}$.
@@ -363,8 +615,8 @@ Montrons maintenant que la courbe $E_0$ est supersingulière.
 
 \begin{proof}
 Ainsi, pour prouver qu'une courbe elliptique est supersingulière, il suffit de trouver deux endomorphismes qui ne commutent pas.
-Considérons le morphisme de Frobenius $\pi : E_0/\F_{p^2} \to E_0^{(p)}/\F_{p^2}$, $(x, y) \mapsto (x^p, y^p)$. 
-Puisque $E_0$ est définie sur $\F_{p}$, $\pi$ est un endomorphisme de $E/\F_{p^2}$.
+Considérons le morphisme de Frobenius $\pi_p : E_0/\F_{p^2} \to E_0^{(p)}/\F_{p^2}$, $(x, y) \mapsto (x^p, y^p)$. 
+Puisque $E_0$ est définie sur $\F_{p}$, $\pi_p$ est un endomorphisme de $E/\F_{p^2}$.
 
 Soit $j$ une racine de $X^2 + X + 1$. 
 Par définition, $j$ appartient à $\F_{p^2}$. 
@@ -375,8 +627,8 @@ Par contraposition, si $p \equiv 2 [3]$ alors $j\in\F_{p^2}\setminus\F_{p}$.
 
 Considérons l'endomorphisme $\psi : E_0 \to E_0$, $(x, y) \mapsto (jx, y)$. 
 Remarquons que puisque $j^3 = 1$, $\psi$ est bien défini.
-De plus $\pi(\psi(x, y)) = \pi(jx, y) = (j^px^p, y^p)$, mais $\psi(\pi(x, y)) = \psi(x^p, y^p) = (jx^p, y^p)$. 
-Puisque $j^p\neq j$, $\pi \circ \psi \neq \psi \circ \pi$, donc End($E$) n'est pas commutatif.
+De plus $\pi_p(\psi(x, y)) = \pi_p(jx, y) = (j^px^p, y^p)$, mais $\psi(\pi_p(x, y)) = \psi(x^p, y^p) = (jx^p, y^p)$. 
+Puisque $j^p\neq j$, $\pi_p \circ \psi \neq \psi \circ \pi_p$, donc End($E$) n'est pas commutatif.
 Ainsi $E$ est supersingulière.
 \end{proof}
 
@@ -400,11 +652,11 @@ Le théorème précédent nous permet d'identifier la structure du groupe abéli
 \end{prop}
 \begin{proof}
   Utilisons à nouveau le théorème \ref{weil} en posant $q = p^2$. 
-  Posons $\phi : E(\overline{\F_p}) \to E(\overline{\F_p})$, $\left( x, y \right) \mapsto \left( x^{q}, y^{q} \right)$.
-  En constatant que $a=p^2 + 1 - \#E_0(\F_{p^2}) = p^2 + 1 - \left( p + 1 \right) ^2 = -2p$, on obtient que $\phi^2 + 2p\phi + [p^2] = 0$, donc que $\left( \phi + [p] \right) ^2 = 0$ dans End($E(\overline{\F_p})$). 
+  Posons $\pi_{p^2}$ le morphisme de Frobenius.
+  En constatant que $a=p^2 + 1 - \#E_0(\F_{p^2}) = p^2 + 1 - \left( p + 1 \right) ^2 = -2p$, on obtient que $\pi_{p^2}^2 + 2p\pi_{p^2} + [p^2] = 0$, donc que $\left( \pi_{p^2} + [p] \right) ^2 = 0$ dans End($E_0(\overline{\F_p})$). 
   Par un argument de degré, cela implique que $\phi = -[p]$. 
 
-  Soit $P\in E(\overline(\F_{p})$. $P \in E(\F_{p^2}) \iff \phi(P) = P$, donc $E(\F_{p^2}) = \ker(\text{Id} - \phi) = \ker([1] + [p]) = \ker([p+1])$.
+  Soit $P\in E_0(\overline{\F_{p}})$. $P \in E_0(\F_{p^2})$ ssi $\pi_{p^2}(P) = P$, donc $E(\F_{p^2}) = \ker(\text{Id} - \pi_{p^2}) = \ker([1] + [p]) = \ker([p+1])$.
   En utilisant la proposition précédente, puisque $p$ ne divise pas $p+1$, on obtient le résultat souhaité.
 \end{proof}
 
