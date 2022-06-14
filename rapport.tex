@@ -182,11 +182,11 @@ Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens 
 
 Ce qui rend les courbes elliptiques intéressantes, notamment en cryptographie, c'est que l'on peut les munir d'une loi de groupe. Soit $E/K$ une courbe elliptique. Nous allons construire une loi sur $E$ notée $+$ telle que $(E, +, \infty)$ formera un groupe abélien.
 
-Il y a différents cas à traiter pour définir l'addition de deux points E.
-Tout d'abord, si l'un des points est égal à $\infty$ : $\infty+P = P+\infty = P$.
-Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$.
+%Il y a différents cas à traiter pour définir l'addition de deux points E.
+%Tout d'abord, si l'un des points est égal à $\infty$ : $\infty+P = P+\infty = P$.
+%Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$.
 
-Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droit est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est
+%Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droit est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est
 
 \subsection{Isogénies}
 \begin{deff}
@@ -212,6 +212,11 @@ Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2
 \begin{deff}
   $E[m] = \Ker([m])$
 \end{deff}
+
+\begin{deff}
+  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \left\{ P\in E(\overline{K}) \ \vert\  mP = O \right\}$.
+\end{deff}
+
 
 \begin{prop}
   $[m]$ commute avec toute les isogénies
@@ -268,7 +273,29 @@ Avec le degré, une autre propriété importante des isogénies est leur caract�
 
 On rappelle brièvement la notion de séparabilité pour une extension de corps. Une extension algébrique $L/K$ est dite séparable si pour tout $a\in L$, le polynôme minimal de $a$ à coefficients dans $K$ ne contient que des racines simples (dans $\overline{K}$). On dit qu'une extension est inséparable quand elle n'est pas séparable, c'est à dire quand il existe un élément dont le polynôme minimal sur $K$ n'est pas à racines simples dans $\overline{K}$. Les extensions purement inséparables sont un cas particulier d'extensions séparables où tous les éléments $a\in L \setminus K$ ont un polynôme qui n'est pas à racines simples.
 
-Ici encore, la forme canonique donnée aux isogénies précédemment permet de donner caractérisation plus simple de la séparabilité.
+Un outil pour étudier la séparabilité d’une extension de corps est la notion de degré de séparabilité (ou
+degré séparable). Soit $L/K$ une extension algébrique. Le degré de séparabilité de $L/K$ noté  $[L : K]_s$ est défini
+formellement comme le nombre de prolongements à $L$ du morphisme d’inclusion de $K$ dans $K$. Les seules
+propriétés que nous allons utiliser sont les trois suivantes :
+
+\begin{prop}
+ Le degré de séparabilité, comme le degré d’une extension, est multiplicatif : [M : K]s =
+[M : L]s [L : K]s.
+\end{prop}
+
+\begin{prop}
+  Pour une extension algébrique L/K, [L : K]s divise [L : K]. De plus [L : K]s = [L : K] si
+et seulement si l’extension L/K est séparable.
+\end{prop}
+
+\begin{prop}
+  Une extension de corps algébrique  L/K non triviale (i.e. L= K) est purement inséparable si et seulement si son degré de séparabilité est égal à 1. Est-ce que c’est vrai ça ?
+\end{prop}
+
+
+On définit alors le degré de séparabilité $\deg_s(\phi)$ d’une isogénie $\phi : E_1 \to E_2$ comme le degré de séparabilité de l’extension $K(E_1)/\phi^*(K(E_2 ))$.
+Ici encore, la forme canonique donnée aux isogénies précédemment permet de donner caractérisation plus
+simple de la séparabilité.
 
 \begin{prop}
   \label{caracsep}
@@ -290,12 +317,12 @@ Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plu
 
 
 \begin{prop}
-  Soit $k$ un corps de caractéristique $p$. Soit $\phi(x, y) = (r_1(x), r_2(x)y)$ une isogénie avec $r_1(x) = u(x)/v(x)$, $p$ et $q$ étant des polynômes de $\overline{K}[x]$ premiers entre eux. Alors $\phi$ est inséparable si et seulement si il existe deux polynômes $f$ et $g$ tels que $u(x) = f(x^p)$ et $v(x) = f(x^p)$.
+  Soit $k$ un corps de caractéristique $p$. Soit $\phi(x, y) = (r_1(x), r_2(x)y)$ une isogénie avec $r_1(x) = u(x)/v(x)$, $u$ et $v$ étant des polynômes de $\overline{K}[x]$ premiers entre eux. Alors $\phi$ est inséparable si et seulement si il existe deux polynômes $f$ et $g$ tels que $u(x) = f(x^p)$ et $v(x) = g(x^p)$.
 \end{prop}
 
 
 \begin{proof}
-  Supposons $\phi$ inséparable, soit $r_1' = 0$ par \ref{caracsep}. Puisque $0 = r_1' = \frac{u'v -uv'}{v^2}$ on obtient que $u'v = uv'$, et puisque $u$ et $v$ sont premiers entre eux, $u$ divise $u'$, ce qui implique que $u' = 0$ pour des raisons de degré.  En notant $u(x) = \sum_{k=0}^{+\infty} a_kx^k$, on obtient $0 = u'(x) = \sum_{k=0}^{+\infty} ka_kx^{k-1}$ et donc $\forall k\in \N, ka_k = 0$. Puisque $\overline{K}$ est de caractéristique $p$, cela implique que $a_k = 0$ si $p\not\equiv 0\ [p]$. Ainsi il existe bien $f$ tel que $u(x) = f(x^p)$. De même, $v = g(x^p)$. 
+  Supposons $\phi$ inséparable, soit $r_1' = 0$ par \ref{caracsep}. Puisque $0 = r_1' = \frac{u'v -uv'}{v^2}$ on obtient que $u'v = uv'$, et puisque $u$ et $v$ sont premiers entre eux, $u$ divise $u'$, ce qui implique que $u' = 0$ pour des raisons de degré.  En notant $u(x) = \sum_{k=0}^{+\infty} a_kx^k$, on obtient $0 = u'(x) = \sum_{k=0}^{+\infty} ka_kx^{k-1}$ et donc $\forall k\in \N, ka_k = 0$. Puisque $\overline{K}$ est de caractéristique $p$, cela implique que $a_k = 0$ si $p\not\equiv 0\ [p]$. Ainsi il existe bien $f$ tel que $u(x) = f(x^p)$. De même, $v(x) = g(x^p)$. 
 
   Réciproquement, si $u(x) = f(x^p)$ et $v(x) = f(x^p)$, $u'(x) = f'(x^p)\cdot px^{p-1} = 0$ et de même pour $v$, donc $u' = v' = 0$. Alors $r_1' = (\frac{u}{v})' =  \frac{u'v -uv'}{v^2} = 0$, et donc $\phi$ est inséparable par \ref{caracsep}.
 \end{proof}
@@ -330,6 +357,7 @@ Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plu
 \end{rem}
 
 \begin{prop}
+  \label{propriétés_duale}
   Soit $\phi : E_1 \to E_2$ une isogénie et $\h\phi$ sa duale.  
   \begin{enumerate}
     \item $\h\phi\circ\phi = [\deg{\phi}]$ sur $E_1$ et $\phi\circ\h\phi = [\deg{\phi}]$ sur $E_2$.
@@ -386,7 +414,7 @@ Le but de cette partie est de montrer que le graphes des isogénies entre $\over
 \end{prop}
 
 \begin{proof}
-  Puisque $E[l]$ est de dimension $2$ {\color{red} (À démontrer!)}, il suffit de montrer que $(v_1, v_2)$ est libre. Par bilinéarité de $e_l$, $v_1$ et $v_2$ sont non nuls. Soient $a, b\in\Z$ tels que $av_1 + bv_2 = 0$. Alors $av_1 = -bv_2$, donc $1 = e_l(av_1, -bv_2) = e_l(v_1, v_2)^{-ab} = e_l(v_1, v_2)^{ab}$. Puisque par hypothèse $e_l(v_1, v_2)$ est une racine $l$-ème primitive de l'unité, cela implique que $l$ divise $ab$. Puisque $l$ est premier, on peut supposer sans perte de généralité que $l$ divise $a$. Ainsi $av_1 = 0$ (dans $E[l]$), et donc $bv_2=-av_1=0$. Puisque $E[l]$ est un $\Z/l\Z$ espace vectoriel et puisque $v_1$ et $v_2$ sont non nuls, cela signifie que $a=b=0$ dans $\Z/l\Z$.
+  Puisque $E[l]$ est de dimension $2$ par le théorème \ref{structure_torsion}, il suffit de montrer que $(v_1, v_2)$ est libre. Par bilinéarité de $e_l$, $v_1$ et $v_2$ sont non nuls. Soient $a, b\in\Z$ tels que $av_1 + bv_2 = 0$. Alors $av_1 = -bv_2$, donc $1 = e_l(av_1, -bv_2) = e_l(v_1, v_2)^{-ab} = e_l(v_1, v_2)^{ab}$. Puisque par hypothèse $e_l(v_1, v_2)$ est une racine $l$-ème primitive de l'unité, cela implique que $l$ divise $ab$. Puisque $l$ est premier, on peut supposer sans perte de généralité que $l$ divise $a$. Ainsi $av_1 = 0$ (dans $E[l]$), et donc $bv_2=-av_1=0$. Puisque $E[l]$ est un $\Z/l\Z$ espace vectoriel et puisque $v_1$ et $v_2$ sont non nuls, cela signifie que $a=b=0$ dans $\Z/l\Z$.
 \end{proof}
 
 \begin{prop}
@@ -451,7 +479,18 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
   En utilisant \ref{degpi} et \ref{cardpi}, $t$ se réécrit $t = 1 + \deg(\pi_q) - \deg(1-\pi_q)$. On reconnait l'expression de la trace de $\pi_q$ donnée en \ref{dettr}, et donc $t = \tr(\pi_q)$. Soit $\pi_{q, l}$ l'endomorphisme induit par $\pi_q$ sur $E[l]$. Le polynôme caractéristique de $\phi_l$ est $X^2 -\tr(\pi_{q,l}) X + \det(\pi_{q, l})$, donc $\pi_{q,l}^2 - t\pi_{q,l}+q = 0$. En appliquant une dernière fois \ref{dettr}, on obtient $\deg(\pi_{q}^2 - t\pi_{q}+q ) = \det (\pi_{q,l}^2 - t\pi_{q,l}+q ) = \det(0) = 0$, et donc par définition du degré on obtient l'égalité souhaitée.
 \end{proof}
 
-Le résultat ci-dessus est une partie du théorème \ref{weil}.
+\begin{thm}
+  \label{structure_torsion}
+  Soit $E/\F_q$ une courbe elliptique. Soit $m\in \Z$ tel que $p$ ne divise pas $m$. Alors, $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$
+\end{thm}
+
+\begin{proof}
+Soit $d$ un diviseur de $m$. 
+Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d’inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d’inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
+Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
+\end{proof}
+
+
 
 \begin{lem}
   Soit $A$ une matrice $2\times 2$ à coefficients dans un corps $K$. Pour tout $n\in\N$, $\tr(A^{n+2}) = \tr(A)\tr(A^{n+1}) - \det(A)\tr(A^n)$.
@@ -462,6 +501,7 @@ Le résultat ci-dessus est une partie du théorème \ref{weil}.
 \end{proof}
 
 \begin{thm}
+  \label{récurrence}
   Soit $\phi$ un endomorphisme de $E/\F_q$ une courbe elliptique et $\pi_q$ le morphisme de Frobenius. Pour $n\in\N$ notons $t_n = \tr(\pi_{q^n}) = \tr(\pi_q^n)$. Alors pour tout $n\in\N$, $t_{n+2} = t_1t_{n+1} - qt_n$.
 \end{thm}
 
@@ -501,8 +541,18 @@ Le résultat ci-dessus est une partie du théorème \ref{weil}.
 \end{prop}
 
 \begin{proof}
-  $[\deg(1-\pi_q)] = (\widehat{[1] - \pi_q})([1]-\pi_q) = [1] - \widehat{\pi_q} - \pi_q + \widehat{\pi_q}\pi_q  $, donc $ \widehat{\pi_q} + \pi_q = [1] + [\deg\pi_q] - [\deg(1-\pi_q)] = [tr(\pi_q)]  $ 
-  L'endomorphisme $\pi_q$ est purement inséparable par \ref{degpi}, donc $[\tr(\pi_q)]$ est inséparable si et seulement si $\widehat{\pi_q}$ est inséparable, si et seulement si $E$ est supersingulière par \ref{pihatsep}. De plus, puisque $\deg[\tr \pi_q] =(\tr \pi_q)^2$ et puisque $p$ est premier, $E$ est supersingulière si et seulement si $p$ divise $\tr\pi_q$. 
+  Appliquons le théorème \ref{récurrence} : 
+  notons $t_n = \tr(\pi_{q^n})$ 
+  et alors pour tout $n\in\N$, 
+  $t_{n+2} = t_1 t_{n+1} -qt_n$.
+  En raisonnant modulo $p$, on obtient $t_{n+2} \equiv t_1 t_{n+1}\ [p]$, donc $t_n \equiv t_1^n\ [p]$. 
+  De plus, $\#E(\F_{q^n}) = q^n + 1 - \tr(\pi_{q^n}) \equiv 1 - t_n\ [p]$.
+
+Supposons $t_1 = \tr(\pi_q) \equiv 0\ [p]$. 
+Alors $\#E(\F_{q^n}) = 1 - t_1^n \equiv 1\ [p]$ pour tout $n \ge 1$, donc par le théorème de Lagrange, $E(\F_{q^n})$ ne contient pas d’éléments d’ordre $p$, et donc $E[p] = \{0\}$.
+
+Supposons $t_1 = \tr(\pi_q) \not\equiv 0\ [p]$. 
+Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]$. Par le théorème de Cauchy, $E(\F_q^{p-1})$ contient un élément d’ordre $p$, et donc $E[p] \neq  \{0\}$.
 \end{proof}
 
 
@@ -518,6 +568,10 @@ Le résultat ci-dessus est une partie du théorème \ref{weil}.
 \begin{prop}
   Toute courbe elliptique $E/\overline{\F_p}$ a son $j$-invariant dans $\F_{p^2}$, donc une telle courbe est $\overline{\F_p}$-isomorphe à une courbe définie sur $\F_{p^2}$. 
 \end{prop}
+
+\begin{proof}
+  Puisque $E$ est supersingulière, $\h{\pi_p} : E^{(p)} \to  E$ est purement inséparable, donc $\h{\pi_p} = \psi \circ \pi_p$ avec $\psi : E^{(p^2}) \to E$ une isogénie de degré $1$. Une telle isogénie est un isomorphisme, donc $ E^{(p^2}) $ est $\ol{\F_p}$-isomorphe à $E$. Ainsi $j(E) = j( E^{(p^2}) ) = j(E)^{p^2}$ donc $X^{p^2} - X$ annule $j(E)$, ce qui revient à dire que $j(E)$ appartient à $\F_{p^2}$.
+\end{proof}
 
 \begin{prop}
 \label{cardsuper} 
@@ -631,18 +685,6 @@ Commençons par compter le nombre de points de $E_0$ sur $\F_{p}$. Pour cela nou
 Ainsi $\#E_0(\F_{p}) = p+1$. 
 Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$. 
 
-\begin{thm}
-  \label{weil}
-  Soit $E/\F_q$ une courbe elliptique et posons $a = q + 1 - \#E(\F_q)$.
-  \begin{itemize}
-    \item Le morphisme de Frobenius $\pi_q \colon E \to E$, $(x, y) \mapsto (x^q, y^q)$ vérifie $\pi_q^2 - a\pi_q + q = 0$.
-    \item Les deux racines complexes $\alpha$ et $\beta$ de $X^2 - aX + q$ vérifient $\#E(\F_{q^n}) = q^n + 1 - \alpha^n - \beta^n$ pour tout $n\ge1$. 
-  \end{itemize}
-\end{thm}
-
-\begin{proof}
-  La preuve de ce théorème est probablement due à Weil. Voir le théorème V.2.3.1 dans le Silverman. Le premier point du théorème a déjà été prouvé en \ref{polcarac}.
-\end{proof}
 
 Le théorème précédent permet de calculer le nombre de points de la courbe $E_0$ sur $\F_{p^2}$ en connaissant le nombre de points de la courbe sur $\F_{p}$.
 
@@ -693,17 +735,6 @@ Ainsi $E$ est supersingulière.
 \end{proof}
 
 On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure des groupes de torsion dans la clôture algébrique de $\F_{p}$.
-\begin{deff}
-  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \left\{ P\in E/\overline{K} \ \vert\  mP = O \right\}$.
-\end{deff}
-
-\begin{thm}
-  Soit $m\neq0$. Si $char(K)\neq 0$ ou si char($K$) ne divise pas $m$, $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$
-\end{thm}
-
-\begin{proof}
-  Voir le corollaire III.6.4 dans le Silverman.
-\end{proof}
 
 Le théorème précédent nous permet d'identifier la structure du groupe abélien $E_0(\F_{p^2})$.
 
@@ -711,7 +742,7 @@ Le théorème précédent nous permet d'identifier la structure du groupe abéli
   $$E_0(\F_{p^2}) \simeq \Z/(p+1)\Z \times \Z/(p+1)\Z$$
 \end{prop}
 \begin{proof}
-  Utilisons à nouveau le théorème \ref{weil} en posant $q = p^2$. 
+  Utilisons à nouveau le théorème \ref{polcarac} en posant $q = p^2$. 
   Posons $\pi_{p^2}$ le morphisme de Frobenius.
   En constatant que $a=p^2 + 1 - \#E_0(\F_{p^2}) = p^2 + 1 - \left( p + 1 \right) ^2 = -2p$, on obtient que $\pi_{p^2}^2 + 2p\pi_{p^2} + [p^2] = 0$, donc que $\left( \pi_{p^2} + [p] \right) ^2 = 0$ dans End($E_0(\overline{\F_p})$). 
   Par un argument de degré, cela implique que $\phi = -[p]$. 
