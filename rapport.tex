@@ -481,7 +481,7 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
 
 \begin{thm}
   \label{structure_torsion}
-  Soit $E/\F_q$ une courbe elliptique. Soit $m\in \Z$ tel que $p$ ne divise pas $m$. Alors, $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$
+  Soit $E/\F_q$ une courbe elliptique. Soit $m\in \Z$ tel que $p$ ne divise pas $m$. Alors $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$
 \end{thm}
 
 \begin{proof}
@@ -683,17 +683,16 @@ Commençons par compter le nombre de points de $E_0$ sur $\F_{p}$. Pour cela nou
 
 À partir de maintenant on suppose que $p$ est un nombre premier impair congru à $2$ modulo $3$. 
 Ainsi $\#E_0(\F_{p}) = p+1$. 
-Le théorème suivant va nous permettre de calculer $\#E_0(\F_{p^2})$. 
 
 
-Le théorème précédent permet de calculer le nombre de points de la courbe $E_0$ sur $\F_{p^2}$ en connaissant le nombre de points de la courbe sur $\F_{p}$.
+On cherche maintenant à calculer le nombre de points de la courbe $E_0$ sur $\F_{p^2}$ en connaissant le nombre de points de la courbe sur $\F_{p}$.
 
 \begin{cor}
 $\#E_0(\F_{p^2}) = (p+1)^2$.
 \end{cor}
 
 \begin{proof}
-  En utilisant la proposition 2, $a = 0$. $\alpha$ et $\beta$ sont les racines de $X^2 + p$, ainsi $\alpha^2 = \beta^2 = -p$. Donc $\#E(\F_{p^2}) = p^2 + 1 - \alpha^2 - \beta^2 = p^2 + 1 + 2p = (p+1)^2$.
+  En utilisant le théorème \ref{récurrence}, avec $q = p$, on obtient $t_2 = t_1^2 - pt_0 = -2p$. Donc $\#E(\F_{p^2}) = p^2 + 1 - t_2 = p^2 + 1 + 2p = (p+1)^2$.
 \end{proof}
 
 
@@ -707,9 +706,9 @@ Montrons maintenant que la courbe $E_0$ est supersingulière.
   Voir le théorème V.3.1 dans le Silverman.
 \end{proof}
 
-\begin{deff}
-  Dans le premier cas on dit que $E$ est \textit{ordinaire} et dans le second cas qu'elle est \textit{supersingulière}.
-\end{deff}
+\begin{thm}
+  Soit $E/\F_q$ une courbe elliptique, $E$ est supersingulière si et seulement si $\End(E)$ est un ordre dans une algèbre de quaternions.
+\end{thm}
 
 \begin{cor}
   $E_0$ est supersingulière.
@@ -741,11 +740,12 @@ Le théorème précédent nous permet d'identifier la structure du groupe abéli
 \begin{prop}
   $$E_0(\F_{p^2}) \simeq \Z/(p+1)\Z \times \Z/(p+1)\Z$$
 \end{prop}
+
 \begin{proof}
   Utilisons à nouveau le théorème \ref{polcarac} en posant $q = p^2$. 
   Posons $\pi_{p^2}$ le morphisme de Frobenius.
-  En constatant que $a=p^2 + 1 - \#E_0(\F_{p^2}) = p^2 + 1 - \left( p + 1 \right) ^2 = -2p$, on obtient que $\pi_{p^2}^2 + 2p\pi_{p^2} + [p^2] = 0$, donc que $\left( \pi_{p^2} + [p] \right) ^2 = 0$ dans End($E_0(\overline{\F_p})$). 
-  Par un argument de degré, cela implique que $\phi = -[p]$. 
+  En constatant que $\tr(\pi_{p^2}) = -2p$, on obtient que $\pi_{p^2}^2 + 2p\pi_{p^2} + [p^2] = 0$, donc que $\left( \pi_{p^2} + [p] \right) ^2 = 0$ dans End($E_0(\overline{\F_p})$). 
+  Ainsi $\deg(\pi_{p^2} + [p])^2 = 0$, donc $\deg(\pi{p^2} + [p]) = 0$, donc $\pi_{p^2} + [p] = 0$.
 
   Soit $P\in E_0(\overline{\F_{p}})$. $P \in E_0(\F_{p^2})$ ssi $\pi_{p^2}(P) = P$, donc $E(\F_{p^2}) = \ker(\text{Id} - \pi_{p^2}) = \ker([1] + [p]) = \ker([p+1])$.
   En utilisant la proposition précédente, puisque $p$ ne divise pas $p+1$, on obtient le résultat souhaité.
@@ -801,7 +801,7 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
 \end{proof}
 
 
-
+\section{Cryptographie}
 
 
 \end{document}
