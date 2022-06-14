@@ -48,6 +48,7 @@
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\U}{\mathbb{U}}
 \newcommand{\h}{\widehat}
+\newcommand{\ol}{\overline}
 
 \DeclareMathOperator{\End}{End}
 \DeclareMathOperator{\tr}{tr}
@@ -74,8 +75,6 @@
 
 \subsection{Définitions}
 
-{\color{red} À ne pas lire, c'est pas très propre}
-
 Je donne en dessous deux définitions de ce qu'est une courbe elliptique. La première est plus générale puisqu'elle ne mentionne pas la  caractéristique du corps. La deuxième est plus pratique puisqu'elle permet de stocker une courbe dans un ordinateur, et d'effectuer des calculs dessus. Nous allons montrer que dans un corps de caractéristique différente de $2$ et de $3$, ces deux définitions sont équivalentes.
 
 \begin{deff}[Formelle]
@@ -83,50 +82,111 @@ Je donne en dessous deux définitions de ce qu'est une courbe elliptique. La pre
 \end{deff}
 
 \begin{deff}[Pratique]
-  Soit $k$ un corps de caractéristique différente de $2$ et de $3$. Une courbe elliptique sur $k$ est un couple $(a, b)$ d'éléments de $k$ tel que la quantité $\Delta =-16(4a^3+ 27b^2)$ soit non nulle.
+  Soit $K$ un corps de caractéristique différente de $2$ et de $3$. Une courbe elliptique sur $K$ est un ensemble de la forme $\{(x, y)\in\ol K\ |\ y^2 = x^3 + ax +b\}\cup\{\infty\}$ ou $a$ et $b$ sont des éléments de $K$ tels que la quantité $\Delta =-16(4a^3+ 27b^2)$ soit non nulle.
 \end{deff}
 
-Fixons pour cette partie un corps corps $k$ caractéristique différente de $2$ et de $3$ et notons $\overline{k}$ une de ses clôtures algébriques. Essayons maintenant de comprendre la définition plus formelle. Le premier terme à comprendre est le mot \emph{projectif}.
+\begin{center}
+  \color{red}
+  Dans toute la suite, je suppose que les corps utilisés ne sont ni de caractéristique $2$, ni de caractéristique $3$.
+\end{center}
+
+Fixons pour cette partie un corps $K$ (de caractéristique différente de $2$ et de $3$) et notons $\overline{K}$ sa clôture algébriques. Nous allons maintenant essayer de comprendre la définition plus formelle, et d'expliquer pourquoi une courbe elliptique au sens de la définition pratique est bien une courbe elliptique au sens de la définition formelle. Le premier terme à comprendre est le mot \emph{projectif}.
 
 \begin{deff}
-  L'espace projectif $\mathbb{P}^2$ est l'ensemble $$\frac{\overline{k}^3\setminus(0, 0, 0)}{\sim},\text{\ \ où\ \ } (x, y, z) \sim (x', y', z') \iff \exists \lambda \in \overline{k}^\times \text{ tel que } (x, y, z) = (\lambda x', \lambda y', \lambda z')$$
+  Posons $\mathcal{A} = \ol K^3\setminus(0, 0, 0)$. On définit une relation d'équivalence sur $\mathcal A$ de la sorte : étant donné $(x, y, z)$ et $(x', y', z')$ deux éléments de $A$, ces derniers sont équivalents s'il existe une constante $\lambda\in\ol K^\times$ telle que $(x, y, z) = (\lambda x', \lambda y', \lambda z')$.
+
+  L'espace projectif $\mathbb P^2$ sur $K$ est définit comme le quotient de $\mathcal A$ par cette relation d'équivalence. 
 \end{deff}
+
+De façon moins formelle, l'espace $\mathbb P^2$ est l'ensemble des droites vectorielles de $\ol K^3$. Dans notre cadre, l'espace projectif sert uniquement à donner un cadre rigoureux à l'ajout de points à l'infini dans l'espace. Pour maintenant donner un sens à la notion de \emph{courbe}, il faut définir ce qu'est un ensemble algébrique, puis ce qu'est une variété.
+
+\begin{deff}
+  Soit $I$ un idéal de $\ol K[X, Y, Z]$ engendré par des polynômes homogènes. On définit l'ensemble $Z(I)$ par $Z(I) = \{ P\in \mathbb{P}^2 : f(P) = 0 \text{ pour tout } f \text{ homogène de } I \}$.
+
+  Un ensemble est dit algébrique s'il est de la forme $Z(I)$ pour un certain $I$.
+\end{deff}
+
+La notation $Z(I)$ désigne ici l'ensemble des zéros communs à tous les polynômes homogènes de $I$. On ne considère que les polynômes homogènes de $I$ puisque dans l'espace projectif la propriété $f(P) = 0$ n'est pas bien définie pour des polynômes qui ne seraient pas homogènes. 
+En effet, l'espace projectif est définie par un quotient et cette propriété n'est pas indépendante du choix d'un représentant. En revanche, cette propriété l'est pour des polynômes homogènes.
+
+Donnons dès à présent un exemple d'ensemble algébrique, qui permettra d'illustrer la définition et de faire un premier lien entre les deux définitions d'une courbe elliptique.
+
+Soient $a$ et $b$ dans $K$, et considérons le polynôme de $f(x, y) = y^2 -x^3 -ax -b$ de $K[x, y]$. 
+L'intérêt de tels polynômes est que l'ensemble leurs zéros dans $\ol K$ (que nous noterons aussi $Z(f)$ ou $Z(\langle f \rangle)$) définit une courbe elliptique au sens de la définition pratique.  
+Un tel polynôme n'est pas homogène, mais un procédé simple permet de l'homogénéiser. 
+Posons $F(X, Y, Z) = Z^3f(\frac{X}{Z}, \frac{Y}{Z})$. 
+Un tel $F$ est un polynôme homogène de $K[X, Y, Z]$, puisque $F(X, Y, Z) = Z^3\big((\frac{Y}{Z})^2 - (\frac{X}{Z})^3 -a\frac{X}{Z}-b\big) = Y^2Z - X^3 -aXZ^2 -bZ^3$. 
+En considérant $\langle F \rangle$ l'idéal de $\ol K[X, Y, Z]$ engendré par $F$, $Z(\langle F \rangle)$ définit bien un ensemble algébrique. Pour alléger les notations, on notera $Z(F)$ à la place de $Z(\langle F\rangle)$. 
+
+\vspace{0.5em}
+
+Continuons de faire le lien entre $\ol K^2$ et $\mathbb P^2$. Pour $x, y$ et $z$ des éléments de $\ol K$, la notation $[x, y, z]$ désigne la classe d'équivalence de $(x, y, z)$ dans $\mathbb P^2$.
+
+\begin{prop}
+ Notons $U = \{[x, y, z]\in \mathbb P^2\ |\ z\neq 0\}$. L'application $\phi : \ol K^2 \to U$, définie par $\phi(x, y) = [x, y, 1]$ est bijective. 
+\end{prop}
+
+\begin{proof}
+  Soit $[x, y, z]\in U$. On vérifie facilement que le couple $(\frac{x}{z}, \frac{y}{z})$ est l'unique antécédent de $[x, y, z]$ par $\phi$.
+\end{proof}
+
+La proposition précédente montre que $\mathbb P^2$ contient une copie de $\ol K^2$. Montrons que $Z(F )$ contient une copie de $Z(f)$ par le même isomorphisme. 
+
+\begin{prop}
+  Avec les mêmes notations que la question précédente, $\phi$ induit une bijection entre $Z(f)$ et $Z(F) \cap U$.
+\end{prop}
+
+\begin{proof}
+  Soit $(x, y)\in\ol K^2$ tel que $f(x, y) = 0$, alors $F([x, y, 1]) = 1^3f(\frac{x}{1}, \frac{y}{1}) = f(x, y) = 0$.
+  Réciproquement, soit $[x, y, z]\in U$. Si $F([x, y, z]) = 0$, alors $z^3f(\frac{x}{z}, \frac{y}{z}) = 0$, donc $f(\frac{x}{z}, \frac{y}{z}) = 0$.
+\end{proof}
+
+On peut maintenant s'intéresser aux points de $Z(F)\setminus U$. Soit $[x, y, z]\in Z(F)\setminus U$. Alors $z=0$ et $0 = F(x,y, z) = F(x, y, 0) = -x^3$, donc $x=0$. Ainsi $[x, y, z] = [0, y, 0] = [0, 1, 0]$, car $y$ ne peut pas être nul puisque $[0, 0, 0]$ n'appartient pas à $\mathbb P^2$. On vient de montrer que le seul point de $Z(F)$ qui n'appartient pas à $U$ est $[0, 1, 0]$, et c'est ce point que l'on considérera comme "point à l'infini" dans $\ol K^2$. Ainsi on a une correspondance simple entre $Z(f) \cup \{\infty\}$ et $Z(F)$.
+L'espace projectif a un intérêt théorique puisque beaucoup de résultats s'y expriment de façon bien plus élégantes, mais en pratique, dans un ordinateur on effectuera les calculs dans $\ol K^2$ qui est plus facile à manipuler.
+
+\begin{deff}
+  À un ensemble algébrique $V$, on associe un idéal :
+  $$I(V) = \{ f\in \overline{K}[X, Y, Z] : f \text{ est homogène et } f(P) = 0 \text{ pour tout } P\in V \}$$
+  Si $I(V)$ est premier dans $ \overline{K}[X, Y, Z] $, on dit que $V$ est une variété (projective). Si $I(V)$ est engendré par des polynômes homogènes de $k[X, Y, Z]$, on dit que $V$ est définie sur $K$.  
+\end{deff}
+
+
+Continuons l'exemple précédent en montrant que $Z(f)$ est une variété.
+  Le polynôme $f$ défini précédemment est un polynôme de homogène irréductible de $K[X, Y, Z]$.   
+  Quel que soit l'idéal $I$ de $K[X, Y, Z]$, il est toujours vrai que $I \subseteq I(Z(I))$, donc $\langle F \rangle \subseteq I(Z( F ))$. 
+  Dans ce cas particulier, il se trouve que la réciproque est vraie. Soit $g\in I(Z(F))$ : par la version forte du théorème des zéros de Hilbert (que nous ne démontrons pas ici), il existe $n\in\N^*$ tel que $g^n\in \langle F \rangle$.
+  Puisque $\ol K[X, Y, Z]$ est factoriel et puisque $F$ est irréductible,  $\langle F \rangle$ est premier. Ainsi $g\in \langle F \rangle$ et donc $I(Z(F)) = \langle F \rangle$.
+  On en déduit que $V$ est une variété (projective) définie sur $K$.
+
+  Nous pouvons enfin donner la définition d'une courbe projective :
 
 \begin{deff}
   Une courbe (projective) est une variété de dimension $1$ de l'espace (projectif).
 \end{deff}
 
-\begin{deff}
-  Un ensemble est dit algébrique s'il est de la forme $$V(I) = \{ P\in \mathbb{P}^2 : f(P) = 0 \text{ pour tout } f \text{ homogène de } I \}$$ pour un certain $I$, où $I$ est un idéal de $\overline{k}[X, Y, Z]$ homogène (c'est à dire engendré par des polynômes homogènes).
-\end{deff}
 
-\begin{deff}
-  À un ensemble algébrique $V$, on associe un idéal :
-  $$I(V) = \{ f\in \overline{k}[X, Y, Z] : f \text{ est homogène et } f(P) = 0 \text{ pour tout } P\in V \}$$
-  Si $I(V)$ est premier dans $ \overline{k}[X, Y, Z] $, on dit que $V$ est une variété (projective). Si $I(V)$ est engendré par des polynômes homogènes de $k[X, Y, Z]$, on dit que $V$ est définie sur $k$.  
-\end{deff}
+Je n'ai pas envie de définir formellement (de manière purement algébrique) la dimension d'une variété, mais on peut se convaincre que $Z(f) = \{(x, y)\in \ol K^2\ |\ y^2 = x^3 + ax + b\}$ est de dimension $1$ par analogie avec le cas réel puisque étant donné une valeur de $x\in\ol K$, il existe au plus deux valeurs de $y\in\ol K$ telles que $(x, y)\in Z(f)$. 
 
 
+La condition sur $\Delta$ implique que cette variété est lisse. Ce qui est plus difficile est de montrer  qu'une telle courbe est de genre $1$. 
 
-\begin{ex}
-  Soit $f$ un polynôme de homogène irréductible de $k[X, Y, Z]$. Posons $V = V(\langle f \rangle)$, et montrons que $V$ est une variété. 
-  Il est toujours vrai que $I \subseteq I(V(I))$, donc $\langle f \rangle \subseteq I(V)$. 
-  Dans ce cas particulier, la réciproque est vraie. Soit $g\in I(V)$ : par la version forte du théorème des zéros de Hilbert, il existe $n\in\N^*$ tel que $g^n\in \langle f \rangle$.
-  Puisque $\overline{k}$ est factoriel et puisque $f$ est irréductible,  $\langle f \rangle$ est premier. Ainsi $g\in \langle f \rangle$ et donc $I(V) = \langle f \rangle$.
-  On en déduit que $V$ est une variété (projective) définie sur $k$.
-\end{ex}
+Le point spécifié de la courbe projective est le point $[0, 1, 0]$, qui correspond au point à l'infini. Ceci "justifie" qu'une courbe elliptique au sens de la définition pratique est bien une courbe elliptique au sens de la définition formelle. 
 
-\begin{ex}
-  Posons $f = Y^2 Z - X^3 -aXZ^2 -b Z^3$ avec $a$ et $b$ dans $k$. $f$ est irréductible (je ne l'ai pas vraiment écrit en projectif\ldots), donc $V(\langle f \rangle)$ est une variété définie sur $k$.
-\end{ex}
+Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens de la première définition est bien une courbe elliptique au sens de la seconde... L'outil clef est le théorème de Riemann-Roch.
 
-On voit apparaître le lien entre les deux définitions. Étant donné un couple d'éléments de $k$, on construit comme ci-dessus une variété projective. La condition sur $\Delta$ implique que cette variété est lisse. Même si je n'ai pas défini la dimension, intuitivement cette variété est de dimension $1$. Enfin, une telle courbe est de genre $1$. Le point spécifié est le point $[0, 1, 0]$. Ceci "justifie" qu'une courbe elliptique au sens de la définition $1$ est bien une courbe elliptique au sens de la définition $1$. 
+\vspace{0.5em}
+À partir de maintenant, lorsque l'on considérera une courbe elliptique $E$ définie sur $K$, ce que l'on notera $E/K$, cela signifiera que l'on s'est donné une équation $y^2 = x^3 + ax + b$, $a$ et $b$ étant des éléments de $K$ tels que $\Delta =-16(4a^3+ 27b^2)$ soit non nulle, et que l'on étudiera l'ensemble des solutions de cette équation dans $\ol K^2\cup \{\infty\}$ avec la convention que $\infty$ est solution de l'équation.
 
-Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens de la première définition est bien une courbe elliptique au sens de la seconde\ldots. L'outil clef est le théorème de Riemann-Roch.
 
-\subsection{Mais pourquoi s'intéresse-t-on aux courbes elliptiques ?}
+\subsection{La loi de groupe d'une courbe elliptique}
 
-Il y a une loi de groupe.
+Ce qui rend les courbes elliptiques intéressantes, notamment en cryptographie, c'est que l'on peut les munir d'une loi de groupe. Soit $E/K$ une courbe elliptique. Nous allons construire une loi sur $E$ notée $+$ telle que $(E, +, \infty)$ formera un groupe abélien.
+
+Il y a différents cas à traiter pour définir l'addition de deux points E.
+Tout d'abord, si l'un des points est égal à $\infty$ : $\infty+P = P+\infty = P$.
+Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$.
+
+Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droit est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est
 
 \subsection{Isogénies}
 \begin{deff}
