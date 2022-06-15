@@ -42,7 +42,6 @@
 \newtheorem{ex}[thm]{Exemple}
 \newtheorem{rem}[thm]{Remarque}
 
-\newcommand{\Fp}{\mathbb{F}_{p}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
@@ -54,6 +53,8 @@
 \DeclareMathOperator{\tr}{tr}
 \DeclareMathOperator{\id}{id}
 \DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Aut}{Aut}
 
 
 % Pour les sous-sections dans le sommaire
@@ -182,45 +183,101 @@ Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens 
 
 Ce qui rend les courbes elliptiques intéressantes, notamment en cryptographie, c'est que l'on peut les munir d'une loi de groupe. Soit $E/K$ une courbe elliptique. Nous allons construire une loi sur $E$ notée $+$ telle que $(E, +, \infty)$ formera un groupe abélien.
 
-%Il y a différents cas à traiter pour définir l'addition de deux points E.
-%Tout d'abord, si l'un des points est égal à $\infty$ : $\infty+P = P+\infty = P$.
-%Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$.
+Il y a différents cas à traiter pour définir l'addition de deux points E.
+Tout d'abord, si l'un des points est égal à $\infty$ : $\infty+P = P+\infty = P$.
+Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$.
 
-%Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droit est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est
+Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droite est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est $y = m(x-x_1) + y_1$. Les points d'intersection entre la droite $\mathcal D$ et $E$ sont les points $(x, y)$ vérifiant $y^2 = x^3 + ax + b$ et $y = m(x-x_1) + y_1$. En combinant les deux équations, on obtient $(m(x-x_1) + y_1)^2 =  x^3 + ax + b$. 
+En ne cherchant à expliciter que les termes de degré $2$ et $3$ en $x$, on obtient: $ x^3 -m^2x^2 + \alpha x + \beta = 0$. 
+Cette équation est de degré $3$ en $x$, mais on en connait déjà  deux solutions $x_1$ et $x_2$, donc en utilisant les relations racines coefficients, on obtient $x_1+x_2+x_3 = m^2$ soit $x_3 = m^2 - x_1 - x_2$ où $x_3$ est la troisième solution. La valeur de $y_3$ est $m(x_3-x_1)+y_1$ en réutilisant l'équation de la droite. On définit le point $P_1 + P_2$ comme le point de coordonnées $(x_3, -y_3)$.
 
-\subsection{Isogénies}
+Si $x_1=x_2$ et $y_1\neq y_2$, on définit $P_1+P_2$ comme valant $\infty$.
+
+Enfin si $P_1 = P_2$, on considère la tangente à $E$ passant par $P_1$. Pour trouver la pente de la tangente, on dérive l'équation de la courbe par rapport à $x$ : $2y\frac{dy}{dx} = 3x^2 + a$, donc $m = \frac{3x_1^2 + a}{2y_1}$. On peut montrer que si $y_1 = 0$, alors $3x_1^2 + a \neq 0$. 
+(On montre que $\Delta \neq 0$ si et seulement si $(x^3 + ax + b)\wedge(3x^2 + a) = 1$). 
+Dans ce cas particulier, on définit $P_1+P_1$ comme valant $\infty$.
+Si  $y_1 \neq  0$, $m$ est bien défini et on construit $P_1+P_1$ comme précédemment.
+
+Il est remarquable que la loi définie ci-dessus soit une loi de groupe. Le point $\infty$ est l'élément neutre par définition. Il est facile de voir que la loi est commutative. En effet, la droite passant par $P_1$ et $P_2$ est la même que la droite passant par $P_2$ et $P_1$. L'opposé de l'élément $(x_1, y_1)$ est l'élément $(x_1, -y_1)$. Le plus dur est de montrer l'associativité de cette loi. Il est possible de tout écrire à la main, mais il est aussi possible de procéder de façon plus élégante.
+
+
+\subsection{Un premier protocole d'échange de clefs}
+
+\subsection{Morphismes et isogénies}
+
 \begin{deff}
-  Morphisme 
+  Soient $E_1$ et $E_2$ deux courbes elliptiques définies sur $K$. Un morphisme $\phi : E_1\to  E_2$ est une application de la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ des fractions rationnelles en $x$ et $y$ qui envoie $\infty_{E_1}$ sur $\infty_{E_2}$.
 \end{deff}
 
+\begin{rem}
+  A priori les fractions rationnelles peuvent être définies sur n'importe extension de $L$ de $K$. On dit alors que le morphisme est défini sur $L$.
+\end{rem}
+
+\begin{thm}
+  Soit $E_1/K$ et $E_2/K$ deux courbes elliptiques. Un morphisme $\phi : E_1\to  E_2$ défini sur $L$ une extension de $K$ (possiblement égale à $K$) induit un morphisme de groupe entre $E_1(L)$ et $E_2(L)$. 
+\end{thm}
+
+Le théorème précédent permet de donner les définitions usuelles associées aux ensembles d'endomorphismes. Soit $E/K$, $E_1/K$ et $E_2/K$ trois courbes elliptiques définies sur $K$ et soit $L$ une extension de $K$.
+
+\begin{deff}
+  On note $\Hom_L(E_1, E_2)$ l'ensemble des morphismes de $E_1$ dans $E_2$ définis sur $L$. En définissant l'addition de morphismes comme l'addition point par point, $\Hom_L(E_1, E_2)$ devient un groupe abélien.
+\end{deff}
+
+\begin{deff}
+  On note $\End_L(E)$ le groupe $\Hom_L(E, E)$. Muni de la loi de composition des morphismes, $\End_L(E)$ est un anneau intègre. Les éléments de $\End_L(E)$ sont appelés endomorphismes de $E$.
+\end{deff}
+
+
+ Nous donnons maintenant une forme plus simple aux isogénies :
+
+
 \begin{prop}
-  Un morphisme est constant ou surjectif.
+  Un morphisme $\phi$ peut toujours se mettre sous la forme $\phi(x, y) = (r_1(x), r_2(x)y)$ avec $r_1$ et $r_2$ des fonctions rationnelles (i.e. des quotients de polynômes en $x$).
+\end{prop}
+
+\begin{proof}
+  Soit $R(x, y)$ une fraction rationnelle. Puisque les points de $E$ vérifient $y^2 = x^3 + ax + b$, on peut éliminer les puissances de $y$ plus grande que $2$ au numérateur et au dénominateur de $R$. On peut donc supposer $R$ de la forme : $$R(x, y) = \frac{p_1(x) + p_2(x)y}{p_3(x)+p_4(x)y} = \frac{(p_1(x) + p_2(x)y)(p_3(x)-p_4(x)y)}{p_3(x)^2 - p_4(x)^2y^2} = \frac{q_1(x) +q_2(x)y}{q_3(x)} $$
+ On a multiplié le dénominateur et le numérateur par la quantité conjuguée $(p_3-p_4y)$ et réutilisé l'équation de la courbe pour éliminer $y$ au dénominateur.
+
+ Le morphisme $\phi$ peut se mettre sous la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ de la forme donnée ci-dessus. Puisque $\phi$ est un morphisme de groupes, 
+ $(R_1(x, -y), R_2(x, -y)) = \phi(x, -y) = \phi(-(x, y)) = -\phi(x, y) = (R_1(x, y), -R_2(x, y))$, donc on peut réécrire $R_1(x, y) = p_1(x) / q_1(x)$ et $R_2(x, y) = p_2(x)y/q_2(x)$. On obtient bien la forme désirée. {\color{red}Il faut que je donne la formule de l'opposé d'un point sur une courbe.}
+\end{proof}
+
+\begin{rem}
+  Si deux fractions rationnelles en $x$ prennent les mêmes valeurs sur une infinité de points alors elles sont égales. Les isogénies sont définies sur $E(\overline{K})$ (les points de la courbe elliptique sur la clôture algébrique de $K$) qui est infini, donc l'écriture précédente est unique.
+\end{rem}
+
+
+\begin{deff}
+  Une isogénie est un morphisme non constant.
+\end{deff}
+
+Notons dès à présent qu'étant donné deux courbes elliptiques définies sur un corps $K$, il est a priori difficile de trouver une isogénie entre elles.
+
+\begin{thm}
+  Une isogénie est surjective.  
+\end{thm}
+
+\begin{proof}
+  C'est magique !
+\end{proof}
+
+\begin{prop}
+  Soit $E/K$ et soit $m\in\Z$. L'application $[m] : E \to E, P \mapsto mP$ est un endomorphisme de $E$ défini sur $K$. 
 \end{prop}
 
 \begin{deff}
-  Isogénie : morphisme non constant qui envoie $O$ sur $O$.
-\end{deff}
-
-\begin{prop}
-  Une isogénie est un morphisme de groupe.
-\end{prop}
-
-\begin{deff}
-  L'application $[m] : E \to E, P \mapsto mP$ est une isogénie. 
-\end{deff}
-
-\begin{deff}
-  $E[m] = \Ker([m])$
-\end{deff}
-
-\begin{deff}
-  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \left\{ P\in E(\overline{K}) \ \vert\  mP = O \right\}$.
+  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \Ker([m])= \left\{ P\in E(\overline{K}) \ \vert\  mP = O \right\}$.
 \end{deff}
 
 
 \begin{prop}
-  $[m]$ commute avec toute les isogénies
+  Le morphisme $[m]$ commute avec tous les morphismes. 
 \end{prop}
+
+\begin{proof}
+  Soit $\phi : E_1\to E_2$ un morphisme et $m\in\Z$. Soit $P\in E_1$. $(\phi \circ [m]_{E_1})(P) = \phi(P + \ldots + P) = \phi(P) + \ldots + \phi(P) = ([m]_{E_2} \circ \phi)(P)$.
+\end{proof}
 
 \begin{deff}
   Degré d'une isogénie. Soit $\phi : E_1 \to E_2$ une isogénie. La fonction $\phi^* : K(E_2) \to K(E_1)$ définie par $\phi^*(f) = f \circ \phi$ est une injection entre deux corps. On peut montrer que l'extension $K(E_1)/\phi^*(K(E_2))$ est finie (voir R. Hartstone, Algebraic Geometry...). On définit le degré de $\phi$ comme le degré de cette extension.
@@ -237,23 +294,6 @@ Le degré d'une extension finie $L/K$ est la dimension de $L$ en temps que $K$-e
 \end{proof}
 
 On cherche maintenant à avoir une forme canonique pour effectuer des calculs sur les isogénies, et pour pouvoir calculer plus facilement leur degré.
-
-\begin{prop}
-  Une isogénie $\phi$ peut toujours se mettre sous la forme $\phi(x, y) = (r_1(x), r_2(x)y)$ avec $r_1$ et $r_2$ des fonctions rationnelles (i.e. des quotients de polynômes en $x$).
-\end{prop}
-
-\begin{proof}
-  Soit $R(x, y)$ une fonction rationnelle. Puisque les points de $E$ vérifient $y^2 = x^3 + ax + b$, on peut éliminer les puissances de $y$ plus grande que $2$ au numérateur et au dénominateur de $R$. On peut donc supposer $R$ de la forme : $$R(x, y) = \frac{p_1(x) + p_2(x)y}{p_3(x)+p_4(x)y} = \frac{(p_1(x) + p_2(x)y)(p_3(x)-p_4(x)y)}{p_3(x)^2 - p_4(x)^2y^2} = \frac{q_1(x) +q_2(x)y}{q_3(x)} $$
- On a multiplié le dénominateur et le numérateur par la quantité conjuguée $(p_3-p_4y)$ et réutilisé l'équation de la courbe pour éliminer $y$ au dénominateur.
-
- L'isogénie $\phi$ peut se mettre sous la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ de la forme donnée ci-dessus. Puisque $\phi$ est un morphisme de groupes, 
- $(R_1(x, -y), R_2(x, -y)) = \phi(x, -y) = \phi(-(x, y)) = -\phi(x, y) = (R_1(x, y), -R_2(x, y))$, donc on peut réécrire $R_1(x, y) = p_1(x) / q_1(x)$ et $R_2(x, y) = p_2(x)y/q_2(x)$. On obtient bien la forme désirée. {\color{red}Il faut que je donne la formule de l'opposé d'un point sur une courbe.}
-\end{proof}
-
-\begin{rem}
-  Si deux fractions rationnelles en $x$ prennent les mêmes valeurs sur une infinité de points alors elles sont égales. Les isogénies sont définies sur $E(\overline{K})$ (les points de la courbe elliptique sur la clôture algébrique de $K$) qui est infini, donc l'écriture précédente est unique.
-\end{rem}
-
 La proposition suivante va nous permettre de lire le degré d'une isogénie sur son expression canonique définie précédemment.
 
 \begin{prop}
@@ -442,15 +482,6 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
    L'égalité suivante est vraie pour toute matrices $2\times 2$ : $\det(1-A) = (1-a)(1-d) - bc = 1 -a -d + ad -bc = 1 - \tr(A) + \det(A)$. Ainsi, en utilisant cette égalité et le lien entre le degré et le déterminant d'un endomorphisme on obtient bien $tr(\phi_l) = 1 + deg(\phi) - deg(1-\phi)$.   
 \end{proof}
 
-%\begin{prop}
-%  \label{degpi}
-%  Soit $E$ une courbe elliptique définie sur $\F_q$, et soit $\pi_q$ le morphisme de Frobenius $\pi_q : E \to E^{(q)}, (x, y) \mapsto (x^q, y^q)$. Alors $\pi_q$ est purement inséparable et $\deg(\pi_q) =q$.
-%\end{prop}
-%
-%\begin{proof}
-%  Silverman II.2.11.
-%\end{proof}
-
 \begin{prop}
   Soit $\phi:E_1\to E_2$ une isogénie séparable. Alors $\# \Ker(\phi) = \deg(\phi)$.  
 \end{prop}
@@ -486,7 +517,7 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
 
 \begin{proof}
 Soit $d$ un diviseur de $m$. 
-Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d’inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d’inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
+Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d'inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d'inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
 Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
 \end{proof}
 
