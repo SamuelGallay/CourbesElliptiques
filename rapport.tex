@@ -68,11 +68,20 @@
 
 \maketitle
 
+\tableofcontents
 
+\newpage
 
+\section{Introduction}
 
+Longue liste des choses non démontrées ici, en tout cas pour le moment.
+\begin{enumerate}
+  \item Tout ce qui touche de près ou de loin à la géométrie algébrique et au théorème de Riemann-Roch. Les définitions de genre et de dimension ne sont pas données. Le caractère lisse d'une variété n'est pas défini non plus.
+  \item L'associativité de la loi de groupe sur la courbe elliptique.
+  \item 
+\end{enumerate}
 
-\section{Courbes elliptiques}
+\section{Qu'est-ce qu'une courbe elliptique?}
 
 \subsection{Définitions}
 
@@ -179,7 +188,7 @@ Ce qui est plus difficile, c'est de montrer que toute courbe elliptique au sens 
 À partir de maintenant, lorsque l'on considérera une courbe elliptique $E$ définie sur $K$, ce que l'on notera $E/K$, cela signifiera que l'on s'est donné une équation $y^2 = x^3 + ax + b$, $a$ et $b$ étant des éléments de $K$ tels que $\Delta =-16(4a^3+ 27b^2)$ soit non nulle, et que l'on étudiera l'ensemble des solutions de cette équation dans $\ol K^2\cup \{\infty\}$ avec la convention que $\infty$ est solution de l'équation.
 
 
-\subsection{La loi de groupe d'une courbe elliptique}
+\subsection{Loi de groupe}
 
 Ce qui rend les courbes elliptiques intéressantes, notamment en cryptographie, c'est que l'on peut les munir d'une loi de groupe. Soit $E/K$ une courbe elliptique. Nous allons construire une loi sur $E$ notée $+$ telle que $(E, +, \infty)$ formera un groupe abélien.
 
@@ -198,10 +207,17 @@ Enfin si $P_1 = P_2$, on considère la tangente à $E$ passant par $P_1$. Pour t
 Dans ce cas particulier, on définit $P_1+P_1$ comme valant $\infty$.
 Si  $y_1 \neq  0$, $m$ est bien défini et on construit $P_1+P_1$ comme précédemment.
 
-Il est remarquable que la loi définie ci-dessus soit une loi de groupe. Le point $\infty$ est l'élément neutre par définition. Il est facile de voir que la loi est commutative. En effet, la droite passant par $P_1$ et $P_2$ est la même que la droite passant par $P_2$ et $P_1$. L'opposé de l'élément $(x_1, y_1)$ est l'élément $(x_1, -y_1)$. Le plus dur est de montrer l'associativité de cette loi. Il est possible de tout écrire à la main, mais il est aussi possible de procéder de façon plus élégante.
+Il est remarquable que la loi définie ci-dessus soit une loi de groupe. Le point $\infty$ est l'élément neutre par définition. Il est facile de voir que la loi est commutative. En effet, la droite passant par $P_1$ et $P_2$ est la même que la droite passant par $P_2$ et $P_1$.
+
+\begin{prop}
+  \label{opposé}
+L'opposé de l'élément $(x_1, y_1)$ est l'élément $(x_1, -y_1)$.
+\end{prop}
+
+Le plus dur est de montrer l'associativité de cette loi. Il est possible de tout écrire à la main, mais il est aussi possible de procéder de façon plus élégante.
 
 
-\subsection{Un premier protocole d'échange de clefs}
+\subsection{Le protocole Diffie-Hellman}
 
 
 Nous décrivons dans cette section le protocole d'échange de clefs de Diffie et Hellman. 
@@ -219,7 +235,9 @@ L'opération consistant à calculer $g^a$ en connaissant $a$ peut se faire en $O
 
 
 
-\subsection{Morphismes et isogénies}
+\section{Morphismes et isogénies}
+
+\subsection{Définitions}
 
 \begin{deff}
   Soient $E_1$ et $E_2$ deux courbes elliptiques définies sur $K$. Un morphisme $\phi : E_1\to  E_2$ est une application de la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ des fractions rationnelles en $x$ et $y$ qui envoie $\infty_{E_1}$ sur $\infty_{E_2}$.
@@ -232,6 +250,10 @@ L'opération consistant à calculer $g^a$ en connaissant $a$ peut se faire en $O
 \begin{thm}
   Soit $E_1/K$ et $E_2/K$ deux courbes elliptiques. Un morphisme $\phi : E_1\to  E_2$ défini sur $L$ une extension de $K$ (possiblement égale à $K$) induit un morphisme de groupe entre $E_1(L)$ et $E_2(L)$. 
 \end{thm}
+
+\begin{proof}
+  Admise. 
+\end{proof}
 
 Le théorème précédent permet de donner les définitions usuelles associées aux ensembles d'endomorphismes. Soit $E/K$, $E_1/K$ et $E_2/K$ trois courbes elliptiques définies sur $K$ et soit $L$ une extension de $K$.
 
@@ -255,8 +277,8 @@ Le théorème précédent permet de donner les définitions usuelles associées 
   Soit $R(x, y)$ une fraction rationnelle. Puisque les points de $E$ vérifient $y^2 = x^3 + ax + b$, on peut éliminer les puissances de $y$ plus grande que $2$ au numérateur et au dénominateur de $R$. On peut donc supposer $R$ de la forme : $$R(x, y) = \frac{p_1(x) + p_2(x)y}{p_3(x)+p_4(x)y} = \frac{(p_1(x) + p_2(x)y)(p_3(x)-p_4(x)y)}{p_3(x)^2 - p_4(x)^2y^2} = \frac{q_1(x) +q_2(x)y}{q_3(x)} $$
  On a multiplié le dénominateur et le numérateur par la quantité conjuguée $(p_3-p_4y)$ et réutilisé l'équation de la courbe pour éliminer $y$ au dénominateur.
 
- Le morphisme $\phi$ peut se mettre sous la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ de la forme donnée ci-dessus. Puisque $\phi$ est un morphisme de groupes, 
- $(R_1(x, -y), R_2(x, -y)) = \phi(x, -y) = \phi(-(x, y)) = -\phi(x, y) = (R_1(x, y), -R_2(x, y))$, donc on peut réécrire $R_1(x, y) = p_1(x) / q_1(x)$ et $R_2(x, y) = p_2(x)y/q_2(x)$. On obtient bien la forme désirée. {\color{red}Il faut que je donne la formule de l'opposé d'un point sur une courbe.}
+ Le morphisme $\phi$ peut se mettre sous la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ de la forme donnée ci-dessus. Puisque $\phi$ est un morphisme de groupes, en utilisant trois fois la proposition \ref{opposé}, on obtient
+ $(R_1(x, -y), R_2(x, -y)) = \phi(x, -y) = \phi(-(x, y)) = -\phi(x, y) = (R_1(x, y), -R_2(x, y))$. On peut donc réécrire $R_1(x, y) = p_1(x) / q_1(x)$ et $R_2(x, y) = p_2(x)y/q_2(x)$. On obtient bien la forme désirée.
 \end{proof}
 
 \begin{rem}
@@ -282,9 +304,7 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
   Soit $E/K$ et soit $m\in\Z$. L'application $[m] : E \to E, P \mapsto mP$ est un endomorphisme de $E$ défini sur $K$. 
 \end{prop}
 
-\begin{deff}
-  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \Ker([m])= \left\{ P\in E(\overline{K}) \ \vert\  mP = O \right\}$.
-\end{deff}
+
 
 
 \begin{prop}
@@ -295,6 +315,8 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
   Soit $\phi : E_1\to E_2$ un morphisme et $m\in\Z$. Soit $P\in E_1$. $(\phi \circ [m]_{E_1})(P) = \phi(P + \ldots + P) = \phi(P) + \ldots + \phi(P) = ([m]_{E_2} \circ \phi)(P)$.
 \end{proof}
 
+\subsection{Degré}
+
 \begin{deff}[Degré d'un morphisme]. 
   Soit $\phi : E_1 \to E_2$ une isogénie. La fonction $\phi^* : K(E_2) \to K(E_1)$ définie par $\phi^*(f) = f \circ \phi$ est une injection entre deux corps. On peut montrer que l'extension $K(E_1)/\phi^*(K(E_2))$ est finie (voir R. Hartstone, Algebraic Geometry). On définit le degré de $\phi$ comme le degré de cette extension.
   
@@ -302,10 +324,6 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
 \end{deff}
 
 Le degré d'une extension finie $L/K$ est la dimension de $L$ en temps que $K$-espace vectoriel et est noté $[L : K$].
-
-\begin{rem}
-  
-\end{rem}
 
 \begin{prop}
   Le degré est multiplicatif. Soient $\phi : E_1\to E_2$ et $\psi : E_2\to E_3$ deux morphisme. Alors $\deg(\psi \circ \phi) = \deg(\psi)\deg(\phi)$ 
@@ -327,35 +345,39 @@ La proposition suivante va nous permettre de lire le degré d'une isogénie sur 
   Admise. 
 \end{proof}
 
+\subsection{Séparabilité}
+
 Avec le degré, une autre propriété importante des isogénies est leur caractère séparable ou non.
 
 \begin{deff}
-  Une isogénie $\phi$ est dite séparable, inséparable, ou purement inséparable si c'est le cas de l'extension $K(E_1) / \phi^*(K(E_2))$.
+  Une isogénie $\phi$ est dite séparable si c'est le cas de l'extension $K(E_1) / \phi^*(K(E_2))$. Une isogénie qui n'est pas séparable est dite inséparable.
 \end{deff}
 
 On rappelle brièvement la notion de séparabilité pour une extension de corps. Une extension algébrique $L/K$ est dite séparable si pour tout $a\in L$, le polynôme minimal de $a$ à coefficients dans $K$ ne contient que des racines simples (dans $\overline{K}$). On dit qu'une extension est inséparable quand elle n'est pas séparable, c'est à dire quand il existe un élément dont le polynôme minimal sur $K$ n'est pas à racines simples dans $\overline{K}$. Les extensions purement inséparables sont un cas particulier d'extensions séparables où tous les éléments $a\in L \setminus K$ ont un polynôme qui n'est pas à racines simples.
 
 Un outil pour étudier la séparabilité d’une extension de corps est la notion de degré de séparabilité (ou
 degré séparable). Soit $L/K$ une extension algébrique. Le degré de séparabilité de $L/K$ noté  $[L : K]_s$ est défini
-formellement comme le nombre de prolongements à $L$ du morphisme d’inclusion de $K$ dans $K$. Les seules
-propriétés que nous allons utiliser sont les trois suivantes :
+formellement comme le nombre de prolongements à $L$ du morphisme d’inclusion de $K$ dans $K$. 
 
 \begin{prop}
- Le degré de séparabilité, comme le degré d’une extension, est multiplicatif : [M : K]s =
-[M : L]s [L : K]s.
+Les seules
+propriétés que nous allons utiliser sont les suivantes :
+  \begin{enumerate}
+    \item Le degré de séparabilité est multiplicatif : $[M : K]_s = [M : L]_s [L : K]_s$.
+    \item Pour une extension algébrique $L/K$, $[L : K]_s$ divise $[L : K]$. On note $[L:K]_i$ l'unique entier tel que $[L:K]_s[L:K]_i=[L:K]$. C'est le degré d'inséparabilité de l'extension. 
+    \item Le degré d'inséparabilité est multiplicatif.
+    \item L’extension L/K est séparable si et seulement si $[L : K]_s = [L : K]$ si et seulement si $[L:K]_i = 1$.
+    \item On dit que l'extension $L/K$ est purement inséparable si $[L:K]_s = 1$.
+    \item Une extension purement inséparable non triviale est inséparable.
+  \end{enumerate}
 \end{prop}
 
-\begin{prop}
-  Pour une extension algébrique L/K, [L : K]s divise [L : K]. De plus [L : K]s = [L : K] si
-et seulement si l’extension L/K est séparable.
-\end{prop}
 
-\begin{prop}
-  Une extension de corps algébrique  L/K non triviale (i.e. L= K) est purement inséparable si et seulement si son degré de séparabilité est égal à 1. Est-ce que c’est vrai ça ?
-\end{prop}
+\begin{deff}
+On définit alors le degré de séparabilité et d'inséparabilité $\deg_s(\phi)$ et $\deg_i(\phi)$ d’une isogénie $\phi : E_1 \to E_2$ comme les degré de séparabilité et d'inséparabilité de l’extension $K(E_1)/\phi^*(K(E_2 ))$.
+\end{deff}
 
 
-On définit alors le degré de séparabilité $\deg_s(\phi)$ d’une isogénie $\phi : E_1 \to E_2$ comme le degré de séparabilité de l’extension $K(E_1)/\phi^*(K(E_2 ))$.
 Ici encore, la forme canonique donnée aux isogénies précédemment permet de donner caractérisation plus
 simple de la séparabilité.
 
@@ -363,6 +385,12 @@ simple de la séparabilité.
   \label{caracsep}
   Une isogénie $\phi(x, y) = (r_1(x), r_2(x)y)$ est séparable si et seulement si $r_1'(x) \neq 0$.
 \end{prop}
+
+\begin{proof}
+  Admise.
+\end{proof}
+
+\subsection{Morphisme de Frobenius}
 
 Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plus important d'isogénie inséparable.
 
@@ -405,6 +433,8 @@ Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plu
   Cette expression est unique. Supposons que $\phi = \psi_a \circ \pi_p^{n_a} = \psi_b \circ \pi_p^{n_b}$ comme dans le corollaire précédent. Sans perte de généralité on peut supposer que $n_a \le n_b$. Alors $(\psi_a - \psi_b \circ \pi_p^{n_b - n_a}) \circ \pi_p^{n_a} = 0$, donc en utilisant la multiplicativité du degré et la convention $\deg(0) = 0$, on obtient $\psi_a = \psi_b \circ \pi_p^{n_b - n_a}$. Puisque $\psi_a$ est séparable, en utilisant la proposition $\ref{caracsep}$ on en déduit que $n_a = n_b$, et donc $\psi_a = \psi_b$.
 \end{rem}
 
+\subsection{Isogénie duale}
+
 \begin{thm}
   \label{existence_duale}
   Soit $\phi : E_1\to E_2$ une isogénie (non constante). Il existe une unique isogénie $\h\phi : E_2\to E_1$ telle que $\h\phi \circ \phi = [\deg\phi]$. Elle est appelée l'isogénie duale de $\phi$.
@@ -415,35 +445,56 @@ Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plu
 \end{proof}
 
 \begin{rem}
-  Dans le cas où $\phi = [0]$, on définit $\h\phi = [0]$. {\color{red} Il faut que je décide si j'autorise les isogénies à être constantes dans ma définition}.
+  Dans le cas où $\phi = [0]$, on définit $\h\phi = [0]$ et on étend ainsi le concept d'isogénie duale aux morphismes. .
 \end{rem}
 
 \begin{prop}
   \label{propriétés_duale}
-  Soit $\phi : E_1 \to E_2$ une isogénie et $\h\phi$ sa duale.  
+  Soit $\phi : E_1 \to E_2$ un morphisme.  
   \begin{enumerate}
     \item $\h\phi\circ\phi = [\deg{\phi}]$ sur $E_1$ et $\phi\circ\h\phi = [\deg{\phi}]$ sur $E_2$.
-    \item Soit $\lambda :E_2\to E_3$ une autre isogénie. Alors $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
-    \item Soit $\psi :E_1\to E_2$ une autre isogénie. Alors $\h{\phi+\psi} = \h\phi + \h\psi$.
+    \item Soit $\lambda :E_2\to E_3$ un autre morphisme. Alors $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
+    \item Soit $\psi :E_1\to E_2$ un autre morphisme. Alors $\h{\phi+\psi} = \h\phi + \h\psi$.
     \item Pour tout $m\in\Z$, $\h{[m]} = [m]$ et $\deg([m]) = m^2$.
     \item $\deg\h\phi = \deg\phi$ et $\h{\h\phi} = \phi$.
   \end{enumerate}
 \end{prop}
 
 \begin{proof}
-  On va admettre beaucoup de choses pour le moment.
+  Toutes ces propriétés sont triviales dans le cas ou les morphismes sont nuls. On ne considère dans cette démonstration que des isogénies.
   \begin{enumerate}
     \item Par le théorème \ref{existence_duale} la propriété $\h\phi\circ\phi = [\deg{\phi}]_{E_1}$ est la définition de l'isogénie duale. Pour la deuxième partie, on observe que $(\phi\circ\h\phi)\circ\phi = \phi\circ(\h\phi\circ\phi) = \phi\circ[\deg{\phi}]_{E_1} = [\deg{\phi}]_{E_2}\circ\phi$ et donc $\phi$ étant surjective, on obtient bien $\phi\circ\h\phi = [\deg{\phi}]_{E_2}$.
     \item En remarquant que $(\h\phi\circ\h\lambda)\circ(\lambda\circ\phi) = \h\phi\circ [\deg\lambda]_{E_2} \circ\phi = [\deg\lambda]_{E_1}\circ\h\phi\circ\phi = [\deg\lambda]_{E_1}\circ [\deg\phi]_{E_1} = [\deg(\lambda)\deg(\phi)] = [\deg(\lambda\circ\phi)]$ et en utilisant le théorème \ref{existence_duale}, on montre que $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
     \item Je ne le démontre pas car la démonstration est un peu technique.
-    \item Montrons d'abord par récurrence que pour $m\in\N$, $\h{[m]} = [m]$. Le cas $m=0$ est vrai par définition (voir la remarque précédente). Les cas $m = \pm 1$ se montrent par le théorème \ref{existence_duale} en sachant que puisque $[1](x, y) = (x, y)$ et $[-1](x, y) = (x, -y)$, on montre par la proposition \ref{caracdeg} que $\deg[-1] = \deg[1] = 1$. La propriété étant vraie à un certain rang $m$, le point $2$ montre l'hérédité : $\h{[m+1]} = \h{[m] + [1]} = \h{[m]} + \h{[1]} = [m] + [1] = [m+1]$ et $\h{[m-1]} = \h{[m] + [-1]} = \h{[m]} + \h{[-1]} = [m] + [-1] = [m-1]$.
+    \item Montrons d'abord par récurrence pour $m\in\N$ que $\h{[m]} = [m]$. Le cas $m=0$ est vrai par définition (voir la remarque précédente). Les cas $m = \pm 1$ se montrent par le théorème \ref{existence_duale} en sachant que puisque $[1](x, y) = (x, y)$ et $[-1](x, y) = (x, -y)$, on montre par la proposition \ref{caracdeg} que $\deg[-1] = \deg[1] = 1$. La propriété étant vraie à un certain rang $m$, le point $2$ montre l'hérédité : $\h{[m+1]} = \h{[m] + [1]} = \h{[m]} + \h{[1]} = [m] + [1] = [m+1]$ et $\h{[m-1]} = \h{[m] + [-1]} = \h{[m]} + \h{[-1]} = [m] + [-1] = [m-1]$.
       Enfin $[\deg [m]] = \h{[m]} \circ [m] = [m] \circ [m] = [m^2]$ montre la deuxième partie de l'assertion, le morphisme $[]:\Z\to \End_{E_1}$ étant injectif.
     \item Par le point précédent, $ (\deg\phi)^2=\deg([\deg\phi])=\deg(\h\phi\circ\phi) = (\deg\h\phi)(\deg\phi)$, donc $\deg\h\phi = \deg\phi$. Avec le point $1$, $\phi\circ\h\phi = [\deg\phi] = [\deg \h\phi]$, donc en réutilisant le théorème \ref{existence_duale} on obtient bien $\h{\h\phi} = \phi$.
   \end{enumerate}
 \end{proof}
 
-\section{Étude du graphe des isogénies}
+\subsection{Torsion}
+
+\begin{deff}
+  Soit $E/K$ une courbe elliptique. Pour $m\in\Z$, on définit la $m$-torsion de $E$ par $ E[m] = \Ker([m])= \left\{ P\in E(\overline{K}) \ \vert\  mP = O \right\}$.
+\end{deff}
+
+\begin{thm}
+  \label{structure_torsion}
+  Soit $E/\F_q$ une courbe elliptique. Soit $m\in \Z$ tel que $p$ ne divise pas $m$. Alors $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$
+\end{thm}
+
+\begin{proof}
+Soit $d$ un diviseur de $m$. 
+Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d'inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d'inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
+Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
+\end{proof}
+
+
+
+\section{Comptage de points}
 Le but de cette partie est de montrer que le graphes des isogénies entre $\overline{\F_p}$-isomorphismes de courbes elliptiques supersingulières définies sur $\F_{p^2}$ est connexe. Il me manque encore un bon nombre de définitions et de propriétés : introduire ce qu'est une isogénie, son degré, la notion d'isogénie duale, le pairing de Weil\ldots
+
+\subsection{Pairing de Weil, trace d'une isogénie}
 
 \begin{deff}
   Soit $\phi\in \End(E)$, et soit $l$ un nombre premier. $\phi$ induit un endomorphisme $\phi_l : E[l] \to E[l]$. Si $l\neq p$, $\phi_l$ est un endomorphisme du $\Z/l\Z$-espace vectoriel de dimension $2$ $E[l]$. 
@@ -504,6 +555,8 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
    L'égalité suivante est vraie pour toute matrices $2\times 2$ : $\det(1-A) = (1-a)(1-d) - bc = 1 -a -d + ad -bc = 1 - \tr(A) + \det(A)$. Ainsi, en utilisant cette égalité et le lien entre le degré et le déterminant d'un endomorphisme on obtient bien $tr(\phi_l) = 1 + deg(\phi) - deg(1-\phi)$.   
 \end{proof}
 
+\subsection{Trace du mophisme de Frobenius}
+
 \begin{prop}
   Soit $\phi:E_1\to E_2$ une isogénie séparable. Alors $\# \Ker(\phi) = \deg(\phi)$.  
 \end{prop}
@@ -532,19 +585,6 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
   En utilisant \ref{degpi} et \ref{cardpi}, $t$ se réécrit $t = 1 + \deg(\pi_q) - \deg(1-\pi_q)$. On reconnait l'expression de la trace de $\pi_q$ donnée en \ref{dettr}, et donc $t = \tr(\pi_q)$. Soit $\pi_{q, l}$ l'endomorphisme induit par $\pi_q$ sur $E[l]$. Le polynôme caractéristique de $\phi_l$ est $X^2 -\tr(\pi_{q,l}) X + \det(\pi_{q, l})$, donc $\pi_{q,l}^2 - t\pi_{q,l}+q = 0$. En appliquant une dernière fois \ref{dettr}, on obtient $\deg(\pi_{q}^2 - t\pi_{q}+q ) = \det (\pi_{q,l}^2 - t\pi_{q,l}+q ) = \det(0) = 0$, et donc par définition du degré on obtient l'égalité souhaitée.
 \end{proof}
 
-\begin{thm}
-  \label{structure_torsion}
-  Soit $E/\F_q$ une courbe elliptique. Soit $m\in \Z$ tel que $p$ ne divise pas $m$. Alors $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$
-\end{thm}
-
-\begin{proof}
-Soit $d$ un diviseur de $m$. 
-Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d'inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d'inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
-Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
-\end{proof}
-
-
-
 \begin{lem}
   Soit $A$ une matrice $2\times 2$ à coefficients dans un corps $K$. Pour tout $n\in\N$, $\tr(A^{n+2}) = \tr(A)\tr(A^{n+1}) - \det(A)\tr(A^n)$.
 \end{lem}
@@ -570,44 +610,7 @@ Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien
   Cette égalité étant vraie pour une infinité d'entiers $l$, on obtient $\tr\phi^{n+2} =  \tr(\phi)\tr(\phi^{n+1})-\deg(\phi)\tr(\phi^n)$. En appliquant cette égalité à $\phi = \pi_q$ et sachant que $\deg(\pi_q)=q$, on obtient bien $t_{n+2} = t_1t_{n+1}-qt_n$. 
 
 \end{proof}
-
-\begin{deff}
-  $E$ est dite supersingulière si $E[p]$ est réduit à $O$. 
-\end{deff}
-
-\begin{prop}
-  \label{pihatsep}
-  Soit $E/\F_q$ une courbe elliptique. La courbe $E$ est supersingulière si et seulement si $\widehat{\pi_q}$ est (purement) inséparable.
-\end{prop}
-
-\begin{proof}
-  Notons $q = p^r$. 
-
-  Supposons que $E/\F_q$ soit supersingulière, c'est à dire que $E[p] = \{0\}$. Alors $1 = \#E[p] = \deg_s[p] = \deg_s(\h{\pi_{p}} \circ \pi_{p}) = \deg_s(\h{\pi_{p}})$. Ainsi $\deg_s(\h{\pi_{q}}) =  \deg_s(\h{\pi_{p}})^r= 1$, donc $\h{\pi_{p^r}}$ est purement inséparable.
-
-  Supposons que $E$ ne soit pas supersingulière et montrons que $\h{\pi_{q}}$ est séparable. Puisque $E[p] \neq \{0\}$, $p$ divise $\#E[p] = \deg_s(\h{\pi_p})$. Or $\deg_s(\h{\pi_p})$ divise $\deg(\h{\pi_p}) = \deg({\pi_p}) = p$. Donc $\deg_s(\h{\pi_p}) = \deg(\h{\pi_p}) =p$, ce qui montre que $\h{\pi_p}$ est séparable, et donc que $\h{\pi_q}$ est séparable.
-\end{proof}
-
-\begin{prop}
-  \label{pimodp}
-  $E/\F_q$ est supersingulière si et seulement si $\tr(\pi_q) \equiv 0\ [p]$. 
-\end{prop}
-
-\begin{proof}
-  Appliquons le théorème \ref{récurrence} : 
-  notons $t_n = \tr(\pi_{q^n})$ 
-  et alors pour tout $n\in\N$, 
-  $t_{n+2} = t_1 t_{n+1} -qt_n$.
-  En raisonnant modulo $p$, on obtient $t_{n+2} \equiv t_1 t_{n+1}\ [p]$, donc $t_n \equiv t_1^n\ [p]$. 
-  De plus, $\#E(\F_{q^n}) = q^n + 1 - \tr(\pi_{q^n}) \equiv 1 - t_n\ [p]$.
-
-Supposons $t_1 = \tr(\pi_q) \equiv 0\ [p]$. 
-Alors $\#E(\F_{q^n}) = 1 - t_1^n \equiv 1\ [p]$ pour tout $n \ge 1$, donc par le théorème de Lagrange, $E(\F_{q^n})$ ne contient pas d’éléments d’ordre $p$, et donc $E[p] = \{0\}$.
-
-Supposons $t_1 = \tr(\pi_q) \not\equiv 0\ [p]$. 
-Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]$. Par le théorème de Cauchy, $E(\F_q^{p-1})$ contient un élément d’ordre $p$, et donc $E[p] \neq  \{0\}$.
-\end{proof}
-
+\subsection{Borne de Hasse}
 
 \begin{deff}[Forme quadratique]
   Soit $G$ un groupe abélien et $d:G\to \Z$. On dit que $d$ est une forme quadratique si pour tout $g \in G$, $d(g) = d(-g)$ et si l'application $G\times G \to \mathbb R$, définie par  $\langle g, h\rangle_d = \frac{1}{2}(d(g+h) - d(g) -d(h))$ est bilinéaire.
@@ -647,6 +650,47 @@ Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]
   Appliquons l'inégalité de Cauchy-Schwarz (lemme \ref{Cauchy-Schwarz})  la forme quadratique définie positive $\deg : \End E \to \Z$ (proposition \ref{degré_quadratique}). Pour $\phi, \psi\in \End E$, $|\deg(\phi+\psi) - \deg\phi -\deg\psi| \le 2\sqrt{(\deg\phi)(\deg\psi)}$. Utilisons cette inégalité avec $\phi = [1]$ et $\psi = -\pi_q$. On sait déjà que $\deg[1] = 1$ (remarque \ref{degpi}) et $\deg(-\pi_q) = q$ (propriété \ref{propriétés_duale}). 
   Par le lemme \ref{cardpi}, on sait que $\#E(\F_q) = \deg([1] - \pi_q)$, donc finalement $|\#E(\F_q)-q-1| \le 2\sqrt{q}$.
 \end{proof}
+
+\section{Courbes supersingulières}
+
+\begin{deff}
+  $E$ est dite supersingulière si $E[p]$ est réduit à $O$. 
+\end{deff}
+
+\begin{prop}
+  \label{pihatsep}
+  Soit $E/\F_q$ une courbe elliptique. La courbe $E$ est supersingulière si et seulement si $\widehat{\pi_q}$ est (purement) inséparable.
+\end{prop}
+
+\begin{proof}
+  Notons $q = p^r$. 
+
+  Supposons que $E/\F_q$ soit supersingulière, c'est à dire que $E[p] = \{0\}$. Alors $1 = \#E[p] = \deg_s[p] = \deg_s(\h{\pi_{p}} \circ \pi_{p}) = \deg_s(\h{\pi_{p}})$. Ainsi $\deg_s(\h{\pi_{q}}) =  \deg_s(\h{\pi_{p}})^r= 1$, donc $\h{\pi_{p^r}}$ est purement inséparable.
+
+  Supposons que $E$ ne soit pas supersingulière et montrons que $\h{\pi_{q}}$ est séparable. Puisque $E[p] \neq \{0\}$, $p$ divise $\#E[p] = \deg_s(\h{\pi_p})$. Or $\deg_s(\h{\pi_p})$ divise $\deg(\h{\pi_p}) = \deg({\pi_p}) = p$. Donc $\deg_s(\h{\pi_p}) = \deg(\h{\pi_p}) =p$, ce qui montre que $\h{\pi_p}$ est séparable, et donc que $\h{\pi_q}$ est séparable.
+\end{proof}
+
+\begin{prop}
+  \label{pimodp}
+  $E/\F_q$ est supersingulière si et seulement si $\tr(\pi_q) \equiv 0\ [p]$. 
+\end{prop}
+
+\begin{proof}
+  Appliquons le théorème \ref{récurrence} : 
+  notons $t_n = \tr(\pi_{q^n})$ 
+  et alors pour tout $n\in\N$, 
+  $t_{n+2} = t_1 t_{n+1} -qt_n$.
+  En raisonnant modulo $p$, on obtient $t_{n+2} \equiv t_1 t_{n+1}\ [p]$, donc $t_n \equiv t_1^n\ [p]$. 
+  De plus, $\#E(\F_{q^n}) = q^n + 1 - \tr(\pi_{q^n}) \equiv 1 - t_n\ [p]$.
+
+Supposons $t_1 = \tr(\pi_q) \equiv 0\ [p]$. 
+Alors $\#E(\F_{q^n}) = 1 - t_1^n \equiv 1\ [p]$ pour tout $n \ge 1$, donc par le théorème de Lagrange, $E(\F_{q^n})$ ne contient pas d’éléments d’ordre $p$, et donc $E[p] = \{0\}$.
+
+Supposons $t_1 = \tr(\pi_q) \not\equiv 0\ [p]$. 
+Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]$. Par le théorème de Cauchy, $E(\F_q^{p-1})$ contient un élément d’ordre $p$, et donc $E[p] \neq  \{0\}$.
+\end{proof}
+
+
 
 \begin{prop}
   Toute courbe elliptique $E/\overline{\F_p}$ a son $j$-invariant dans $\F_{p^2}$, donc une telle courbe est $\overline{\F_p}$-isomorphe à une courbe définie sur $\F_{p^2}$. 
