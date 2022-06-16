@@ -203,6 +203,22 @@ Il est remarquable que la loi définie ci-dessus soit une loi de groupe. Le poin
 
 \subsection{Un premier protocole d'échange de clefs}
 
+
+Nous décrivons dans cette section le protocole d'échange de clefs de Diffie et Hellman. 
+Soit $G = \langle g \rangle$ un groupe monogène supposé connu de tous. On suppose que le générateur $g$ ainsi que l'ordre $n$ du groupe sont publics.
+
+Deux individus Alice et Bob cherchent à partager un élément du groupe $G$ sans qu'un espion Eve capable d'écouter toutes leurs communications ne puisse l'identifier. Voici les étapes suivies par Alice et Bob :
+\begin{enumerate}
+  \item Alice et Bob choisissent chacun un entier compris entre $1$ et $n-1$ qu'ils gardent secret. Notons $a$ l'entier d'Alice et $b$ celui de Bob.
+  \item Alice calcule $g^a$ et l'envoie à Bob. Bob calcule $g^b$ et l'envoie à Alice.
+  \item Alice calcule $(g^b)^a$ connaissant $a$ et $g^b$. Bob calcule $(g^a)^b$ connaissant $b$ et $g^a$.
+\end{enumerate}
+Puisque $(g^b)^a = g^{ab} = (g^a)^b$, Alice et Bob partagent un secret commun. Ève ayant écouté toutes les communications connait $g$, $n$, $g^a$ et $g^b$. Évidemment, si Ève parvient à retrouver $a$ ou $b$, elle peut retrouver $g^{ab}$. 
+
+L'opération consistant à calculer $g^a$ en connaissant $a$ peut se faire en $O(\log a) = O(\log n)$ opérations dans le groupe par l'algorithme d'exponentiation rapide. Le problème inverse consistant à chercher $a$ en connaissant $g^a$ s'appelle le problème du logarithme discret. Sur un groupe générique, c'est à dire sans information particulière sur le groupe, les meilleurs algorithmes sont de complexité $O(\sqrt{n})$ : voir l'algorithme $\rho$ de Pollard par exemple.
+
+
+
 \subsection{Morphismes et isogénies}
 
 \begin{deff}
@@ -279,18 +295,24 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
   Soit $\phi : E_1\to E_2$ un morphisme et $m\in\Z$. Soit $P\in E_1$. $(\phi \circ [m]_{E_1})(P) = \phi(P + \ldots + P) = \phi(P) + \ldots + \phi(P) = ([m]_{E_2} \circ \phi)(P)$.
 \end{proof}
 
-\begin{deff}
-  Degré d'une isogénie. Soit $\phi : E_1 \to E_2$ une isogénie. La fonction $\phi^* : K(E_2) \to K(E_1)$ définie par $\phi^*(f) = f \circ \phi$ est une injection entre deux corps. On peut montrer que l'extension $K(E_1)/\phi^*(K(E_2))$ est finie (voir R. Hartstone, Algebraic Geometry...). On définit le degré de $\phi$ comme le degré de cette extension.
+\begin{deff}[Degré d'un morphisme]. 
+  Soit $\phi : E_1 \to E_2$ une isogénie. La fonction $\phi^* : K(E_2) \to K(E_1)$ définie par $\phi^*(f) = f \circ \phi$ est une injection entre deux corps. On peut montrer que l'extension $K(E_1)/\phi^*(K(E_2))$ est finie (voir R. Hartstone, Algebraic Geometry). On définit le degré de $\phi$ comme le degré de cette extension.
+  
+  Par convention, on décrète que le degré du morphisme $[0]$ vaut $0$.
 \end{deff}
 
 Le degré d'une extension finie $L/K$ est la dimension de $L$ en temps que $K$-espace vectoriel et est noté $[L : K$].
 
+\begin{rem}
+  
+\end{rem}
+
 \begin{prop}
-  Le degré est multiplicatif. Soient $\phi : E_1\to E_2$ et $\psi : E_2\to E_3$ deux isogénies. Alors $\deg(\psi \circ \phi) = \deg(\psi)\deg(\phi)$ 
+  Le degré est multiplicatif. Soient $\phi : E_1\to E_2$ et $\psi : E_2\to E_3$ deux morphisme. Alors $\deg(\psi \circ \phi) = \deg(\psi)\deg(\phi)$ 
 \end{prop}
 
 \begin{proof}
-  Cela vient directement de la multiplicativité du degré d'une extension de corps : $\deg(\psi \circ \phi) = [K(E_3) :K(E_1)] = [K(E_3):K(E_2)][K(E_2):K(E_1)] = \deg(\psi)\deg(\phi)$. La multiplicativité du degré d'extensions finies peut se faire de façon élémentaire en considérant des bases $(e_i)_i$ et $(f_j)_j$ des deux extensions et en montrant que la famille $(e_if_j)_{ij}$ forme une base.
+  Le cas où $\phi$ ou $\psi$ est nul est trivial. Dans le cas ou $\phi$ et $\psi$ sont des isogénies, cela vient directement de la multiplicativité du degré d'une extension de corps : $\deg(\psi \circ \phi) = [K(E_3) :K(E_1)] = [K(E_3):K(E_2)][K(E_2):K(E_1)] = \deg(\psi)\deg(\phi)$. La preuve de la multiplicativité du degré d'extensions finies peut se faire de façon élémentaire en considérant des bases $(e_i)_i$ du $K(E_1)$-espace vectoriel $K(E_2)$ et $(f_j)_j$ du $K(E_2)$-espace vectoriel $K(E_3)$ et en montrant que la famille $(e_if_j)_{ij}$ forme une base du $K(E_1)$-espace vectoriel $K(E_3)$.
 \end{proof}
 
 On cherche maintenant à avoir une forme canonique pour effectuer des calculs sur les isogénies, et pour pouvoir calculer plus facilement leur degré.
@@ -414,8 +436,8 @@ Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plu
     \item Par le théorème \ref{existence_duale} la propriété $\h\phi\circ\phi = [\deg{\phi}]_{E_1}$ est la définition de l'isogénie duale. Pour la deuxième partie, on observe que $(\phi\circ\h\phi)\circ\phi = \phi\circ(\h\phi\circ\phi) = \phi\circ[\deg{\phi}]_{E_1} = [\deg{\phi}]_{E_2}\circ\phi$ et donc $\phi$ étant surjective, on obtient bien $\phi\circ\h\phi = [\deg{\phi}]_{E_2}$.
     \item En remarquant que $(\h\phi\circ\h\lambda)\circ(\lambda\circ\phi) = \h\phi\circ [\deg\lambda]_{E_2} \circ\phi = [\deg\lambda]_{E_1}\circ\h\phi\circ\phi = [\deg\lambda]_{E_1}\circ [\deg\phi]_{E_1} = [\deg(\lambda)\deg(\phi)] = [\deg(\lambda\circ\phi)]$ et en utilisant le théorème \ref{existence_duale}, on montre que $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
     \item Je ne le démontre pas car la démonstration est un peu technique.
-    \item {\color{blue} Il me manque $\deg[-1] = \deg[1] = 1$} Montrons d'abord par récurrence que pour $m\in\N$, $\h{[m]} = [m]$. Le cas $m=0$ est vrai par définition (voir la remarque précédente), et le cas où $m=1$ (i.e. $[m] = \id$) est évident par le théorème \ref{existence_duale}. La propriété étant vraie à un certain rang $m$, le point $2$ montre l'hérédité : $\h{[m+1]} = \h{[m] + [1]} = \h{[m]} + \h{[1]} = [m] + [1] = [m+1]$. Pour les valeurs de $m$ négatives, on commence par montrer que $\h{[-1]} = [-1]$ parce que $[-1] \circ [-1] = [1]$, puis on procède par récurrence pour les autres valeurs.
-      Enfin $[\deg [m]] = \h{[m]} \circ [m] = [m] \circ [m] = [m^2]$ montre la deuxième partie de l'assertion.
+    \item Montrons d'abord par récurrence que pour $m\in\N$, $\h{[m]} = [m]$. Le cas $m=0$ est vrai par définition (voir la remarque précédente). Les cas $m = \pm 1$ se montrent par le théorème \ref{existence_duale} en sachant que puisque $[1](x, y) = (x, y)$ et $[-1](x, y) = (x, -y)$, on montre par la proposition \ref{caracdeg} que $\deg[-1] = \deg[1] = 1$. La propriété étant vraie à un certain rang $m$, le point $2$ montre l'hérédité : $\h{[m+1]} = \h{[m] + [1]} = \h{[m]} + \h{[1]} = [m] + [1] = [m+1]$ et $\h{[m-1]} = \h{[m] + [-1]} = \h{[m]} + \h{[-1]} = [m] + [-1] = [m-1]$.
+      Enfin $[\deg [m]] = \h{[m]} \circ [m] = [m] \circ [m] = [m^2]$ montre la deuxième partie de l'assertion, le morphisme $[]:\Z\to \End_{E_1}$ étant injectif.
     \item Par le point précédent, $ (\deg\phi)^2=\deg([\deg\phi])=\deg(\h\phi\circ\phi) = (\deg\h\phi)(\deg\phi)$, donc $\deg\h\phi = \deg\phi$. Avec le point $1$, $\phi\circ\h\phi = [\deg\phi] = [\deg \h\phi]$, donc en réutilisant le théorème \ref{existence_duale} on obtient bien $\h{\h\phi} = \phi$.
   \end{enumerate}
 \end{proof}
@@ -496,7 +518,7 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
 \end{lem}
 
 \begin{proof}
-  L'expression canonique du morphisme $1-\pi_q$ est $(1-\pi_q)(x, y) = (x-x^q, y-y^q)$. La dérivée par rapport à $x$ de la première composante est constante égale à $1$ et est donc non nulle. Par les propriétés \ref{caracsep} et \ref{caracdeg} on montre que $\deg(1-\pi_q) = q$ {\color{red} (Alerte ! Ce que je viens d'écrire doit être faux, mais je ne vois pas encore pourquoi !)} et que $1-\pi_q$ est séparable.
+  L'expression canonique du morphisme $1-\pi_q$ est $(1-\pi_q)(x, y) = (x-x^q, y-y^q)$. La dérivée par rapport à $x$ de la première composante est constante égale à $1$ et est donc non nulle. Par les propriétés \ref{caracsep} que $1-\pi_q$ est séparable.
 
   Puisque $1-\pi_q$ est séparable, par la proposition précédente $\deg(1-\pi_q) = \# \Ker(1-\pi_q)$. Or $\Ker(1-\pi_q) = \{(x, y) \in E(\overline{\F_p}) : (x, y) = (x^q, y^q) \} = E(\F_q)$. Ainsi $\# E(\F_q) = \deg(1-\pi_q)$.
 \end{proof}
@@ -587,13 +609,43 @@ Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]
 \end{proof}
 
 
-\begin{thm}[Hasse]
+\begin{deff}[Forme quadratique]
+  Soit $G$ un groupe abélien et $d:G\to \Z$. On dit que $d$ est une forme quadratique si pour tout $g \in G$, $d(g) = d(-g)$ et si l'application $G\times G \to \mathbb R$, définie par  $\langle g, h\rangle_d = \frac{1}{2}(d(g+h) - d(g) -d(h))$ est bilinéaire.
+
+  Si de plus $d(g) = 0$ si et seulement si $g=0$, on dit que $d$ est définie. Si $d(g) \ge 0$ pour tout $g\in G$, on dit que $d$ est positive.
+\end{deff}
+
+\begin{rem}
+  Soit $g, h\in G$ et $n\in \Z$. On remarque que $\langle g, -g\rangle_d = \frac{1}{2}(d(g + (-g)) - d(g) -d(-g)) =\frac{1}{2}( d(0) - d(g) -d(g)) = -d(g)$, donc $d(g) = -\langle g, -g\rangle_d = \langle g, g\rangle_d$. On remarque aussi que par définition $\langle\cdot,\cdot\rangle_d$ est symétrique. Ainsi on peut développer les formes quadratiques de façon usuelle : $d(g+h) =  d(g) + 2\langle g, h\rangle_d + d(h)$ et $d(ng) = n^2d(g)$.
+\end{rem}
+
+\begin{lem}[Inégalité de Cauchy-Schwarz]
+  \label{Cauchy-Schwarz}
+  Soit $G$ un groupe abélien. Et $d:G\to \mathbb Z$ une forme quadratique définie positive. Alors $|d(g+h) - d(g) -d(h)|\le 2\sqrt{d(g)d(h)}$ pour tout $g, h\in G$.  
+\end{lem}
+
+\begin{proof}
+    Soit $g, h\in G$. On peut supposer $g\neq 0$, l'inégalité dans le cas $g=0$ étant triviale. Puisque $d$ est positive, pour tout $m, n\in \Z$ on a $0 \le d(mg + nh) = m^2d(g) + 2mn\langle g, h\rangle_d + n^2d(h)$. En particulier choisissons $m = -\langle g, h\rangle_d$ et $n=d(g)$. On obtient $0 \le  \langle g, h\rangle_d^2d(g) -2d(g)\langle g, h\rangle_d^2 + d(g)^2d(h) = d(g)(-\langle g, h\rangle_d^2 + d(g)d(h))$. Ainsi, puisque $g\neq 0$, $d(g)\neq 0$ et donc $\langle g, h\rangle_d^2 \le d(g)d(h)$. On en déduit directement le résultat énoncé.
+  \end{proof}
+
+
+\begin{prop}
+  \label{degré_quadratique}
+  Soit $E$ une courbe elliptique. L'application $\deg : \End(E) \to \mathbb N$ est une forme quadratique.
+\end{prop}
+
+\begin{proof}
+  On remarque premièrement que par définition, le degré est défini positif. Soit $\phi$ un endomorphisme de $E$ non constant. On remarque que $(-\phi)^*K(E) = \phi^*K(E)$, (on utilise le fait que $K(E)$ est un corps, et que $[-1]$ est un endomorphisme) donc $\deg(-\phi) = \deg(\phi)$. Il ne reste plus qu'à montrer la bilinéarité de $\langle \phi, \psi\rangle = \frac{1}{2}(\deg(\phi+\psi) - \deg(\phi) -\deg(\psi))$. On utilise pour cela le morphisme d'anneaux injectif $[\cdot] :\Z\to \End E$. En remarquant que $[\langle \phi, \psi\rangle] = \h{(\phi + \psi)}(\phi + \psi) - \h\phi\phi -\h\psi\psi =  (\h\phi + \h\psi)(\phi + \psi) - \h\phi\phi -\h\psi\psi = \h\phi\psi + \h\psi\phi$, on voit clairement que $\langle\cdot,\cdot\rangle$ est bilinéaire.
+\end{proof}
+
+\begin{thm}[Borne de Hasse]
   \label{hasse}
-  Soit $E$ une courbe elliptique définie sur $\F_q$. Posons $t = \tr(\pi_q) = \# E(\F_q) - q -1$. Alors $|t| \le 2\sqrt{q}$.
+  Soit $E$ une courbe elliptique définie sur $\F_q$. Alors $|\#E(\F_q) - q -1|\le 2\sqrt{q}$.
 \end{thm}
 
 \begin{proof}
-  Cauchy-Schwarz, voir Silverman V.1.1.  
+  Appliquons l'inégalité de Cauchy-Schwarz (lemme \ref{Cauchy-Schwarz})  la forme quadratique définie positive $\deg : \End E \to \Z$ (proposition \ref{degré_quadratique}). Pour $\phi, \psi\in \End E$, $|\deg(\phi+\psi) - \deg\phi -\deg\psi| \le 2\sqrt{(\deg\phi)(\deg\psi)}$. Utilisons cette inégalité avec $\phi = [1]$ et $\psi = -\pi_q$. On sait déjà que $\deg[1] = 1$ (remarque \ref{degpi}) et $\deg(-\pi_q) = q$ (propriété \ref{propriétés_duale}). 
+  Par le lemme \ref{cardpi}, on sait que $\#E(\F_q) = \deg([1] - \pi_q)$, donc finalement $|\#E(\F_q)-q-1| \le 2\sqrt{q}$.
 \end{proof}
 
 \begin{prop}
@@ -619,12 +671,13 @@ Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]
   Supposons que $\tr(\pi_{p^2}) = 2p$. Tous les $\overline{\F_p}$-isomorphismes entre courbes elliptiques préservant la forme de Weierstrass réduite sont de la forme 
       $\varphi : E \to E', (x, y) \mapsto (u^2 x, u^3 y)$ avec $u\in\overline{\F_p}$. Notons $E : y^2 = x^3 + ax +b$. L'équation $E'$ s'écrit donc $E' : u^6 y^2 = u^6 x^3 + u^2 a x + b$, (soit $E' : y^2 = x^3 + u^{-4} a x + u^{-6}b$ si l'on souhaite une forme réduite). On peut choisir $u^2\in\F_{p^2}$ avec $u\notin \F_{p^2}$, et alors $E'$ est définie sur $\F_{p^2}$, mais ne possède pas le même nombre de points dans $\F_{p^2}$ que $E$.
 
-      Comptons le nombre de points de $\#E(\F_{p^2}) + \#E'(\F_{p^2})$. $E'$ se réécrit encore $E' : u^2 (u^2 y)^2 = (u^2 x)^3 + a (u^2 x) + b$. Puisque $u^2\in \F_{p^2}^\times$, $\#E'(\F_{p^2}) = \#E''(\F_{p^2})$ avec $E'' : u^2 y^2 = x^3 + a x + b$, soit encore $E'' : y^2 = u^{-2} (x^3 + ax + b)$.
+Comptons le nombre de points de $\#E(\F_{p^2}) + \#E'(\F_{p^2})$. $E'$ se réécrit encore $E' : u^2 (u^2 y)^2 = (u^2 x)^3 + a (u^2 x) + b$. Puisque $u^2\in \F_{p^2}^\times$, $\#E'(\F_{p^2}) = \#E''(\F_{p^2})$ avec $E'' : u^2 y^2 = x^3 + a x + b$, soit encore $E'' : y^2 = u^{-2} (x^3 + ax + b)$.
       La multiplication par $u^2$ est une bijection entre les carrés de $\F_{p^2}^\times$ et les éléments qui ne sont pas des carrés de $\F_{p^2}^\times$. 
-      Ainsi, si $x^3 + ax + b$ est un carré non nul de $\F_{p^2}$, $E$ possède deux solutions pour un tel $x$ et $E'$ aucune. Si ce n'est pas un carré, $E$ ne possède pas de solutions et $E'$ en possède deux. Enfin si cette quantité est nulle, $E$ et $E'$ possèdent chacune une solution. En n'oubliant que le point à l'infini appartient aussi aux deux courbes, on obtient :
-      $ \#E(\F_{p^2}) + \#E'(\F_{p^2}) = (p^2 - 1) + (p^2 -1) + 2 + 2 = 2(p^2 + 1)$. Ainsi $\#E'(\F_{p^2}) = p^2 + 1 + \tr(\pi_{p^2}) = p^2 + 1 + 2p$. 
-      {\color{red} (Il faut que $\F_{p^2} \to \F_{p^2} : x \mapsto x^3 + ax +b$ soit bijective pour que cette démonstration soit correcte, ce qui est vrai si $3$ ne divise pas $p^2 - 1=(p+1)(p-1)$, ça semble pas bien parti... En fait c'est bon, j'ai compris, il faut juste que je le rédige mieux.)}
-
+      Ainsi, si $x^3 + ax + b$ est un carré non nul de $\F_{p^2}$, $E$ possède deux solutions pour un tel $x$ et $E''$ aucune. Si ce n'est pas un carré, $E$ ne possède pas de solutions et $E''$ en possède deux. Enfin si cette quantité est nulle, $E$ et $E''$ possèdent chacune une solution. 
+Dans tous les cas, pour une abscisse $x$ fixée, $E$ et $E''$ possèdent au total $2$ points possédant une telle abscisse.
+En n'oubliant que le point à l'infini appartient aussi aux deux courbes, on obtient :
+      $ \#E(\F_{p^2}) + \#E'(\F_{p^2}) = 2p^2  + 2 = 2(p^2 + 1)$. Ainsi $\#E'(\F_{p^2}) = p^2 + 1 + \tr(\pi_{p^2}) = p^2 + 1 + 2p$. 
+     
 \vspace{1em}
 Pour traiter les derniers cas nous serons amenés à étudier les automorphismes de $E$ (voir le théorème III.10.1 dans Silverman). Puisque $E$ est supersingulière, $\widehat{\pi_p} : E^{(p)} \to E$ est purement inséparable donc se factorise en  $\widehat{\pi_p} = \psi \circ \pi_p$. Sachant que $\deg(\widehat{\pi_p}) = \deg(\pi_p) = p^2$, $\psi$ est de degré $1$ et donc est un isomorphisme. De plus $\widehat{\pi_p}\pi_p = [p]$, et $E^{(p^2)} = E$, le diagramme suivant est commutatif: 
 
@@ -649,7 +702,8 @@ Si $\psi$ est d'ordre $2$, $\pi_{p^2}^2 = (\psi^{-1} \circ [p])^2 = \psi^{-2} \c
 
 \begin{thm}[Tate]
   \label{tate}
-  Étant donné deux courbes elliptiques $E_1$ et $E_2$ (définies sur $\F_{q}$ ou $\overline{\F_p}$ ?), il existe une isogénie (non constante par définition) $\varphi : E_1 \to E_2$ définie sur $\F_q$ si et seulement si $\# E_1(\F_q) = \# E_2(\F_q)$. \end{thm}
+Étant donné deux courbes elliptiques $E_1$ et $E_2$ définies sur $\F_{q}$, et soit $n\in\N^*$. Il existe une isogénie (non constante par définition) $\varphi : E_1 \to E_2$ définie sur $\F_{q^n}$ si et seulement si $\# E_1(\F_{q^n}) = \# E_2(\F_{q^n})$. 
+\end{thm}
 
 \begin{proof}
   Admise.
@@ -766,8 +820,6 @@ Ainsi $E$ est supersingulière.
 
 On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure des groupes de torsion dans la clôture algébrique de $\F_{p}$.
 
-Le théorème précédent nous permet d'identifier la structure du groupe abélien $E_0(\F_{p^2})$.
-
 \begin{prop}
   $$E_0(\F_{p^2}) \simeq \Z/(p+1)\Z \times \Z/(p+1)\Z$$
 \end{prop}
@@ -833,6 +885,7 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
 
 
 \section{Cryptographie}
+
 
 
 \end{document}
