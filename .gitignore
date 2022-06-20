@@ -7,3 +7,5 @@ rapport.out
 rapport.pdf
 rapport.synctex.gz
 rapport.toc
+*.bbl
+*.blg

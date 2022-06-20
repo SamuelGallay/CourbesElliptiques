@@ -74,6 +74,16 @@
 
 \section{Introduction}
 
+
+L'objectif de ce mémoire est de donner une présentation en français de l'article \cite{DeFeo} "\emph{Towards quantum-resistant cryptosystems from supersingular elliptic curve isogenies}" accessible à des lecteurs n'étant pas des experts des courbes elliptiques.
+Cet article présente un nouveau protocole cryptographique d'échange de clefs, nommé SIDH pour \emph{Supersingular Isogenies Diffie-Hellman}, basé sur des isogénies entre courbes elliptiques supersingulières. 
+L'intérêt de ce protocole est sa supposée sécurité face à un attaquant disposant d'un ordinateur quantique. 
+En effet, la sécurité de la plupart des systèmes cryptographiques utilisés actuellement reposent soit sur le problème de la factorisation d'entiers, comme le protocole RSA, soit sur le problème du logarithme discret. 
+L'inconvénient de ces deux problèmes est qu'un attaquant disposant d'un ordinateur quantique suffisamment puissant serait capable de les résoudre facilement, et donc de lire toutes les communications chiffrées.
+
+La majeure partie de ce rapport sera consacrée à la présentation des outils mathématiques utilisés par SIDH en s'appuyant principalement sur le livre \emph{The Arithmetic of Elliptic Curves} de \cite{Silverman}. Ce livre a l'avantage d'être utilisé comme une oeuvre de référence par la communauté mathématique de la cryptographie des courbes elliptiques, dans le sens où plusieurs articles que j'ai pu rencontrer renvoient le lecteur souhaitant une preuve des résultats énoncés directement au texte de Silverman. Ce texte possède l'inconvénient d'utiliser régulièrement des outils de géométrie algébrique ou de la théorie de Galois, ce qui le rend difficilement accessible à un étudiant de License. J'ai aussi consulté le livre de \cite{Washington} sur les courbes elliptiques qui présente souvent avec des outils plus simples (et des méthodes parfois calculatoires!) les résultats nécessaires à l'étude des courbes elliptiques. 
+
+\vspace{2em}
 Longue liste des choses non démontrées ici, en tout cas pour le moment.
 \begin{enumerate}
   \item Tout ce qui touche de près ou de loin à la géométrie algébrique et au théorème de Riemann-Roch. Les définitions de genre et de dimension ne sont pas données. Le caractère lisse d'une variété n'est pas défini non plus.
@@ -83,16 +93,19 @@ Longue liste des choses non démontrées ici, en tout cas pour le moment.
 
 \section{Qu'est-ce qu'une courbe elliptique?}
 
+Cette première partie cherche à donner une définition de ce qu'est une courbe elliptique, puis présente la loi de groupe que possède une courbe elliptique, et enfin présente un premier protocole d'échange de clefs très régulièrement utilisé de nos jours.
+
+
 \subsection{Définitions}
 
-Je donne en dessous deux définitions de ce qu'est une courbe elliptique. La première est plus générale puisqu'elle ne mentionne pas la  caractéristique du corps. La deuxième est plus pratique puisqu'elle permet de stocker une courbe dans un ordinateur, et d'effectuer des calculs dessus. Nous allons montrer que dans un corps de caractéristique différente de $2$ et de $3$, ces deux définitions sont équivalentes.
+La tâche consistant à donner la définition de ce qu'est une courbe elliptique s'avère bien plus délicate que ce que j'imaginais dans un premier temps. En effet, il est possible de donner plusieurs, ou du moins deux définitions équivalentes d'une courbe elliptique présentant chacune leur intérêt mais dont la preuve de ladite équivalence est difficile à donner. Je vais donc donner en dessous deux définitions de ce qu'est une courbe elliptique, et sans démontrer l'équivalence je vais essayer de donner l'intuition de la raison pour laquelle elles représentent le même objet. La première définition utilise de nombreux concepts venant de la géométrie algébrique et la seconde en revanche est beaucoup plus élémentaire, et à l'avantage de pouvoir être manipulée directement par un ordinateur.
 
 \begin{deff}[Formelle]
   Une courbe elliptique est une courbe projective lisse de genre $1$ dont a spécifié un point.
 \end{deff}
 
 \begin{deff}[Pratique]
-  Soit $K$ un corps de caractéristique différente de $2$ et de $3$. Une courbe elliptique sur $K$ est un ensemble de la forme $\{(x, y)\in\ol K\ |\ y^2 = x^3 + ax +b\}\cup\{\infty\}$ ou $a$ et $b$ sont des éléments de $K$ tels que la quantité $\Delta =-16(4a^3+ 27b^2)$ soit non nulle.
+  Soit $K$ un corps de caractéristique différente de $2$ et de $3$. Une courbe elliptique définie sur $K$ est un ensemble de la forme $\{(x, y)\in\ol K\ |\ y^2 = x^3 + ax +b\}\cup\{\infty\}$ ou $a$ et $b$ sont des éléments de $K$ tels que la quantité $\Delta =-16(4a^3+ 27b^2)$ soit non nulle.
 \end{deff}
 
 \begin{center}
@@ -108,7 +121,7 @@ Fixons pour cette partie un corps $K$ (de caractéristique différente de $2$ et
   L'espace projectif $\mathbb P^2$ sur $K$ est définit comme le quotient de $\mathcal A$ par cette relation d'équivalence. 
 \end{deff}
 
-De façon moins formelle, l'espace $\mathbb P^2$ est l'ensemble des droites vectorielles de $\ol K^3$. Dans notre cadre, l'espace projectif sert uniquement à donner un cadre rigoureux à l'ajout de points à l'infini dans l'espace. Pour maintenant donner un sens à la notion de \emph{courbe}, il faut définir ce qu'est un ensemble algébrique, puis ce qu'est une variété.
+De façon moins formelle, l'espace $\mathbb P^2$ est l'ensemble des droites vectorielles de $\ol K^3$. Dans notre cadre, l'espace projectif sert principalement à donner un cadre rigoureux à l'ajout de points à l'infini dans l'espace. Pour maintenant donner un sens à la notion de \emph{courbe}, il faut définir ce qu'est un ensemble algébrique, puis ce qu'est une variété.
 
 \begin{deff}
   Soit $I$ un idéal de $\ol K[X, Y, Z]$ engendré par des polynômes homogènes. On définit l'ensemble $Z(I)$ par $Z(I) = \{ P\in \mathbb{P}^2 : f(P) = 0 \text{ pour tout } f \text{ homogène de } I \}$.
@@ -117,7 +130,7 @@ De façon moins formelle, l'espace $\mathbb P^2$ est l'ensemble des droites vect
 \end{deff}
 
 La notation $Z(I)$ désigne ici l'ensemble des zéros communs à tous les polynômes homogènes de $I$. On ne considère que les polynômes homogènes de $I$ puisque dans l'espace projectif la propriété $f(P) = 0$ n'est pas bien définie pour des polynômes qui ne seraient pas homogènes. 
-En effet, l'espace projectif est définie par un quotient et cette propriété n'est pas indépendante du choix d'un représentant. En revanche, cette propriété l'est pour des polynômes homogènes.
+En effet, l'espace projectif est définit par un quotient et cette propriété n'est pas indépendante du choix d'un représentant. En revanche, cette propriété l'est pour des polynômes homogènes.
 
 Donnons dès à présent un exemple d'ensemble algébrique, qui permettra d'illustrer la définition et de faire un premier lien entre les deux définitions d'une courbe elliptique.
 
@@ -445,7 +458,7 @@ Nous introduisons maintenant le morphisme de Frobenius, qui est l'exemple le plu
 \end{proof}
 
 \begin{rem}
-  Dans le cas où $\phi = [0]$, on définit $\h\phi = [0]$ et on étend ainsi le concept d'isogénie duale aux morphismes. .
+Dans le cas où $\phi = [0]$, on définit $\h\phi = [0]$ et on étend ainsi le concept d'isogénie duale à tous les morphismes. .
 \end{rem}
 
 \begin{prop}
@@ -657,6 +670,8 @@ La proposition précédente montre qu'il fait sens de définir la trace de $\phi
   $E$ est dite supersingulière si $E[p]$ est réduit à $O$. 
 \end{deff}
 
+\subsection{Premières propriétés}
+
 \begin{prop}
   \label{pihatsep}
   Soit $E/\F_q$ une courbe elliptique. La courbe $E$ est supersingulière si et seulement si $\widehat{\pi_q}$ est (purement) inséparable.
@@ -699,6 +714,10 @@ Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]
 \begin{proof}
   Puisque $E$ est supersingulière, $\h{\pi_p} : E^{(p)} \to  E$ est purement inséparable, donc $\h{\pi_p} = \psi \circ \pi_p$ avec $\psi : E^{(p^2}) \to E$ une isogénie de degré $1$. Une telle isogénie est un isomorphisme, donc $ E^{(p^2}) $ est $\ol{\F_p}$-isomorphe à $E$. Ainsi $j(E) = j( E^{(p^2}) ) = j(E)^{p^2}$ donc $X^{p^2} - X$ annule $j(E)$, ce qui revient à dire que $j(E)$ appartient à $\F_{p^2}$.
 \end{proof}
+
+\subsection{Graphe des isogénies}
+
+
 
 \begin{prop}
 \label{cardsuper} 
@@ -760,6 +779,8 @@ Si $\psi$ est d'ordre $2$, $\pi_{p^2}^2 = (\psi^{-1} \circ [p])^2 = \psi^{-2} \c
 \begin{proof}
   En combinant du théorème de Tate (\ref{tate}) et de la proposition \ref{cardsuper}, on obtient qu'entre deux classe de $\overline{\F_p}$-isomorphisme entre courbes elliptiques supersingulières définies sur $\F_{p^2}$ il existe toujours une isogénie.
 \end{proof}
+
+\section{Cryptographie par isogénies entre courbes supersingulières}
 
 \section{Construction d'une courbe initiale}
 
@@ -910,7 +931,7 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
 
 \begin{prop}
   Soient $P$ et $Q$ deux éléments de $\Z/l^e\Z \times \Z/l^e\Z$. 
-  $(P, Q)$ est $\Z/l^e\Z $-libre ssi $(l^{e-1}P, l^{e-1}Q)$ est $\Z/l\Z $-libre. 
+  La famille $(P, Q)$ est $\Z/l^e\Z $-libre ssi $(l^{e-1}P, l^{e-1}Q)$ est $\Z/l\Z $-libre. 
 \end{prop}
 
 \begin{proof}
@@ -927,8 +948,8 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
   Ainsi $v_l(b) \ge v_l(a) \ge e$, donc $a \equiv b \equiv 0\ [l^e]$. Le cas $a=b=0$ est trivial. Dans le cas où $a\neq0$ et $b=0$ par exemple, la preuve précédente reste correcte en écrivant $b = 0\cdot l^{v_l(a)}$.
 \end{proof}
 
-
-\section{Cryptographie}
+\bibliographystyle{plainnat-fr}
+\bibliography{biblio}
 
 
 
