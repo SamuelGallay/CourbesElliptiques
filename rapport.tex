@@ -204,12 +204,14 @@ Ce qui rend les courbes elliptiques intéressantes, notamment en cryptographie, 
 
 
 \begin{deff}
-Pour définir la somme de deux points $P_1$ et $P_2$, on commence par tracer la droite $\mathcal D$ entre $P_1$ et $P_2$. Cette droite possède une troisième intersection $P_3$ avec la courbe $E$. On note alors $P_1 + P_2$ la réfléction de $P_3$ par rapport à l'axe des abscisses.
+Pour définir la somme de deux points $P_1$ et $P_2$, on commence par tracer la droite $\mathcal D$ entre $P_1$ et $P_2$. Cette droite possède une troisième intersection $P_3$ avec la courbe $E$. On note alors $P_1 + P_2$ la reflection de $P_3$ par rapport à l'axe des abscisses.
 \end{deff}
 
-\begin{center}
-\begin{tikzpicture}
-  \begin{axis}[
+Cette définition d'est pas claire pour plusieurs raisons. Quelle sont les  droites passant par $\infty$ par exemple ? On souhaite que $\infty$ soit l'élément neutre soit le neutre de cette loi, donc si par exemple $P_1=\infty$, on définit : $P_1+P_2 = \infty+P_2 = P_2$.
+Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$:
+
+\begin{center}\begin{tikzpicture}
+\begin{axis}[
             xmin=-2,
             xmax=2,
             ymin=-3,
@@ -221,44 +223,113 @@ Pour définir la somme de deux points $P_1$ et $P_2$, on commence par tracer la 
             samples=200,
             smooth,
             clip=false,
+            thick,
         ]
-        \addplot [red] expression[domain=-1:0]{sqrt(x*(x^2-1))};
-        \addplot [red] expression[domain=-1:0]{-sqrt(x*(x^2-1))};
-        \addplot [red] expression[domain=1:2]{sqrt(x*(x^2-1))}
-                node[right] {$y^2=x(x-1)(x+1)$};
-        \addplot [red] expression[domain=1:2]{-sqrt(x*(x^2-1))};
-        \addplot [blue] expression[domain=-2:2]{(0.2+0.32*x)/0.73};
-        \filldraw[black] (-0.93, -0.13) circle (2pt) node[anchor=north]{};
-        \filldraw[black] (-0.2, 0.19) circle (2pt) node[anchor=north]{};
-        \filldraw[black] (1.28, 0.83) circle (2pt) node[anchor=north]{};
-        \filldraw[black] (1.28, -0.83) circle (2pt) node[anchor=north]{};
-  \end{axis}
+\addplot [red] expression[domain=-1:0]{sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=-1:0]{-sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=1:2]{sqrt(x*(x^2-1))} node[left] {$y^2=x(x-1)(x+1)$};
+\addplot [red] expression[domain=1:2]{-sqrt(x*(x^2-1))};
+\addplot [blue] expression[domain=-2:2]{0.500566389048933*x +0.779881625467151};
+\filldraw[black] (-0.950000000000000,0.304343555870664) circle (2pt) node[anchor=south east]{$P_1$};
+\filldraw[black] (-0.400000000000000,0.579655069847578) circle (2pt) node[anchor=south]{$P_2$};
+\filldraw[black] (1.60056670984549,1.58107152384644) circle (2pt) node[anchor=south east]{$P_3$};
+\filldraw[black] (1.60056670984549,-1.58107152384644) circle (2pt) node[anchor=north east]{$P_1+P_2$};
+\end{axis}
 \end{tikzpicture}
 \end{center}
-
-
-Cette définition d'est pas claire pour plusieures raisons. Quelle sont les  droites passant par $\infty$ par exemple ? On souhaite que $\infty$ soit l'élément neutre soit le neutre de cette loi, donc si par exemple $P_1=\infty$, on définit : $P_1+P_2 = \infty+P_2 = P_2$.
-Ensuite que ce passe-t'il si $P_1=P_2$ ? On considère pour $\mathcal D$ dans ce cas là la tangente à $E$ passant par $P_1$.
-
-
-Maintenant traitons le cas où les deux points sont différents de $\infty$. Notons ces deux points $P_1$ et $P_2$, et leurs coordonnées $(x_1, y_1)$ et $(x_2, y_2)$.
-
-\begin{enumerate}
-  \item Si $x_1\neq x_2$, on considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droite est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est $y = m(x-x_1) + y_1$. Les points d'intersection entre la droite $\mathcal D$ et $E$ sont les points $(x, y)$ vérifiant $y^2 = x^3 + ax + b$ et $y = m(x-x_1) + y_1$. En combinant les deux équations, on obtient $(m(x-x_1) + y_1)^2 =  x^3 + ax + b$. 
+{\color{blue}Cas $x_1\neq x_2$.} On considère la droite $\mathcal D$ passant par $P_1$ et $P_2$. La pente de cette droite est $m = \frac{y_2-y_1}{x_2-x_1}$ et son équation est $y = m(x-x_1) + y_1$. Les points d'intersection entre la droite $\mathcal D$ et $E$ sont les points $(x, y)$ vérifiant $y^2 = x^3 + ax + b$ et $y = m(x-x_1) + y_1$. En combinant les deux équations, on obtient $(m(x-x_1) + y_1)^2 =  x^3 + ax + b$. 
 En ne cherchant à expliciter que les termes de degré $2$ et $3$ en $x$, on obtient: $ x^3 -m^2x^2 + \alpha x + \beta = 0$. 
 Cette équation est de degré $3$ en $x$, mais on en connait déjà  deux solutions $x_1$ et $x_2$, donc en utilisant les relations racines coefficients, on obtient $x_1+x_2+x_3 = m^2$ soit $x_3 = m^2 - x_1 - x_2$ où $x_3$ est la troisième solution. La valeur de $y_3$ est $m(x_3-x_1)+y_1$ en réutilisant l'équation de la droite. On définit le point $P_1 + P_2$ comme le point de coordonnées $(x_3, -y_3)$.
 
-\item Si $x_1=x_2$ et $y_1\neq y_2$, la droite $\mathcal D$ est verticale et on définit $P_1+P_2$ comme valant $\infty$. 
+\begin{center}\begin{tikzpicture}
+\begin{axis}[
+            xmin=-2,
+            xmax=2,
+            ymin=-3,
+            ymax=3,
+            xlabel={$x$},
+            ylabel={$y$},
+            scale only axis,
+            axis lines=middle,
+            samples=200,
+            smooth,
+            clip=false,
+            thick,
+        ]
+\addplot [red] expression[domain=-1:0]{sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=-1:0]{-sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=1:2]{sqrt(x*(x^2-1))} node[left] {$y^2=x(x-1)(x+1)$};
+\addplot [red] expression[domain=1:2]{-sqrt(x*(x^2-1))};
+\addplot[blue] coordinates {(-0.700,-3)(-0.7000,3)} node[left] {$\infty$};
+\filldraw[black] (-0.700000000000000,0.597494769851586) circle (2pt) node[anchor=south east]{$P_1$};
+\filldraw[black] (-0.700000000000000,-0.597494769851586) circle (2pt) node[anchor=north east]{$P_2$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+{\color{blue}Cas $x_1=x_2$ et $y_1\neq y_2$.} La droite $\mathcal D$ est verticale et on définit $P_1+P_2$ comme valant $\infty$. 
 
-\item Enfin si $P_1 = P_2$, on considère la tangente à $E$ passant par $P_1$. Pour trouver la pente de la tangente, on dérive l'équation de la courbe par rapport à $x$ : $2y\frac{dy}{dx} = 3x^2 + a$, donc $m = \frac{3x_1^2 + a}{2y_1}$. Si  $y_1 \neq  0$, $m$ est bien défini et on construit $P_1+P_1$ comme précédemment : la droite $\mathcal D$ possède une intersection de multiplicité double en $P_1$ puisqu'elle est tangente, et on obtient la troisième intersection en utilisant les relations racines-coefficients.
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+            xmin=-2,
+            xmax=2,
+            ymin=-3,
+            ymax=3,
+            xlabel={$x$},
+            ylabel={$y$},
+            scale only axis,
+            axis lines=middle,
+            samples=200,
+            smooth,
+            clip=false,
+            thick,
+        ]
+\addplot [red] expression[domain=-1:0]{sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=-1:0]{-sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=1:2]{sqrt(x*(x^2-1))} node[left] {$y^2=x(x-1)(x+1)$};
+\addplot [red] expression[domain=1:2]{-sqrt(x*(x^2-1))};
+\addplot [blue] expression[domain=-2:2]{0.393308882115190*x +0.872810987332219};
+\filldraw[black] (-0.700000000000000,0.597494769851586) circle (2pt) node[anchor=south east]{$P_1=P_2$};
+\filldraw[black] (1.55469187675070,1.48428511141060) circle (2pt) node[anchor=south east]{$P_3$};
+\filldraw[black] (1.55469187675070,-1.48428511141060) circle (2pt) node[anchor=north east]{$P_1+P_2$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+{\color{blue} Cas $P_1=P_2$ et $y_1\neq 0$.} On considère pour $\mathcal D$ dans ce cas là la tangente à $E$ passant par $P_1$.
+Pour trouver la pente de la tangente, on dérive l'équation de la courbe par rapport à $x$ : $2y\frac{dy}{dx} = 3x^2 + a$, donc $m = \frac{3x_1^2 + a}{2y_1}$ puisque  $y_1 \neq  0$. On construit $P_1+P_1$ comme précédemment : la droite $\mathcal D$ possède une intersection de multiplicité double en $P_1$ puisqu'elle est tangente, et on obtient la troisième intersection en utilisant les relations racines-coefficients.
 
-\item Dans le cas précédent, on peut montrer que si $y_1 = 0$, alors $3x_1^2 + a \neq 0$. 
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+            xmin=-2,
+            xmax=2,
+            ymin=-3,
+            ymax=3,
+            xlabel={$x$},
+            ylabel={$y$},
+            scale only axis,
+            axis lines=middle,
+            samples=200,
+            smooth,
+            clip=false,
+            thick,
+        ]
+\addplot [red] expression[domain=-1:0]{sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=-1:0]{-sqrt(x*(x^2-1))};
+\addplot [red] expression[domain=1:2]{sqrt(x*(x^2-1))} node[left] {$y^2=x(x-1)(x+1)$};
+\addplot [red] expression[domain=1:2]{-sqrt(x*(x^2-1))};
+\addplot[blue] coordinates {(-1, -3) (-1, 3)} node[left] {$\infty$};
+\filldraw[black] (-1, 0) circle (2pt) node[anchor=south east]{$P_1 = P_2$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+{\color{blue} Cas $P_1=P_2$ et $y_1=0$.} Dans le cas précédent, on peut montrer que si $y_1 = 0$, alors $3x_1^2 + a \neq 0$. 
 On montre plus précisément que $\Delta \neq 0$ si et seulement si $(x^3 + ax + b)\wedge(3x^2 + a) = 1$. 
 Dans ce cas particulier $y_1=0$, on définit $P_1+P_1$ comme valant $\infty$.
 
-\end{enumerate}
-
+\begin{rem}
 Il est remarquable que la loi définie ci-dessus soit une loi de groupe. Le point $\infty$ est l'élément neutre par définition. Il est facile de voir que la loi est commutative. En effet, la droite passant par $P_1$ et $P_2$ est la même que la droite passant par $P_2$ et $P_1$. Il est facile de calculer l'opposé d'un point:
+\end{rem}
 
 \begin{prop}
   \label{opposé}
@@ -652,16 +723,16 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 \end{prop}
 
 \begin{proof}
-  
+  Par la proposition \ref{dettr}, $\tr(\pi_q) = \deg(\pi_q) + 1 - \deg(1-\pi_q)$. Par les propositions \ref{degpi} et \ref{cardpi}, on sait que $\deg(\pi_q) = q$ et $\#E(\F_q) = deg(1 - \pi_q)$. Ainsi $\tr(\pi_q) = q + 1 - \#E(\F_q)$, ce qui démontre l'égalité annoncée.
 \end{proof}
 
 \begin{thm}
   \label{polcarac}
-  Soit $E/\F_q$ une courbe elliptique et $\pi_q$ l'endomorphisme de Frobenius. Posons $t=q+1-\#E(\F_q)$. Alors $X^2 -tX + q = 0$ annule $\pi_q$.
+  Soit $E/\F_q$ une courbe elliptique et $\pi_q$ l'endomorphisme de Frobenius. Alors $\pi_q^2 -\tr(\pi_q)\pi_q + [q] = 0$.
 \end{thm}
 
 \begin{proof}
-  En utilisant \ref{degpi} et \ref{cardpi}, $t$ se réécrit $t = 1 + \deg(\pi_q) - \deg(1-\pi_q)$. On reconnait l'expression de la trace de $\pi_q$ donnée en \ref{dettr}, et donc $t = \tr(\pi_q)$. Soit $\pi_{q, l}$ l'endomorphisme induit par $\pi_q$ sur $E[l]$. Le polynôme caractéristique de $\phi_l$ est $X^2 -\tr(\pi_{q,l}) X + \det(\pi_{q, l})$, donc $\pi_{q,l}^2 - t\pi_{q,l}+q = 0$. En appliquant une dernière fois \ref{dettr}, on obtient $\deg(\pi_{q}^2 - t\pi_{q}+q ) = \det (\pi_{q,l}^2 - t\pi_{q,l}+q ) = \det(0) = 0$, et donc par définition du degré on obtient l'égalité souhaitée.
+  Soit $\pi_{q, l}$ l'endomorphisme induit par $\pi_q$ sur $E[l]$. Le polynôme caractéristique de $\phi_l$ est $X^2 -\tr(\pi_{q,l}) X + \det(\pi_{q, l})$. Par le théorème de Cayley-Hamilton, et en appliquant deux fois la proposition \ref{dettr} on obtient que $\pi_{q,l}^2 - t\pi_{q,l}+q = 0$. En appliquant une dernière fois \ref{dettr}, on obtient $\deg(\pi_{q}^2 - \tr(\pi_q)\pi_{q}+q ) = \det (\pi_{q,l}^2 - \tr(\pi_q)\pi_{q,l}+q ) = \det(0) = 0$, et donc par définition du degré on obtient l'égalité souhaitée.
 \end{proof}
 
 \begin{lem}
@@ -690,6 +761,8 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 
 \end{proof}
 \subsection{Borne de Hasse}
+
+Le théorème \ref{hasse} donne une borne sur le nombre de points dans $\F_q$ d'une courbe elliptique définie sur $\F_q$.
 
 \begin{deff}[Forme quadratique]
   Soit $G$ un groupe abélien et $d:G\to \Z$. On dit que $d$ est une forme quadratique si pour tout $g \in G$, $d(g) = d(-g)$ et si l'application $G\times G \to \mathbb R$, définie par  $\langle g, h\rangle_d = \frac{1}{2}(d(g+h) - d(g) -d(h))$ est bilinéaire.
@@ -732,8 +805,10 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 
 \section{Courbes supersingulières}
 
+On s'intéresse maintenant particulièrement aux courbes elliptiques supersingulières que nous allons définir et qui seront utilisées dans le protocole SIDH.
+
 \begin{deff}
-  $E$ est dite supersingulière si $E[p]$ est réduit à $O$. 
+  Une courbe elliptique $E/Fq$ ($q$ étant une puissance de $p$) est dite supersingulière si $E[p]$ est réduit à $\infty$. 
 \end{deff}
 
 \subsection{Premières propriétés}
@@ -774,20 +849,31 @@ Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]
 
 
 \begin{prop}
+  \label{j-p2}
   Toute courbe elliptique $E/\overline{\F_p}$ a son $j$-invariant dans $\F_{p^2}$, donc une telle courbe est $\overline{\F_p}$-isomorphe à une courbe définie sur $\F_{p^2}$. 
 \end{prop}
 
 \begin{proof}
   Puisque $E$ est supersingulière, $\h{\pi_p} : E^{(p)} \to  E$ est purement inséparable, donc $\h{\pi_p} = \psi \circ \pi_p$ avec $\psi : E^{(p^2}) \to E$ une isogénie de degré $1$. Une telle isogénie est un isomorphisme, donc $ E^{(p^2}) $ est $\ol{\F_p}$-isomorphe à $E$. Ainsi $j(E) = j( E^{(p^2}) ) = j(E)^{p^2}$ donc $X^{p^2} - X$ annule $j(E)$, ce qui revient à dire que $j(E)$ appartient à $\F_{p^2}$.
+Deux courbes sont isomorphes si et seulement si elles possèdent le même $j$-invariant, ce qui démontre la fin de la proposition.
 \end{proof}
 
 \subsection{Graphe des isogénies}
 
-Le but de cette partie est de montrer que le graphes des isogénies entre $\overline{\F_p}$-isomorphismes de courbes elliptiques supersingulières définies sur $\F_{p^2}$ est connexe.
+Le but de cette partie est de montrer que le graphes des isogénies entre $\overline{\F_p}$-isomorphismes de courbes elliptiques supersingulières définies sur $\F_{p^2}$ est connexe. Puisque chaque courbes elliptique supersingulière est $\ol{\F_p}$-isomorphe à une courbe définie sur $\F_{p^2}$, on restreindra notre étude aux courbes elliptiques définies sur $F_{p^2}$.
+
+
+\begin{deff}[Graphe des isogénies]
+  Les sommets du graphe (non-orienté) des isogénies est l'ensemble des courbes elliptiques définies sur $\F_{p^2}$ quotienté par la relation "être $\ol{\F_p}$-isomorphe". Deux sommets sont reliés par une arête si il existe une $\F_{p^2}$-isogénie d'un représentant d'un des sommets vers un représentant de l'autre sommet.
+\end{deff}
+
+\begin{rem}
+  Par le théorème d'existence de l'isogénie duale assure que s'il existe une isogénie dans un sens, il existe une isogénie dans l'autre. En revanche, étant donné deux représentant particuliers de deux sommets du graphe reliés par une arête, il n'existe pas forcément une isogénie entre ces deux représentants.
+\end{rem}
 
 \begin{prop}
 \label{cardsuper} 
-  Soit $E/\F_{p^2}$ une courbe supersingulière définie sur $\F_{p^2}$. $E$ est isomorphe à une courbe définie sur $\F_{p^2}$ de cardinal $E(\F_{p^2}) = p^2 + 1 + 2p = (p+1)^2$.
+Soit $E/\F_{p^2}$ une courbe supersingulière définie sur $\F_{p^2}$. La courbe $E$ est $\F_{p^2}$-isomorphe à une courbe définie sur $\F_{p^2}$ de cardinal $E(\F_{p^2}) = p^2 + 1 + 2p = (p+1)^2$.
 \end{prop}
 
 \begin{proof}
@@ -838,23 +924,29 @@ Si $\psi$ est d'ordre $2$, $\pi_{p^2}^2 = (\psi^{-1} \circ [p])^2 = \psi^{-2} \c
   Admise.
 \end{proof}
 
+
 \begin{cor}
-  Le graphe des isogénies (que l'on a pas encore construit) entre courbes supersingulières définies sur $\F_{p^2}$ est connexe.
+  Le graphe des isogénies entre courbes supersingulières définies sur $\F_{p^2}$ est connexe.
 \end{cor}
 
 \begin{proof}
   En combinant du théorème de Tate (\ref{tate}) et de la proposition \ref{cardsuper}, on obtient qu'entre deux classe de $\overline{\F_p}$-isomorphisme entre courbes elliptiques supersingulières définies sur $\F_{p^2}$ il existe toujours une isogénie.
 \end{proof}
 
+\begin{rem}
+  On a même montré qu'en partant d'un courbe supersingulière définie sur $\F_{p^2}$ de cardinal $E(\F_{p^2}) = (p+1)^2$ et en se promenant sur le graphe des isogénies on atteint toutes les courbes supersingulières.
+\end{rem}
+
 \section{Cryptographie par isogénies entre courbes supersingulières}
 
-\section{Construction d'une courbe initiale}
+Dans cette partie on présente le protocole SIDH. 
 
-L'objectif de cette partie est de construire une courbe elliptique supersingulière adaptée. 
-On souhaite que cette courbe ait pour cardinalité un entier possédant de petit facteurs premiers pour pouvoir calculer efficacement des isogénies. 
-On souhaite aussi pouvoir trouver des courbes de cardinalité arbitrairement grande pour pouvoir adapter la longueur des clefs, et donc la sécurité, du protocole cryptographique.
-Puisque chaque courbe supersingulière est $\overline{\F_p}$-isomorphe à une courbe définie sur $\F_{p}$ ou $\F_{p^2}$, on ne considérera que des courbes à coefficients dans $\F_{p^2}$ par la suite.
-Plus précisément, nous allons étudier la courbe $E_0 : y^2 = x^3 + b$ sur $\F_{p^2}$ avec $b\in\F_{p}^\times$ et montrer que sous certaines conditions sur $p$, cette courbe est supersingulière et de bonne cardinalité.
+Le protocole utilise une courbe elliptique supersingulière $E_0$ définie sur $\F_{p^2}$ de cardinal $E_0(\F_{p^2}) = (p+1)^2 =(2^a3^bf)^2$ avec $2$ ne divisant pas $f$ et $b$ ne divisant pas $f$. La sécurité du protocole repose sur la taille des entiers $a$ et $b$, il est donc nécessaire de pouvoir construire de telles courbes avec de grands $a$ et $b$. C'est ce que nous faisons dans la partie \ref{init}. Dans la partie \ref{torsion_init} nous comptons le nombre de sous groupes cycliques de la $2^a$ ou $3^b$-torsion de $E_0$. On souhaite que ce nombre soit important pour le protocole cryptographique.
+
+\subsection{Construction d'une courbe initiale}
+\label{init}
+L'objectif de cette partie est de construire une courbe elliptique supersingulière adaptée.
+Plus précisément, nous allons étudier la courbe $E_0 : y^2 = x^3 + b$ avec $b\in\F_{p}^\times$ et montrer que sous certaines conditions sur $p$, cette courbe est supersingulière et de bonne cardinalité (en considérant le nombre de points dans $\F_{p^2}$.
 
 
 Commençons par compter le nombre de points de $E_0$ sur $\F_{p}$. Pour cela nous montrons d'abord un résultat sur le nombre de carrés dans $\F_{p}$.
@@ -919,12 +1011,16 @@ Montrons maintenant que la courbe $E_0$ est supersingulière.
 \end{thm}
 
 \begin{proof}
-  Voir le théorème V.3.1 dans le Silverman.
+  Voir le théorème V.3.1 dans \cite{Silverman}.
 \end{proof}
 
 \begin{thm}
   Soit $E/\F_q$ une courbe elliptique, $E$ est supersingulière si et seulement si $\End(E)$ est un ordre dans une algèbre de quaternions.
 \end{thm}
+
+\begin{proof}
+  Voir le théorème V.3.1a dans \cite{Silverman}.
+\end{proof}
 
 \begin{cor}
   $E_0$ est supersingulière.
@@ -939,8 +1035,8 @@ Soit $j$ une racine de $X^2 + X + 1$.
 Par définition, $j$ appartient à $\F_{p^2}$. 
 Dans quelles conditions est-ce que $j$ appartient à $\F_{p}$ ? 
 $j^3 = -j^2 -j = 1$, donc $j$ est d'ordre $3$. 
-Si $j\in \F_{p}$ alors $3\ |\ p-1$ par le théorème de Lagrange, soit $p\equiv 1[3]$. 
-Par contraposition, si $p \equiv 2 [3]$ alors $j\in\F_{p^2}\setminus\F_{p}$.
+Si $j\in \F_{p}$ alors $3\ |\ p-1$ par le théorème de Lagrange, soit $p\equiv 1\ [3]$. 
+Par contraposition, si $p \equiv 2\ [3]$ alors $j\in\F_{p^2}\setminus\F_{p}$.
 
 Considérons l'endomorphisme $\psi : E_0 \to E_0$, $(x, y) \mapsto (jx, y)$. 
 Remarquons que puisque $j^3 = 1$, $\psi$ est bien défini.
@@ -949,7 +1045,11 @@ Puisque $j^p\neq j$, $\pi_p \circ \psi \neq \psi \circ \pi_p$, donc End($E$) n'e
 Ainsi $E$ est supersingulière.
 \end{proof}
 
-On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure des groupes de torsion dans la clôture algébrique de $\F_{p}$.
+
+\subsection{Torsions de la courbe initiale}
+\label{torsion_init}
+
+On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure de groupes des points $\F_{p^2}$ rationnels de la courbe $E_0$. 
 
 \begin{prop}
   $$E_0(\F_{p^2}) \simeq \Z/(p+1)\Z \times \Z/(p+1)\Z$$
@@ -958,14 +1058,14 @@ On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $
 \begin{proof}
   Utilisons à nouveau le théorème \ref{polcarac} en posant $q = p^2$. 
   Posons $\pi_{p^2}$ le morphisme de Frobenius.
-  En constatant que $\tr(\pi_{p^2}) = -2p$, on obtient que $\pi_{p^2}^2 + 2p\pi_{p^2} + [p^2] = 0$, donc que $\left( \pi_{p^2} + [p] \right) ^2 = 0$ dans End($E_0(\overline{\F_p})$). 
+  En constatant que $\tr(\pi_{p^2}) = -2p$, on obtient que $\pi_{p^2}^2 + 2p\pi_{p^2} + [p^2] = 0$, donc que $\left( \pi_{p^2} + [p] \right) ^2 = 0$ dans End($E_0$). 
   Ainsi $\deg(\pi_{p^2} + [p])^2 = 0$, donc $\deg(\pi{p^2} + [p]) = 0$, donc $\pi_{p^2} + [p] = 0$.
 
-  Soit $P\in E_0(\overline{\F_{p}})$. $P \in E_0(\F_{p^2})$ ssi $\pi_{p^2}(P) = P$, donc $E(\F_{p^2}) = \ker(\text{Id} - \pi_{p^2}) = \ker([1] + [p]) = \ker([p+1])$.
-  En utilisant la proposition précédente, puisque $p$ ne divise pas $p+1$, on obtient le résultat souhaité.
+  Soit $P\in E_0(\overline{\F_{p}})$. $P \in E_0(\F_{p^2})$ ssi $\pi_{p^2}(P) = P$, donc $E_0(\F_{p^2}) = \Ker(\text{Id} - \pi_{p^2}) = \Ker([1] + [p]) = \Ker([p+1])$.
+  En utilisant la proposition \ref{structure_torsion}, puisque $p$ ne divise pas $p+1$, on obtient le résultat souhaité.
 \end{proof}
 
-On considère maintenant la décomposition de $p + 1$ suivante : $p + 1 = 2^a 3^b f$, avec $2 \nmid f$ et $3 \nmid f$. Puisque l'on a déjà supposé $p\ge 3$ et $p \equiv 2\ [3]$, on a $a, b\ge 1$. Avec ces notations, on s'intéresse à la $2^a$ et à la $3^b$-torsion de $E_0$. Pour éviter d'écrire deux fois la même chose, le couple $\left( l, e \right)$ désigne soit le couple $(2, a)$ soit le couple $(3, b)$ dans les preuves suivantes. 
+ Puisque l'on a déjà supposé $p\ge 3$ et $p \equiv 2\ [3]$, on a $a, b\ge 1$. Avec ces notations, on s'intéresse à la $2^a$ et à la $3^b$-torsion de $E_0$. Pour éviter d'écrire deux fois la même chose, le couple $\left( l, e \right)$ désigne soit le couple $(2, a)$ soit le couple $(3, b)$ dans les preuves suivantes. 
 
 \begin{prop}
   $$E_0(\F_{p^2})[l^e] \simeq \Z/l^e\Z \times \Z/l^e\Z$$
@@ -982,6 +1082,7 @@ On considère maintenant la décomposition de $p + 1$ suivante : $p + 1 = 2^a 3^
   En remarquant que $\Z/l^e\Z \times \Z/l^e\Z$ est un $l$-Sylow par la proposition précédente, on démontre l'inclusion manquante et donc l'isomorphisme annoncé. 
 \end{proof}
 
+Ainsi, puisque $E_0(\F_{p^2})[l^e] \simeq \Z/l^e\Z \times \Z/l^e\Z$ par la proposition \ref{structure_torsion}, on en déduit que la $l^e$-torsion est $\F_{p^2}$-rationnelle. 
 On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3^b$-torsion.
 
 \begin{prop}
@@ -994,6 +1095,9 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
   Notons $\alpha = l^{e} - l^{e-1}$ le nombre de générateurs de $\Z/l^e\Z$.  
   Ainsi le nombre de sous sous-groupes cycliques d'ordre $l^e$ de la $l^e$-torsion est $({2l^e\alpha -\alpha^2})/{\alpha} = 2l^e-\alpha = l^e + l^{e-1} = l^{e-1}(l + 1)$.
 \end{proof}
+
+La proposition suivante permet d'écrire un algorithme pour calculer une base de 
+  $E_0[l^e] \simeq \Z/l^e\Z \times \Z/l^e\Z$.
 
 \begin{prop}
   Soient $P$ et $Q$ deux éléments de $\Z/l^e\Z \times \Z/l^e\Z$. 
@@ -1013,6 +1117,29 @@ On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3
   Si $v_l(a) \le e-1$, en multipliant l'équation précédente par $l^{e-1-v_l(a)}$ on obtient $a' l^{e-1}P + b' l^{e-1 + v_l(b) - v_l(a)}Q = 0$, et ainsi $a' \equiv 0\ [l]$, ce qui contredit la définition de $v_l(a)$. 
   Ainsi $v_l(b) \ge v_l(a) \ge e$, donc $a \equiv b \equiv 0\ [l^e]$. Le cas $a=b=0$ est trivial. Dans le cas où $a\neq0$ et $b=0$ par exemple, la preuve précédente reste correcte en écrivant $b = 0\cdot l^{v_l(a)}$.
 \end{proof}
+
+\begin{rem}
+  Soit $P, Q\in \Z/l^e\Z \times \Z/l^e\Z$ une un couple d'éléments de la $l^e$-torsion choisis au hasard. Avec une importante probabilité la famille $(P, Q)$ est libre, ce qui peut être vérifié avec la proposition précédente en un temps proportionnel à $e$. En effet le calcul de $l^{e-1}P$ peut se faire en temps $O(\log(l^{e-1}) = O(e)$ par l'algorithme d'exponentiation rapide. Ensuite le test de la $\Z/l\Z$ liberté de la famille $(l^{e-1}P, l^{e-1}Q)$ peut se faire en temps $O(l^2) = O(1)$ puisqu'il n'y a que $l^2$ combinaisons linéaires possibles et puisque $l$ vaut $2$ ou $3$. Enfin si $(P, Q)$ est $\Z/l^e\Z$-libre c'est aussi une base puisque le nombre de combinaisons linéaires possibles est égal à la cardinalité de $\Z/l^e\Z \times \Z/l^e\Z$.
+\end{rem}
+
+\subsection{Le protocole cryptographique}
+
+Dans cette partie nous décrivons enfin le protocole SIDH de l'article \cite{DeFeo}. Deux correspondants Alice et Bob souhaitent s'échanger secrètement le $j$-invariant d'une courbe elliptique supersingulière définie sur $\F_{p^2}$.
+
+
+
+\begin{enumerate}
+  \item Alice et Bob se mettent d'accord publiquement choisit une base publique $(P_A, Q_A)$ de la $2^a$-torsion de $E_0$.
+  \item Bob   choisit une base publique $(P_B, Q_B)$ de la $3^b$-torsion de $E_0$.
+  \item 
+    Alice choisit deux entiers secrets $m_A$ et $n_A$ dans $\Z/2^a\Z$.
+    Alice calcule $\phi_A : E_0 \to E_A$ l'unique isogénie partant de $E_0$ et de noyau $\langle m_AP_A +n_AQ_A \rangle$ et envoie $\phi_A(P_B)$, $\phi_A(Q_B)$ et $E_A$ à Bob.
+  \item  
+    Bob   choisit deux entiers secrets $m_B$ et $n_B$ dans $\Z/3^b\Z$.
+    Bob   calcule $\phi_B : E_0 \to E_B$ l'unique isogénie partant de $E_0$ et de noyau $\langle m_BP_B +n_BQ_B \rangle$ et envoie $\phi_B(P_A)$, $\phi_B(Q_A)$ et $E_B$ à Alice.
+
+
+\end{enumerate}
 
 \bibliographystyle{plainnat-fr}
 \bibliography{biblio}
