@@ -1175,6 +1175,41 @@ Dans cette partie nous décrivons enfin le protocole SIDH de l'article \cite{DeF
   \item Bob calcule $\phi_B' : E_A\to E_{BA}$ de noyau $\langle m_B\phi_A(P_B) + n_B\phi_A(Q_B)\rangle$.
 \end{enumerate}
 
+\begin{center}
+  \begin{tikzcd}
+    &[65pt]  
+    E_A
+    \ar[dr, 
+    "\Ker(\phi_B')=\langle m_B\phi_A(P_B) + n_B\phi_A(Q_B)\rangle"{rotate=-19, anchor=south}, 
+    "\phi_B'"{below, rotate=-19}]  
+    &[105pt] \\[20pt]
+
+    &  
+    &E_{BA} 
+    \ar[dd, equal] 
+    \\[-18pt]
+
+    E_0 
+    \ar[uur, 
+    "\Ker(\phi_A) = \langle m_AP_A +n_AQ_A \rangle" {anchor=south, rotate = 32}, 
+    "{\phi_A,\ \phi_A(P_B),\ \phi_A(Q_B)}"{below, rotate=32}] 
+    \ar[ddr, 
+    "\Ker(\phi_B) = \langle m_BP_B +n_BQ_B \rangle"{anchor=south, rotate = -32, below}, 
+    "{\phi_B,\ \phi_B(P_A),\ \phi_B(Q_A)}"{above, rotate=-32}]  
+    & & 
+    \\[-18pt]
+
+    &  & E_{AB} 
+    \\[20pt]
+    
+    &  E_B
+    \ar[ur, 
+    "\Ker(\phi_A')=\langle m_A\phi_B(P_A) + n_A\phi_B(Q_A)\rangle"{rotate = 19, below}, 
+    "\phi_A'"{above, rotate=19}]  
+    &
+  \end{tikzcd}
+\end{center}
+
 
 
 \bibliographystyle{plainnat-fr}
