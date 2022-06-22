@@ -25,7 +25,9 @@
 
 \pgfplotsset{compat=1.18}
 \usepgfplotslibrary{external}
-%\tikzexternalize % Bug avec les diagrammes commutatifs
+\tikzexternalize % Bug avec les diagrammes commutatifs
+\AtBeginEnvironment{tikzcd}{\tikzexternaldisable}
+\AtEndEnvironment{tikzcd}{\tikzexternalenable}
 \usetikzlibrary{cd}
 
 % Pour les marges
@@ -296,7 +298,7 @@ Cette équation est de degré $3$ en $x$, mais on en connait déjà  deux soluti
 \end{tikzpicture}
 \end{center}
 {\color{blue} Cas $P_1=P_2$ et $y_1\neq 0$.} On considère pour $\mathcal D$ dans ce cas là la tangente à $E$ passant par $P_1$.
-Pour trouver la pente de la tangente, on dérive l'équation de la courbe par rapport à $x$ : $2y\frac{dy}{dx} = 3x^2 + a$, donc $m = \frac{3x_1^2 + a}{2y_1}$ puisque  $y_1 \neq  0$. On construit $P_1+P_1$ comme précédemment : la droite $\mathcal D$ possède une intersection de multiplicité double en $P_1$ puisqu'elle est tangente, et on obtient la troisième intersection en utilisant les relations racines-coefficients.
+Pour trouver la pente de la tangente, on dérive l'équation de la courbe par rapport à $x$ : $2y\frac{dy}{dx} = 3x^2 + a$, donc $m = \frac{3x_1^2 + a}{2y_1}$ puisque  $y_1 \neq  0$. On construit $P_1+P_1$ comme précédemment : la droite $\mathcal D$ possède une intersection de multiplicité double avec$E$ en $P_1$ puisqu'elle est tangente, et on obtient la troisième intersection en utilisant les relations racines-coefficients.
 
 \begin{center}
 \begin{tikzpicture}
@@ -843,7 +845,7 @@ Supposons $t_1 = \tr(\pi_q) \equiv 0\ [p]$.
 Alors $\#E(\F_{q^n}) = 1 - t_1^n \equiv 1\ [p]$ pour tout $n \ge 1$, donc par le théorème de Lagrange, $E(\F_{q^n})$ ne contient pas d’éléments d’ordre $p$, et donc $E[p] = \{0\}$.
 
 Supposons $t_1 = \tr(\pi_q) \not\equiv 0\ [p]$. 
-Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]$. Par le théorème de Cauchy, $E(\F_q^{p-1})$ contient un élément d’ordre $p$, et donc $E[p] \neq  \{0\}$.
+Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]$. Par le théorème de Cauchy, $E(\F_{q^{p-1}})$ contient un élément d’ordre $p$, et donc $E[p] \neq  \{0\}$.
 \end{proof}
 
 
@@ -898,10 +900,12 @@ Pour traiter les derniers cas nous serons amenés à étudier les automorphismes
 
 \begin{center}
   \begin{tikzcd}
-          E \arrow[rrd, "p"] \arrow[r, "\pi_p"] & E^{(p)} \arrow[rd, "\widehat{\pi_p}"] \arrow[r, "\pi_p"] &E \arrow[d, "\psi"]\\
-                                 &  & E
+    & & E\ar[dd, "\psi", dashed] \\
+    E \ar[r, "\pi_p"] \ar[rru, "\pi_{p^2}", bend left=20] \ar[rrd, "{[p]}", bend right=20]  & E^{(p)} \ar[ru, "\pi_p"] \ar[rd, "\h{\pi_p}"] & \\
+    & & E
   \end{tikzcd}
 \end{center}
+
 Ainsi $\pi_{p^2} = \psi^{-1} \circ [p]$.
 
 \vspace{1em}
@@ -1122,6 +1126,40 @@ La proposition suivante permet d'écrire un algorithme pour calculer une base de
   Soit $P, Q\in \Z/l^e\Z \times \Z/l^e\Z$ une un couple d'éléments de la $l^e$-torsion choisis au hasard. Avec une importante probabilité la famille $(P, Q)$ est libre, ce qui peut être vérifié avec la proposition précédente en un temps proportionnel à $e$. En effet le calcul de $l^{e-1}P$ peut se faire en temps $O(\log(l^{e-1}) = O(e)$ par l'algorithme d'exponentiation rapide. Ensuite le test de la $\Z/l\Z$ liberté de la famille $(l^{e-1}P, l^{e-1}Q)$ peut se faire en temps $O(l^2) = O(1)$ puisqu'il n'y a que $l^2$ combinaisons linéaires possibles et puisque $l$ vaut $2$ ou $3$. Enfin si $(P, Q)$ est $\Z/l^e\Z$-libre c'est aussi une base puisque le nombre de combinaisons linéaires possibles est égal à la cardinalité de $\Z/l^e\Z \times \Z/l^e\Z$.
 \end{rem}
 
+\subsection{Formules de Vélu}
+
+\begin{prop}
+  Soit $E/K$ une courbe elliptique et $G$ un sous groupe fini de $E(K)$. Il existe à isomorphisme près une unique courbe elliptique $E'$ et une unique isogénie séparable $\phi : E \to E'$ telle que $\Ker \phi = G$. La courbe $E'$ est notée $E/G$.
+\end{prop}
+
+\begin{proof}
+  Voir \cite{Silverman} III.4.12.
+\end{proof}
+
+Les formules de Vélu permettent de calculer explicitemennt une telle courbe $E/G$ et une telle isogénie $\phi$ : 
+\begin{prop}
+  Soit $E/K : y^2 = x^3 +ax +b$. une courbe elliptique et $G$ un sous groupe fini de $E(K)$. Notons $G_2$ l'ensemble des points d'ordre $2$ de $G$. Soit $R$ un sous ensemble de $G$ tel que $G = \{\infty\}  \sqcup G_2 \sqcup R \sqcup (-R)$. Notons $S = R \sqcup G_2$.
+  Pour tout point $Q=(x_Q, y_Q)\in G\setminus \{\infty\}$, notons 
+  $$u_Q = 4y_Q^2  \text{\ \ et\ \ }     
+  v_Q = 
+    \begin{cases}
+      (3x_Q^2 + a)\ \text{si $2Q = \infty$}\\ 
+      2(3x_Q^2 + a)\ \text{sinon}
+    \end{cases}$$
+    Posons ensuite $$v = \sum_{Q\in S}v_Q   \text{\ \ et\ \ } w  = \sum_{Q\in S}(u_Q + x_Qv_Q)$$.
+
+    Alors $E/G$ est donnée par $y^2 = x^3 + (a-5v)x + (b-7w)$, et $\phi (x, y) = (X, Y)$ est donné par les formules suivantes :
+\begin{align*}
+  X &= x + \sum_{Q\in S}\left( \frac{v_Q}{x-x_Q} + \frac{u_Q}{(x-x_Q)^2} \right)\\
+  Y &= y - \sum_{Q\in S}\left( u_Q\frac{2y}{(x-x_Q)^3} + v_Q\frac{y-y_Q}{(x-x_Q)^2} + \frac{2y_Q(3x_Q^2 +a)}{(x-x_Q)^2} \right)\\
+\end{align*}
+ \end{prop}
+
+\begin{proof}
+  Voir la partie 12.3 dans \cite{Washington}. 
+\end{proof}
+
+
 \subsection{Le protocole cryptographique}
 
 Dans cette partie nous décrivons enfin le protocole SIDH de l'article \cite{DeFeo}. Deux correspondants Alice et Bob souhaitent s'échanger secrètement le $j$-invariant d'une courbe elliptique supersingulière définie sur $\F_{p^2}$.
@@ -1129,17 +1167,15 @@ Dans cette partie nous décrivons enfin le protocole SIDH de l'article \cite{DeF
 
 
 \begin{enumerate}
-  \item Alice et Bob se mettent d'accord publiquement choisit une base publique $(P_A, Q_A)$ de la $2^a$-torsion de $E_0$.
-  \item Bob   choisit une base publique $(P_B, Q_B)$ de la $3^b$-torsion de $E_0$.
-  \item 
-    Alice choisit deux entiers secrets $m_A$ et $n_A$ dans $\Z/2^a\Z$.
-    Alice calcule $\phi_A : E_0 \to E_A$ l'unique isogénie partant de $E_0$ et de noyau $\langle m_AP_A +n_AQ_A \rangle$ et envoie $\phi_A(P_B)$, $\phi_A(Q_B)$ et $E_A$ à Bob.
+  \item Les paramètres publiques sont une courbe elliptique $E_0$ comme construite dans la partie \ref{init}, une base $(P_A, Q_A)$ de la $2^a$-torsion et une base $(P_B, Q_B)$ de la $3^b$-torsion de $E_0$.
+\item Alice choisit deux entiers secrets $m_A$ et $n_A$ dans $\Z/2^a\Z$ et calcule $\phi_A : E_0 \to E_A$ l'unique isogénie partant de $E_0$ et de noyau $\langle m_AP_A +n_AQ_A \rangle$ par les formules de Vélu. Alice envoie $\phi_A(P_B)$, $\phi_A(Q_B)$ et $E_A$ à Bob.
   \item  
-    Bob   choisit deux entiers secrets $m_B$ et $n_B$ dans $\Z/3^b\Z$.
-    Bob   calcule $\phi_B : E_0 \to E_B$ l'unique isogénie partant de $E_0$ et de noyau $\langle m_BP_B +n_BQ_B \rangle$ et envoie $\phi_B(P_A)$, $\phi_B(Q_A)$ et $E_B$ à Alice.
-
-
+    Bob   choisit deux entiers secrets $m_B$ et $n_B$ dans $\Z/3^b\Z$ et calcule $\phi_B : E_0 \to E_B$ l'unique isogénie partant de $E_0$ et de noyau $\langle m_BP_B +n_BQ_B \rangle$ par les formules de Vélu. Bob envoie $\phi_B(P_A)$, $\phi_B(Q_A)$ et $E_B$ à Alice.
+  \item Alice calcule $\phi_A' : E_B\to E_{AB}$ de noyau $\langle m_A\phi_B(P_A) + n_A\phi_B(Q_A)\rangle$.
+  \item Bob calcule $\phi_B' : E_A\to E_{BA}$ de noyau $\langle m_B\phi_A(P_B) + n_B\phi_A(Q_B)\rangle$.
 \end{enumerate}
+
+
 
 \bibliographystyle{plainnat-fr}
 \bibliography{biblio}
