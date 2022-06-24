@@ -10,3 +10,4 @@ rapport.toc
 *.bbl
 *.blg
 rapport-figure*
+_minted-*

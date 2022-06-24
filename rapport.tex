@@ -3,6 +3,8 @@
 \usepackage[utf8]{inputenc}     % Encodage d'entrée
 \usepackage[T1]{fontenc}        % Sinon Babel n'est pas content 
 \usepackage{natbib}             % Pour une liste de références plus française
+\usepackage{silence}
+\WarningFilter{hyperref}{Token not allowed}
 \usepackage{hyperref}           % Pour des liens vers les références
 \usepackage{geometry}           % Pour régler les marges
 \usepackage{amsfonts, amsmath}
@@ -10,6 +12,7 @@
 \usepackage{pgfplots}           % Pour les figures
 \usepackage{mathtools}          % Des fractions dans des accolades  
 \usepackage{setspace}           % Pour les interlignes
+\usepackage{minted}
 \usepackage[french]{babel}      % Pour le support de la langue française
 
 \onehalfspacing
@@ -32,6 +35,7 @@
 
 % Pour les marges
 \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=0.7in,rmargin=1.1in}
+
 
 % Math Environments
 \theoremstyle{plain}% default
@@ -85,14 +89,6 @@ L'inconvénient de ces deux problèmes est qu'un attaquant disposant d'un ordina
 
 La majeure partie de ce rapport sera consacrée à la présentation des outils mathématiques utilisés par SIDH en s'appuyant principalement sur le livre \emph{The Arithmetic of Elliptic Curves} de \cite{Silverman}. Ce livre a l'avantage d'être utilisé comme une oeuvre de référence par la communauté mathématique de la cryptographie des courbes elliptiques, dans le sens où plusieurs articles que j'ai pu rencontrer renvoient le lecteur souhaitant une preuve des résultats énoncés directement au texte de Silverman. Ce texte possède l'inconvénient d'utiliser régulièrement des outils de géométrie algébrique ou de la théorie de Galois, ce qui le rend difficilement accessible à un étudiant de License. J'ai aussi consulté le livre de \cite{Washington} sur les courbes elliptiques qui présente souvent avec des outils plus simples (et des méthodes parfois calculatoires!) les résultats nécessaires à l'étude des courbes elliptiques. 
 
-\vspace{2em}
-Longue liste des choses non démontrées ici, en tout cas pour le moment.
-\begin{enumerate}
-  \item Tout ce qui touche de près ou de loin à la géométrie algébrique et au théorème de Riemann-Roch. Les définitions de genre et de dimension ne sont pas données. Le caractère lisse d'une variété n'est pas défini non plus.
-  \item L'associativité de la loi de groupe sur la courbe elliptique.
-  \item 
-\end{enumerate}
-
 \section{Qu'est-ce qu'une courbe elliptique?}
 
 Cette première partie cherche à donner une définition de ce qu'est une courbe elliptique, puis présente la loi de groupe que possède une courbe elliptique, et enfin présente un premier protocole d'échange de clefs très régulièrement utilisé de nos jours.
@@ -100,9 +96,9 @@ Cette première partie cherche à donner une définition de ce qu'est une courbe
 
 \subsection{Définitions}
 
-La tâche consistant à donner la définition de ce qu'est une courbe elliptique s'avère bien plus délicate que ce que j'imaginais dans un premier temps. En effet, il est possible de donner plusieurs, ou du moins deux définitions équivalentes d'une courbe elliptique présentant chacune leur intérêt mais dont la preuve de ladite équivalence est difficile à donner. Je vais donc donner en dessous deux définitions de ce qu'est une courbe elliptique, et sans démontrer l'équivalence je vais essayer de donner l'intuition de la raison pour laquelle elles représentent le même objet. La première définition utilise de nombreux concepts venant de la géométrie algébrique et la seconde en revanche est beaucoup plus élémentaire, et à l'avantage de pouvoir être manipulée directement par un ordinateur.
+La tâche consistant à donner la définition de ce qu'est une courbe elliptique s'avère bien plus délicate que ce que j'imaginais dans un premier temps. En effet, il est possible de donner plusieurs définitions équivalentes d'une courbe elliptique présentant chacune leur intérêt mais dont la preuve de ladite équivalence requiert des outils avancés. Je vais donc présenter en dessous deux définitions de ce qu'est une courbe elliptique, et sans démontrer l'équivalence je vais essayer de donner l'intuition de la raison pour laquelle elles représentent le même objet. La première définition utilise de nombreux concepts venant de la géométrie algébrique et la seconde en revanche est beaucoup plus élémentaire, et à l'avantage de pouvoir être manipulée directement par un ordinateur.
 
-\begin{deff}[Formelle]
+\begin{deff}[Géométrie algébrique]
   Une courbe elliptique est une courbe projective lisse de genre $1$ dont a spécifié un point.
 \end{deff}
 
@@ -115,7 +111,7 @@ La tâche consistant à donner la définition de ce qu'est une courbe elliptique
   Dans toute la suite, je suppose que les corps utilisés ne sont ni de caractéristique $2$, ni de caractéristique $3$.
 \end{center}
 
-Fixons pour cette partie un corps $K$ (de caractéristique différente de $2$ et de $3$) et notons $\overline{K}$ sa clôture algébriques. Nous allons maintenant essayer de comprendre la définition plus formelle, et d'expliquer pourquoi une courbe elliptique au sens de la définition pratique est bien une courbe elliptique au sens de la définition formelle. Le premier terme à comprendre est le mot \emph{projectif}.
+Fixons pour cette partie un corps $K$ (de caractéristique différente de $2$ et de $3$) et notons $\overline{K}$ sa clôture algébriques. Nous allons maintenant essayer de comprendre la première définition, et d'expliquer pourquoi une courbe elliptique au sens de la définition pratique est bien une courbe elliptique au sens de la première. Le premier terme à comprendre est le mot \emph{projectif}.
 
 \begin{deff}
   Posons $\mathcal{A} = \ol K^3\setminus(0, 0, 0)$. On définit une relation d'équivalence sur $\mathcal A$ de la sorte : étant donné $(x, y, z)$ et $(x', y', z')$ deux éléments de $A$, ces derniers sont équivalents s'il existe une constante $\lambda\in\ol K^\times$ telle que $(x, y, z) = (\lambda x', \lambda y', \lambda z')$.
@@ -148,7 +144,7 @@ En considérant $\langle F \rangle$ l'idéal de $\ol K[X, Y, Z]$ engendré par $
 Continuons de faire le lien entre $\ol K^2$ et $\mathbb P^2$. Pour $x, y$ et $z$ des éléments de $\ol K$, la notation $[x, y, z]$ désigne la classe d'équivalence de $(x, y, z)$ dans $\mathbb P^2$.
 
 \begin{prop}
- Notons $U = \{[x, y, z]\in \mathbb P^2\ |\ z\neq 0\}$. L'application $\phi : \ol K^2 \to U$, définie par $\phi(x, y) = [x, y, 1]$ est bijective. 
+ Notons $U = \{[x, y, z]\in \mathbb P^2\ |\ z\neq 0\}$. L'application $\phi : \ol K^2 \to U$ définie par $\phi(x, y) = [x, y, 1]$ est bijective. 
 \end{prop}
 
 \begin{proof}
@@ -172,7 +168,7 @@ L'espace projectif a un intérêt théorique puisque beaucoup de résultats s'y 
 \begin{deff}
   À un ensemble algébrique $V$, on associe un idéal :
   $$I(V) = \{ f\in \overline{K}[X, Y, Z] : f \text{ est homogène et } f(P) = 0 \text{ pour tout } P\in V \}$$
-  Si $I(V)$ est premier dans $ \overline{K}[X, Y, Z] $, on dit que $V$ est une variété (projective). Si $I(V)$ est engendré par des polynômes homogènes de $k[X, Y, Z]$, on dit que $V$ est définie sur $K$.  
+  Si $I(V)$ est premier dans $ \overline{K}[X, Y, Z] $, on dit que $V$ est une variété (projective). Si $I(V)$ est engendré par des polynômes homogènes de $K[X, Y, Z]$, on dit que $V$ est définie sur $K$.  
 \end{deff}
 
 
@@ -350,7 +346,7 @@ Le plus dur est de montrer l'associativité de cette loi. Il est possible de tou
 Nous décrivons dans cette section le protocole d'échange de clefs de Diffie et Hellman. 
 Soit $G = \langle g \rangle$ un groupe monogène supposé connu de tous. On suppose que le générateur $g$ ainsi que l'ordre $n$ du groupe sont publics.
 
-Deux individus Alice et Bob cherchent à partager un élément du groupe $G$ sans qu'un espion Eve capable d'écouter toutes leurs communications ne puisse l'identifier. Voici les étapes suivies par Alice et Bob :
+Deux individus Alice et Bob cherchent à partager un élément du groupe $G$ sans qu'un espion Eve capable d'écouter toutes leurs communications ne puisse l'identifier. Cet élément peut par exemple servir de clef secrète pour un chiffrement symétrique comme AES permettant de sécuriser la communication entre Alice et Bob.  Voici les étapes suivies par Alice et Bob :
 \begin{enumerate}
   \item Alice et Bob choisissent chacun un entier compris entre $0$ et $n-1$ qu'ils gardent secret. Notons $a$ l'entier d'Alice et $b$ celui de Bob.
   \item Alice calcule $g^a$ et l'envoie à Bob. Bob calcule $g^b$ et l'envoie à Alice.
@@ -364,15 +360,15 @@ Un problème très proche de CDH est le \emph{problème du logarithme discret} (
 L'opération consistant à calculer $g^a$ en connaissant $a$ (l'inverse du DLP) peut se faire en $O(\log a) = O(\log n)$ opérations dans le groupe par l'algorithme d'exponentiation rapide. 
 Sur un groupe générique, c'est à dire sans information particulière sur le groupe, les meilleurs algorithmes pour résoudre le DLP sont de complexité $O(\sqrt{n})$ : voir l'algorithme $\rho$ de Pollard par exemple. Un tel groupe serait idéal pour Alice et Bob : l'échange de clef pour de larges valeurs de $n$ est peu couteux et le problème du logarithme discret est très couteux.
 
-Il faut ensuite se poser la question de quel groupe utiliser dans ce protocole cryptographique. En effet, dans certains groupe le logarithme discret est très facile à résoudre : Dans $(\Z/n\Z, +)$ il suffit de calculer une relation de Bézout par l'algorithme d'Eulclide ce qui est très peu couteux. Dans le groupe multiplicatif de $\F_q$, les algorithmes de calcul d'indice peuvent résoudre le logarithme discret en temps sous-exponentiel (ce qui ne veut pas dire polynômial). Enfin, sur certaines courbes elliptiques les meilleurs algorithmes connus pour résoudre le problème du logarithme fonctionnent en temps exponentiel : c'est de cette façon que l'on utilise généralement les courbes elliptiques dans des protocoles d'échanges de clefs sur internet (par exemple le 's' dans 'https').
+Il faut ensuite se poser la question de quel groupe utiliser dans ce protocole cryptographique. En effet, dans certains groupe le logarithme discret est très facile à résoudre : Dans $(\Z/n\Z, +)$ il suffit de calculer une relation de Bézout par l'algorithme d'Euclide ce qui est très peu couteux. Dans le groupe multiplicatif de $\F_q$, les algorithmes de calcul d'indice peuvent résoudre le logarithme discret en temps sous-exponentiel (ce qui ne veut pas dire polynômial). Enfin, sur certaines courbes elliptiques les meilleurs algorithmes connus pour résoudre le problème du logarithme fonctionnent en temps exponentiel : c'est de cette façon que l'on utilise généralement les courbes elliptiques dans des protocoles d'échanges de clefs sur internet (par exemple le 's' dans 'https').
 
 
-\section{Morphismes et isogénies}
+\section{Premières propriétés}
+
+
+\subsection{Morphismes et isogénies}
 
 Cette partie est consacrée à l'étude des morphismes entre courbes elliptiques. Les isogénies sont des morphismes particuliers qui seront utilisés dans la description du protocole SIDH.
-
-\subsection{Définitions}
-
 \begin{deff}
   Soient $E_1$ et $E_2$ deux courbes elliptiques définies sur $K$. Un morphisme $\phi : E_1\to  E_2$ est une application de la forme $\phi(x, y) = (R_1(x, y), R_2(x, y))$ avec $R_1$ et $R_2$ des fractions rationnelles en $x$ et $y$ qui envoie $\infty_{E_1}$ sur $\infty_{E_2}$.
 \end{deff}
@@ -446,6 +442,8 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
 \begin{proof}
   Soit $\phi : E_1\to E_2$ un morphisme et $m\in\Z$. Soit $P\in E_1$. $(\phi \circ [m]_{E_1})(P) = \phi(P + \ldots + P) = \phi(P) + \ldots + \phi(P) = ([m]_{E_2} \circ \phi)(P)$.
 \end{proof}
+
+\subsection{$j$-invariant}
 
 \subsection{Degré}
 
@@ -601,7 +599,9 @@ Dans le cas où $\phi = [0]$, on définit $\h\phi = [0]$ et on étend ainsi le c
   \begin{enumerate}
     \item Par le théorème \ref{existence_duale} la propriété $\h\phi\circ\phi = [\deg{\phi}]_{E_1}$ est la définition de l'isogénie duale. Pour la deuxième partie, on observe que $(\phi\circ\h\phi)\circ\phi = \phi\circ(\h\phi\circ\phi) = \phi\circ[\deg{\phi}]_{E_1} = [\deg{\phi}]_{E_2}\circ\phi$ et donc $\phi$ étant surjective, on obtient bien $\phi\circ\h\phi = [\deg{\phi}]_{E_2}$.
     \item En remarquant que $(\h\phi\circ\h\lambda)\circ(\lambda\circ\phi) = \h\phi\circ [\deg\lambda]_{E_2} \circ\phi = [\deg\lambda]_{E_1}\circ\h\phi\circ\phi = [\deg\lambda]_{E_1}\circ [\deg\phi]_{E_1} = [\deg(\lambda)\deg(\phi)] = [\deg(\lambda\circ\phi)]$ et en utilisant le théorème \ref{existence_duale}, on montre que $\h{\lambda\circ\phi} = \h\phi\circ\h\lambda$.
-    \item Je ne le démontre pas car la démonstration est un peu technique.
+    
+    \item La démonstration que je vais donner ne sera pas très satisfaisante puisqu'elle utilise l'existence du pairing de Weil qui sera admise en \ref{pairing}. Soit $T_1\in E_1[m]$ et $T_2\in E_2[m]$. $e_m(T_1, (\h{\phi +\psi})(T_2)) = e_m((\phi+\psi)(T_1), T_2) = e_m(\phi(T_1), T_2)e_m(\psi (T_1), T_2) = e_m(T_1, \h\phi (T_2))e_m(T_1, \h\psi (T_2)) = e_m(T_1, (\h\phi + \h\psi)(T_2))$. Ainsi $e_m(T_1, (\h{\phi + \psi} - \h\phi -\h\psi)(T_2)) = 1$ pour tout $T_1$, ce qui montre que $(\h{\phi + \psi} - \h\phi -\h\psi)(T_2) = 0$. Ceci étant vrai pour tout $T_2\in E_2[m]$ pour tout $m\in\Z$, cela montre que  $\h{\phi+\psi} = \h\phi + \h\psi$ (en tout cas dans le cas des courbes définies sur $\ol{\F_p}$ où il est évident que chaque élément est d'ordre fini).
+
     \item Montrons d'abord par récurrence pour $m\in\N$ que $\h{[m]} = [m]$. Le cas $m=0$ est vrai par définition (voir la remarque précédente). Les cas $m = \pm 1$ se montrent par le théorème \ref{existence_duale} en sachant que puisque $[1](x, y) = (x, y)$ et $[-1](x, y) = (x, -y)$, on montre par la proposition \ref{caracdeg} que $\deg[-1] = \deg[1] = 1$. La propriété étant vraie à un certain rang $m$, le point $2$ montre l'hérédité : $\h{[m+1]} = \h{[m] + [1]} = \h{[m]} + \h{[1]} = [m] + [1] = [m+1]$ et $\h{[m-1]} = \h{[m] + [-1]} = \h{[m]} + \h{[-1]} = [m] + [-1] = [m-1]$.
       Enfin $[\deg [m]] = \h{[m]} \circ [m] = [m] \circ [m] = [m^2]$ montre la deuxième partie de l'assertion, le morphisme $[]:\Z\to \End_{E_1}$ étant injectif.
     \item Par le point précédent, $ (\deg\phi)^2=\deg([\deg\phi])=\deg(\h\phi\circ\phi) = (\deg\h\phi)(\deg\phi)$, donc $\deg\h\phi = \deg\phi$. Avec le point $1$, $\phi\circ\h\phi = [\deg\phi] = [\deg \h\phi]$, donc en réutilisant le théorème \ref{existence_duale} on obtient bien $\h{\h\phi} = \phi$.
@@ -624,12 +624,25 @@ On définit ici la $m$-torsion d'une isogénie pour $m\in\Z$.
 \begin{proof}
 Soit $d$ un diviseur de $m$. 
 Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d'inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d'inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
-Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
+Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure par le lemme \ref{groupes_abéliens} que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
+\end{proof}
+
+\begin{lem}
+  \label{groupes_abéliens}
+  Soit $m$ premier avec $p$. Sachant que $\#E[d]=d^2$ pour tout $d$ diviseur de $m$, $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$. 
+\end{lem}
+
+\begin{proof}
+  Pour tout $m$ premier avec $p$, notons $\mathcal P(m)$ la propriété à démontrer.
+
+  Supposons dans un premier temps que $m=l^n$, avec $l$ un nombre premier. La propriété $\mathcal P(l^0)$ est trivialement vérifiée. Supposont que $\mathcal P(l^n)$ soit vraie pour un certain entier $n$ : $E[l^n] \simeq \Z/l^n\Z \times \Z/l^n\Z$. Puisque $E[l^n] \subseteq E[l^{n+1}]$, par le théorème de structure des groupes abéliens finis il n'y a que trois cas possibles \emph{a priori} pour la structure de $E[l^{n+1}]$. Soit (1)   $E[l^{n+1}]  \simeq \Z/l^n\Z \times \Z/l^n\Z \times G$ avec $\#G=l^2$, soit (2)   $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^n\Z\times \Z/l\Z$, soit (3) $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^{n+1}\Z$. Montrons que les cas (1) et (2) sont impossibles. Par hypothèse, le nombre d'éléments d'ordre $l^{n+1}$ dans $E[l^{n+1}]$ est $l^{2n+2} - l^{2n} = l^{2n}(p^2 -1)$. Dans le cas (1) il n'y a pas d'éléments d'ordre $l^{n+1}$, et dans le cas (2) il y en a $(l^{n+1} - l^n)l^nl = l^{2n}(l^2-l)$ : puisque $p>1$, ces deux cas sont impossibles. Ainsi $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^{n+1}\Z$.
+
+  Supposons maintenant la propriété $\mathcal P$ vraie pour $l$ et $m$ deux entiers premiers entre eux (et non divisible par $p$). Alors $E[lm]\simeq G_l \times G_m$ avec $\#G_l = l^2$ et $\#G_m = m^2$ par le théorème de structure. De plus, puisque $E[l]\subseteq E[lm]$ et  $E[m]\subseteq E[lm]$, on obtient $E[l]\simeq G_l$ et $E[m]\simeq G_m$, ce qui montre que $\mathcal P(lm)$ est vraie.
+
+  Ainsi, par induction, $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$ pour tout $m$ non divisible par $p$.
 \end{proof}
 
 
-
-\section{Comptage de points}
 
 Le but de cette partie est de compter le nombre de points dans $\F_{q^n}$ d'une courbe elliptique $E$ définie sur $\F_q$.
 
@@ -805,16 +818,17 @@ Le théorème \ref{hasse} donne une borne sur le nombre de points dans $\F_q$ d'
   Par le lemme \ref{cardpi}, on sait que $\#E(\F_q) = \deg([1] - \pi_q)$, donc finalement $|\#E(\F_q)-q-1| \le 2\sqrt{q}$.
 \end{proof}
 
-\section{Courbes supersingulières}
+\section{Cryptographie par isogénies entre courbes supersingulières}
+
+
+
+\subsection{Courbes supersingulières}
 
 On s'intéresse maintenant particulièrement aux courbes elliptiques supersingulières que nous allons définir et qui seront utilisées dans le protocole SIDH.
 
 \begin{deff}
   Une courbe elliptique $E/Fq$ ($q$ étant une puissance de $p$) est dite supersingulière si $E[p]$ est réduit à $\infty$. 
 \end{deff}
-
-\subsection{Premières propriétés}
-
 \begin{prop}
   \label{pihatsep}
   Soit $E/\F_q$ une courbe elliptique. La courbe $E$ est supersingulière si et seulement si $\widehat{\pi_q}$ est (purement) inséparable.
@@ -941,16 +955,13 @@ Si $\psi$ est d'ordre $2$, $\pi_{p^2}^2 = (\psi^{-1} \circ [p])^2 = \psi^{-2} \c
   On a même montré qu'en partant d'un courbe supersingulière définie sur $\F_{p^2}$ de cardinal $E(\F_{p^2}) = (p+1)^2$ et en se promenant sur le graphe des isogénies on atteint toutes les courbes supersingulières.
 \end{rem}
 
-\section{Cryptographie par isogénies entre courbes supersingulières}
 
-Dans cette partie on présente le protocole SIDH. 
-
-Le protocole utilise une courbe elliptique supersingulière $E_0$ définie sur $\F_{p^2}$ de cardinal $E_0(\F_{p^2}) = (p+1)^2 =(2^a3^bf)^2$ avec $2$ ne divisant pas $f$ et $b$ ne divisant pas $f$. La sécurité du protocole repose sur la taille des entiers $a$ et $b$, il est donc nécessaire de pouvoir construire de telles courbes avec de grands $a$ et $b$. C'est ce que nous faisons dans la partie \ref{init}. Dans la partie \ref{torsion_init} nous comptons le nombre de sous groupes cycliques de la $2^a$ ou $3^b$-torsion de $E_0$. On souhaite que ce nombre soit important pour le protocole cryptographique.
 
 \subsection{Construction d'une courbe initiale}
 \label{init}
-L'objectif de cette partie est de construire une courbe elliptique supersingulière adaptée.
-Plus précisément, nous allons étudier la courbe $E_0 : y^2 = x^3 + b$ avec $b\in\F_{p}^\times$ et montrer que sous certaines conditions sur $p$, cette courbe est supersingulière et de bonne cardinalité (en considérant le nombre de points dans $\F_{p^2}$.
+
+Le protocole utilise une courbe elliptique supersingulière $E_0$ définie sur $\F_{p^2}$ de cardinal $E_0(\F_{p^2}) = (p+1)^2 =(2^a3^bf)^2$ avec $2$ et $3$ ne divisant pas $f$. La sécurité du protocole repose sur la taille des entiers $a$ et $b$, il est donc nécessaire de pouvoir construire de telles courbes avec de grands $a$ et $b$. C'est ce que nous faisons dans cette partie.
+Plus précisément, nous allons étudier la courbe $E_0 : y^2 = x^3 + b$ avec $b\in\F_{p}^\times$ et montrer que sous certaines conditions sur $p$, cette courbe est supersingulière et de bonne cardinalité (en considérant le nombre de points dans $\F_{p^2}$).
 
 
 Commençons par compter le nombre de points de $E_0$ sur $\F_{p}$. Pour cela nous montrons d'abord un résultat sur le nombre de carrés dans $\F_{p}$.
@@ -975,7 +986,7 @@ Commençons par compter le nombre de points de $E_0$ sur $\F_{p}$. Pour cela nou
 \end{proof}
 
 \begin{prop}
-  Si $p$ est impair et si $p \equiv 2 [3]$, alors $\#E_0(\F_{p}) = p+1$.
+  Si $p$ est impair et si $p \equiv 2\ [3]$, alors $\#E_0(\F_{p}) = p+1$.
 \end{prop}
 
 \begin{proof}
@@ -1052,6 +1063,7 @@ Ainsi $E$ est supersingulière.
 
 \subsection{Torsions de la courbe initiale}
 \label{torsion_init}
+ Dans la partie \ref{torsion_init} nous comptons le nombre de sous groupes cycliques de la $2^a$ ou $3^b$-torsion de $E_0$. On souhaite que ce nombre soit important pour le protocole cryptographique.
 
 On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure de groupes des points $\F_{p^2}$ rationnels de la courbe $E_0$. 
 
@@ -1090,6 +1102,7 @@ Ainsi, puisque $E_0(\F_{p^2})[l^e] \simeq \Z/l^e\Z \times \Z/l^e\Z$ par la propo
 On s'intéresse maintenant au nombre de sous-groupes cycliques de la $2^a$ ou $3^b$-torsion.
 
 \begin{prop}
+  \label{nombre_cycliques}
   $E_0(\F_{p^2})[l^e]$ contient $l^{e-1}(l+1)$ sous-groupes cycliques d'ordre $l^e$.
 \end{prop}
 \begin{proof}
@@ -1104,6 +1117,7 @@ La proposition suivante permet d'écrire un algorithme pour calculer une base de
   $E_0[l^e] \simeq \Z/l^e\Z \times \Z/l^e\Z$.
 
 \begin{prop}
+  \label{recherche_base}
   Soient $P$ et $Q$ deux éléments de $\Z/l^e\Z \times \Z/l^e\Z$. 
   La famille $(P, Q)$ est $\Z/l^e\Z $-libre ssi $(l^{e-1}P, l^{e-1}Q)$ est $\Z/l\Z $-libre. 
 \end{prop}
@@ -1128,9 +1142,12 @@ La proposition suivante permet d'écrire un algorithme pour calculer une base de
 
 \subsection{Formules de Vélu}
 
-\begin{prop}
+Les formules de Vélu servent à construire des isogénies à partir de la connaissance de leur noyau. 
+
+\begin{thm}
+  \label{isoker}
   Soit $E/K$ une courbe elliptique et $G$ un sous groupe fini de $E(K)$. Il existe à isomorphisme près une unique courbe elliptique $E'$ et une unique isogénie séparable $\phi : E \to E'$ telle que $\Ker \phi = G$. La courbe $E'$ est notée $E/G$.
-\end{prop}
+\end{thm}
 
 \begin{proof}
   Voir \cite{Silverman} III.4.12.
@@ -1175,25 +1192,35 @@ Dans cette partie nous décrivons enfin le protocole SIDH de l'article \cite{DeF
   \item Bob calcule $\phi_B' : E_A\to E_{BA}$ de noyau $\langle m_B\phi_A(P_B) + n_B\phi_A(Q_B)\rangle$.
 \end{enumerate}
 
+
+Posons $\alpha = m_AP_A+n_AQ_A$ et $\beta = m_BP_B + n_BQ_B$ et calculons le noyau de $\phi_B' \circ \phi_A$.  
+$P\in \Ker (\phi_B' \circ \phi_A)$ 
+ssi $\phi_A(P) \in \langle \phi_A(\beta)\rangle$
+ssi $\phi_A(P) = k \phi_A(\beta)$
+ssi $P - k \beta \in \langle \alpha\rangle$
+ssi $P\in \langle \alpha, \beta\rangle$. 
+Ainsi, en procédant de même avec $\phi_A' \circ \phi_B$ on obtient que $\Ker (\phi_A' \circ \phi_B) = \Ker (\phi_B' \circ \phi_A) =  \langle \alpha, \beta\rangle$. En utilisant le théorème \ref{isoker}, cela signifie que les courbes $E_{BA}$ et $E_{AB}$ sont isomorphes. Enfin puisque deux courbes isomorphes possèdent le même $j$-invariant, Alice et Bob peuvent utiliser ce $j$-invariant comme secret commun. Le diagramme suivant résume l'échange :
+
 \begin{center}
   \begin{tikzcd}
     &[65pt]  
     E_A
-    \ar[dr, 
+    \ar[dr, red,
     "\Ker(\phi_B')=\langle m_B\phi_A(P_B) + n_B\phi_A(Q_B)\rangle"{rotate=-19, anchor=south}, 
-    "\phi_B'"{below, rotate=-19}]  
+    "\phi_B'"{below, rotate=-19}]
+    \ar[dddd, blue, shift right=3px]
     &[105pt] \\[20pt]
 
     &  
     &E_{BA} 
-    \ar[dd, equal] 
+    \ar[dd, leftrightsquigarrow, "\simeq" {anchor=south, rotate=-90}] 
     \\[-18pt]
 
     E_0 
-    \ar[uur, 
+    \ar[uur, blue,
     "\Ker(\phi_A) = \langle m_AP_A +n_AQ_A \rangle" {anchor=south, rotate = 32}, 
     "{\phi_A,\ \phi_A(P_B),\ \phi_A(Q_B)}"{below, rotate=32}] 
-    \ar[ddr, 
+    \ar[ddr, red,
     "\Ker(\phi_B) = \langle m_BP_B +n_BQ_B \rangle"{anchor=south, rotate = -32, below}, 
     "{\phi_B,\ \phi_B(P_A),\ \phi_B(Q_A)}"{above, rotate=-32}]  
     & & 
@@ -1203,18 +1230,130 @@ Dans cette partie nous décrivons enfin le protocole SIDH de l'article \cite{DeF
     \\[20pt]
     
     &  E_B
-    \ar[ur, 
+    \ar[ur, blue,
     "\Ker(\phi_A')=\langle m_A\phi_B(P_A) + n_A\phi_B(Q_A)\rangle"{rotate = 19, below}, 
-    "\phi_A'"{above, rotate=19}]  
+    "\phi_A'"{above, rotate=19}] 
+    \ar[uuuu, red, shift right=3px]
     &
   \end{tikzcd}
 \end{center}
+
+La différence principale avec le protocole Diffie-Hellman classique est la nécessité d'envoyer l'image de points de la base par les isogénies secrètes. 
+La sécurité du protocole repose sur le fait qu'il est difficile de retrouver $\phi_A$ ou $\Ker\phi_A$ à partir de $E_A$, $\phi_A(P_B)$, et $\phi_A(Q_B)$.
+
+La proposition \ref{nombre_cycliques} assure qu'il y a suffisament de sous groupes cycliques dans les $2^a$ et $3^b$-torsions de $E_0$ pour qu'il y ait suffisament de courbes $E_A$ et $E_B$ différentes possibles. La proposition \ref{recherche_base} permet en tirant des éléments au hasard de trouver rapidement une base des torsions.
+
+Des technicités apparaissent dans le calcul de $\phi_A(P_B)$, $\phi_A(Q_B)$ et de $E_A$ par Alice (et de leurs analogues pour Bob). Les formules de Vélu utilisant une somme sur tous les éléments du noyau, $2^a$ étant grand, il est impossibles de les utiliser directement pour calculer $\phi_A$. La solution est de décomposer $\phi_A$ en $a$ isogénies de degré au plus $2$.
 
 
 
 \bibliographystyle{plainnat-fr}
 \bibliography{biblio}
 
+\appendix
+
+\section{Code}
+
+Le code ci-dessous utilise le logiciel libre \textsc{SageMath}, et peut normalement être exécuté sans modifications. Avec une telle implémentation je peux calculer un échange avec un nombre $p$ de $784$ bits en quelques dizaines de secondes. L'endroit où l'algorithme passe le plus de temps est dans la recherche d'une base de la torsion. 
+
+\subsection*{Recherche d'un nombre premier $p$}
+\begin{minted}{python}
+lA = 2
+eA = 300
+
+lB = 3
+eB = 300
+
+f = 1
+p = lA ^ eA * lB ^ eB * f - 1
+while f % lA == 0 or f % lB == 0 or p not in Primes():
+    f += 1 
+    p = lA ^ eA * lB ^ eB * f - 1
+    
+print("p : ", p)
+print("Sécurité : log2(p)=", numerical_approx(log(p)/log(2)))
+print("Debug : f =", f)
+
+q = p^2
+Fq = FiniteField((p, 2), 'a')
+\end{minted}
+
+\subsection*{Recherche d'une courbe initiale}
+\begin{minted}{python}
+E = EllipticCurve([Fq(0), Fq(1)])
+print(E)
+print("Supersingulière :", E.is_supersingular())
+desiredCardinality = (lA ^ eA * lB ^ eB * f) ^ 2
+print("Bonne cardinalité :", E.cardinality() == desiredCardinality)
+\end{minted}
+
+\subsection*{Base des torsions}
+\begin{minted}{python}
+is_a_base = False
+while not is_a_base:
+    PA = 0
+    while PA.order() != lA^eA: PA = (lB^eB * f) ^2 * E.random_point()
+    QA = 0
+    while QA.order() != lA^eA: QA = (lB^eB * f) ^2 * E.random_point()
+    is_a_base = PA.weil_pairing(QA, lA^eA) ^ (lA^(eA-1)) != 1
+
+is_a_base = False
+while not is_a_base:
+    PB = 0
+    while PB.order() != lB^eB: PB = (lA^eA * f) ^2 * E.random_point()
+    QB = 0
+    while QB.order() != lB^eB: QB = (lA^eA * f) ^2 * E.random_point()
+    is_a_base = PB.weil_pairing(QB, lB^eB) ^ (lB^(eB-1)) != 1
+\end{minted}
+
+
+\subsection*{Chaine d'isogénies}
+\begin{minted}{python}
+def chain_isogenies(E, R, l, e, points):
+    phi = E.identity_morphism()
+    Ei = E
+    Ri = R
+    for i in range(e):
+        phi_i = Ei.isogeny(l^(e-i-1) * Ri)
+        Ri = phi_i(Ri)
+        Ei = phi_i.codomain()
+        points = [phi_i(P) for P in points]
+    return (Ei, points)
+\end{minted}
+
+
+\subsection*{Création des secrets et calcul des isogénies}
+\begin{minted}{python}
+def random_secret(l, e):
+    badCouple = True
+    while badCouple:
+        m, n = randrange(l^e), randrange(l^e)
+        badCouple = m % l == 0 and n % l == 0
+    return (m, n)
+
+mA, nA = random_secret(lA, eA)
+
+(EA, [phiA_PB, phiA_QB]) = chain_isogenies(E, mA * PA + nA * QA, lA, eA, [PB, QB])
+
+print("Secret :", mA, nA)
+print("Publique :", EA)
+print("Publique :", phiA_PB, phiA_QB)
+
+mB, nB = random_secret(lB, eB)
+
+(EB, [phiB_PA, phiB_QA]) = chain_isogenies(E, mB * PB + nB * QB, lB, eB, [PA, QA])
+
+print("Secret :", mB, nB)
+print("Publique :", EB)
+print("Publique :", phiB_PA, phiB_QA)
+\end{minted}
+
+
+\subsection*{Détermination du secret commun}
+\begin{minted}{python}
+chain_isogenies(EB, mA * phiB_PA + nA * phiB_QA, lA, eA, [])[0].j_invariant()
+chain_isogenies(EA, mB * phiA_PB + nB * phiA_QB, lB, eB, [])[0].j_invariant()
+\end{minted}
 
 
 \end{document}
