@@ -163,7 +163,7 @@ La proposition précédente montre que $\mathbb P^2$ contient une copie de $\ol 
 \end{proof}
 
 On peut maintenant s'intéresser aux points de $Z(F)\setminus U$. Soit $[x, y, z]\in Z(F)\setminus U$. Alors $z=0$ et $0 = F(x,y, z) = F(x, y, 0) = -x^3$, donc $x=0$. Ainsi $[x, y, z] = [0, y, 0] = [0, 1, 0]$, car $y$ ne peut pas être nul puisque $[0, 0, 0]$ n'appartient pas à $\mathbb P^2$. On vient de montrer que le seul point de $Z(F)$ qui n'appartient pas à $U$ est $[0, 1, 0]$, et c'est ce point que l'on considérera comme "point à l'infini" dans $\ol K^2$. Ainsi on a une correspondance simple entre $Z(f) \cup \{\infty\}$ et $Z(F)$.
-L'espace projectif a un intérêt théorique puisque beaucoup de résultats s'y expriment de façon bien plus élégantes, mais en pratique, dans un ordinateur on effectuera les calculs dans $\ol K^2$ qui est plus facile à manipuler.
+L'espace projectif a un intérêt théorique puisque beaucoup de résultats s'y expriment de façon bien plus élégantes, mais l'espace $K^2$ est plus facile à se représenter mentalement. 
 
 \begin{deff}
   À un ensemble algébrique $V$, on associe un idéal :
@@ -200,9 +200,8 @@ Le lecteur peut maintenant oublier la partie précédente puisque que lorsque l'
 
 Ce qui rend les courbes elliptiques intéressantes, notamment en cryptographie, c'est que l'on peut les munir d'une loi de groupe. Soit $E/K$ une courbe elliptique. Nous allons construire une loi sur $E$ notée $+$ telle que $(E, +, \infty)$ formera un groupe abélien.
 
-
 \begin{deff}
-Pour définir la somme de deux points $P_1$ et $P_2$, on commence par tracer la droite $\mathcal D$ entre $P_1$ et $P_2$. Cette droite possède une troisième intersection $P_3$ avec la courbe $E$. On note alors $P_1 + P_2$ la reflection de $P_3$ par rapport à l'axe des abscisses.
+Pour définir la somme de deux points $P_1$ et $P_2$, on commence par tracer la droite $\mathcal D$ entre $P_1$ et $P_2$. Cette droite possède une troisième intersection $P_3$ avec la courbe $E$. On note alors $P_1 + P_2$ la réflexion de $P_3$ par rapport à l'axe des abscisses.
 \end{deff}
 
 Cette définition d'est pas claire pour plusieurs raisons. Quelle sont les  droites passant par $\infty$ par exemple ? On souhaite que $\infty$ soit l'élément neutre soit le neutre de cette loi, donc si par exemple $P_1=\infty$, on définit : $P_1+P_2 = \infty+P_2 = P_2$.
@@ -392,7 +391,7 @@ Le théorème précédent permet de donner les définitions usuelles associées 
 \end{deff}
 
 \begin{deff}
-  On note $\End_L(E)$ le groupe $\Hom_L(E, E)$. Muni de la loi de composition des morphismes, $\End_L(E)$ est un anneau intègre. Les éléments de $\End_L(E)$ sont appelés endomorphismes de $E$.
+  On note $\End_L(E)$ le groupe $\Hom_L(E, E)$. Muni de la loi de composition des morphismes, $\End_L(E)$ est un anneau. Les éléments de $\End_L(E)$ sont appelés endomorphismes de $E$.
 \end{deff}
 
 
@@ -445,6 +444,24 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
 
 \subsection{$j$-invariant}
 
+\begin{deff}
+  Soit $E/K : y^2 = x^3 + ax + b$ une courbe elliptique définie sur $K$. Son discriminant $\Delta$ est non nul et défini par $\Delta = -16(4a^3 + 27b^2)$. Son $j$-invariant est défini par : $$j = -1728\frac{(4a)^3}{\Delta} = 1728\frac{4a^3}{4a^3 + 27b^2}$$ 
+\end{deff}
+
+\begin{prop}
+Soient deux courbes elliptiques $E_1$ et $E_2$ définies sur un corps $K$ par $y^2 = x^3 + a_1x+ b_1$ et $y^2 = x^3 + a_2x + b_2$ respectivement. Notons $j_1$ et $j_2$ leurs $j$-invariants respectifs. Les courbes $E_1$ et $E_2$ sont isomorphes sur $\ol K$ si et seulement si $j_1 = j_2$.
+\end{prop}
+
+\begin{proof}
+  Supposons d'abord que $j_1 = j_2$ et explicitons un isomorphisme entre $E_1$ et $E_2$. Dans le cas où $a_1$ est différent de $0$, $j_1$ est différent de $0$ et donc $j_2$ et $a_2$ le sont aussi. Il existe donc $\mu \in \ol K$ tel que $a_2 = \mu^4 a_1$. Ainsi,
+  $$ \frac{4a_2^3}{4a_2^3 +27b_2^2} = \frac{4a_1^3}{4a_1^3+27b_1^2} =\frac{4\mu^{-12}a_2^3}{4\mu^{-12}a_2^3 + 27b_1^2} = \frac{4a_2^3}{4a_2^3+ 27\mu^{12} b_1^2}$$
+  Finalement $b_2^2 = \mu^{12}b_1^2$, donc $b_2 = \pm \mu^6 b_1$. Quitte à remplacer $\mu$ par $i\mu$, où $i\in \ol K$ est tel que $i^2 = -1$, on peut supposer que $a_2 = \mu^4 a_1$ et $b_2 = \mu^6 b_1$. L'application $\psi : E_1\to E_2$ définie par $\psi(x, y) = (\mu ^2x, \mu ^3 y)$ est bien définie et est un morphisme. En effet, étant donné $(x, y)$ dans $E_1$, $(\mu^3y)^2 = \mu^6 y^2 = \mu^6 x^3 + \mu^6 a_1 x + \mu^6 b_1 = (\mu ^2 x) + a_2(\mu^2x)+ b_2$ donc $\psi(x, y)$ appartient à $E_2$. Il est clair que $\psi$ est bijective et que sa réciproque est aussi un morphisme : $E_1$ et $E_2$ sont donc isomorphes.
+
+  Dans le cas où $a_1 = 0$, $j_2 = j_1 = 0$, donc $a_2 = 0$. Puisque les discriminants de $E_1$ et $E_2$ sont tous deux non nuls, $b_1$ et $b_2$ sont différents de $0$. Il existe donc $\mu \in \ol K$ tel que $b_2 = \mu^6 b_1$, on peut donc conclure comme précédemment.
+
+  Montrons maintenant la réciproque : supposons $E_1$ et $E_2$ isomorphes et montrons que $j_1 = j_2$.
+\end{proof}
+
 \subsection{Degré}
 
 Cette sous-partie introduit la notion de degré d'un morphisme.
@@ -458,11 +475,22 @@ Cette sous-partie introduit la notion de degré d'un morphisme.
 Le degré d'une extension finie $L/K$ est la dimension de $L$ en temps que $K$-espace vectoriel et est noté $[L : K$].
 
 \begin{prop}
+  \label{mul_deg}
   Le degré est multiplicatif. Soient $\phi : E_1\to E_2$ et $\psi : E_2\to E_3$ deux morphisme. Alors $\deg(\psi \circ \phi) = \deg(\psi)\deg(\phi)$ 
 \end{prop}
 
 \begin{proof}
   Le cas où $\phi$ ou $\psi$ est nul est trivial. Dans le cas ou $\phi$ et $\psi$ sont des isogénies, cela vient directement de la multiplicativité du degré d'une extension de corps : $\deg(\psi \circ \phi) = [K(E_3) :K(E_1)] = [K(E_3):K(E_2)][K(E_2):K(E_1)] = \deg(\psi)\deg(\phi)$. La preuve de la multiplicativité du degré d'extensions finies peut se faire de façon élémentaire en considérant des bases $(e_i)_i$ du $K(E_1)$-espace vectoriel $K(E_2)$ et $(f_j)_j$ du $K(E_2)$-espace vectoriel $K(E_3)$ et en montrant que la famille $(e_if_j)_{ij}$ forme une base du $K(E_1)$-espace vectoriel $K(E_3)$.
+\end{proof}
+
+
+\begin{prop}
+  Soit $E$ une courbe elliptique. L'anneau $\End(E)$ est intègre.
+\end{prop}
+
+\begin{proof}
+  Soit $\phi$ et $\psi$ deux morphismes de $E$ tels que $\phi \circ \psi = 0$. 
+Par la proposition \ref{mul_deg}, $(\deg \phi)(\deg \psi) = \deg(\phi \circ \psi) = \deg[0] = 0$. Ainsi $\deg \phi = \deg \psi = 0$ donc $\phi = \psi = 0$.
 \end{proof}
 
 On cherche maintenant à avoir une forme canonique pour effectuer des calculs sur les isogénies, et pour pouvoir calculer plus facilement leur degré.
@@ -635,7 +663,7 @@ Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien
 \begin{proof}
   Pour tout $m$ premier avec $p$, notons $\mathcal P(m)$ la propriété à démontrer.
 
-  Supposons dans un premier temps que $m=l^n$, avec $l$ un nombre premier. La propriété $\mathcal P(l^0)$ est trivialement vérifiée. Supposont que $\mathcal P(l^n)$ soit vraie pour un certain entier $n$ : $E[l^n] \simeq \Z/l^n\Z \times \Z/l^n\Z$. Puisque $E[l^n] \subseteq E[l^{n+1}]$, par le théorème de structure des groupes abéliens finis il n'y a que trois cas possibles \emph{a priori} pour la structure de $E[l^{n+1}]$. Soit (1)   $E[l^{n+1}]  \simeq \Z/l^n\Z \times \Z/l^n\Z \times G$ avec $\#G=l^2$, soit (2)   $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^n\Z\times \Z/l\Z$, soit (3) $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^{n+1}\Z$. Montrons que les cas (1) et (2) sont impossibles. Par hypothèse, le nombre d'éléments d'ordre $l^{n+1}$ dans $E[l^{n+1}]$ est $l^{2n+2} - l^{2n} = l^{2n}(p^2 -1)$. Dans le cas (1) il n'y a pas d'éléments d'ordre $l^{n+1}$, et dans le cas (2) il y en a $(l^{n+1} - l^n)l^nl = l^{2n}(l^2-l)$ : puisque $p>1$, ces deux cas sont impossibles. Ainsi $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^{n+1}\Z$.
+  Supposons dans un premier temps que $m=l^n$, avec $l$ un nombre premier. La propriété $\mathcal P(l^0)$ est trivialement vérifiée. Supposons que $\mathcal P(l^n)$ soit vraie pour un certain entier $n$ : $E[l^n] \simeq \Z/l^n\Z \times \Z/l^n\Z$. Puisque $E[l^n] \subseteq E[l^{n+1}]$, par le théorème de structure des groupes abéliens finis il n'y a que trois cas possibles \emph{a priori} pour la structure de $E[l^{n+1}]$. Soit (1)   $E[l^{n+1}]  \simeq \Z/l^n\Z \times \Z/l^n\Z \times G$ avec $\#G=l^2$, soit (2)   $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^n\Z\times \Z/l\Z$, soit (3) $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^{n+1}\Z$. Montrons que les cas (1) et (2) sont impossibles. Par hypothèse, le nombre d'éléments d'ordre $l^{n+1}$ dans $E[l^{n+1}]$ est $l^{2n+2} - l^{2n} = l^{2n}(p^2 -1)$. Dans le cas (1) il n'y a pas d'éléments d'ordre $l^{n+1}$, et dans le cas (2) il y en a $(l^{n+1} - l^n)l^nl = l^{2n}(l^2-l)$ : puisque $p>1$, ces deux cas sont impossibles. Ainsi $E[l^{n+1}]  \simeq \Z/l^{n+1}\Z \times \Z/l^{n+1}\Z$.
 
   Supposons maintenant la propriété $\mathcal P$ vraie pour $l$ et $m$ deux entiers premiers entre eux (et non divisible par $p$). Alors $E[lm]\simeq G_l \times G_m$ avec $\#G_l = l^2$ et $\#G_m = m^2$ par le théorème de structure. De plus, puisque $E[l]\subseteq E[lm]$ et  $E[m]\subseteq E[lm]$, on obtient $E[l]\simeq G_l$ et $E[m]\simeq G_m$, ce qui montre que $\mathcal P(lm)$ est vraie.
 
@@ -1153,9 +1181,9 @@ Les formules de Vélu servent à construire des isogénies à partir de la conna
   Voir \cite{Silverman} III.4.12.
 \end{proof}
 
-Les formules de Vélu permettent de calculer explicitemennt une telle courbe $E/G$ et une telle isogénie $\phi$ : 
+Les formules de Vélu permettent de calculer explicitement une telle courbe $E/G$ et une telle isogénie $\phi$ : 
 \begin{prop}
-  Soit $E/K : y^2 = x^3 +ax +b$. une courbe elliptique et $G$ un sous groupe fini de $E(K)$. Notons $G_2$ l'ensemble des points d'ordre $2$ de $G$. Soit $R$ un sous ensemble de $G$ tel que $G = \{\infty\}  \sqcup G_2 \sqcup R \sqcup (-R)$. Notons $S = R \sqcup G_2$.
+  Soit $E/K : y^2 = x^3 +ax +b$ une courbe elliptique et $G$ un sous groupe fini de $E(K)$. Notons $G_2$ l'ensemble des points d'ordre $2$ de $G$. Soit $R$ un sous ensemble de $G$ tel que $G = \{\infty\}  \sqcup G_2 \sqcup R \sqcup (-R)$. Notons $S = R \sqcup G_2$.
   Pour tout point $Q=(x_Q, y_Q)\in G\setminus \{\infty\}$, notons 
   $$u_Q = 4y_Q^2  \text{\ \ et\ \ }     
   v_Q = 
@@ -1241,7 +1269,7 @@ Ainsi, en procédant de même avec $\phi_A' \circ \phi_B$ on obtient que $\Ker (
 La différence principale avec le protocole Diffie-Hellman classique est la nécessité d'envoyer l'image de points de la base par les isogénies secrètes. 
 La sécurité du protocole repose sur le fait qu'il est difficile de retrouver $\phi_A$ ou $\Ker\phi_A$ à partir de $E_A$, $\phi_A(P_B)$, et $\phi_A(Q_B)$.
 
-La proposition \ref{nombre_cycliques} assure qu'il y a suffisament de sous groupes cycliques dans les $2^a$ et $3^b$-torsions de $E_0$ pour qu'il y ait suffisament de courbes $E_A$ et $E_B$ différentes possibles. La proposition \ref{recherche_base} permet en tirant des éléments au hasard de trouver rapidement une base des torsions.
+La proposition \ref{nombre_cycliques} assure qu'il y a suffisamment de sous groupes cycliques dans les $2^a$ et $3^b$-torsions de $E_0$ pour qu'il y ait suffisamment de courbes $E_A$ et $E_B$ différentes possibles. La proposition \ref{recherche_base} permet en tirant des éléments au hasard de trouver rapidement une base des torsions.
 
 Des technicités apparaissent dans le calcul de $\phi_A(P_B)$, $\phi_A(Q_B)$ et de $E_A$ par Alice (et de leurs analogues pour Bob). Les formules de Vélu utilisant une somme sur tous les éléments du noyau, $2^a$ étant grand, il est impossibles de les utiliser directement pour calculer $\phi_A$. La solution est de décomposer $\phi_A$ en $a$ isogénies de degré au plus $2$.
 
