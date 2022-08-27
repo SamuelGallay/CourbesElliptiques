@@ -87,7 +87,7 @@ L'intérêt de ce protocole est sa supposée sécurité face à un attaquant dis
 En effet, la sécurité de la plupart des systèmes cryptographiques utilisés actuellement reposent soit sur le problème de la factorisation d'entiers, comme le protocole RSA, soit sur le problème du logarithme discret. 
 L'inconvénient de ces deux problèmes est qu'un attaquant disposant d'un ordinateur quantique suffisamment puissant serait capable de les résoudre facilement, et donc de lire toutes les communications chiffrées.
 
-La majeure partie de ce rapport sera consacrée à la présentation des outils mathématiques utilisés par SIDH en s'appuyant principalement sur le livre \emph{The Arithmetic of Elliptic Curves} de \cite{Silverman}. Ce livre a l'avantage d'être utilisé comme une oeuvre de référence par la communauté mathématique de la cryptographie des courbes elliptiques, dans le sens où plusieurs articles que j'ai pu rencontrer renvoient le lecteur souhaitant une preuve des résultats énoncés directement au texte de Silverman. Ce texte possède l'inconvénient d'utiliser régulièrement des outils de géométrie algébrique ou de la théorie de Galois, ce qui le rend difficilement accessible à un étudiant de License. J'ai aussi consulté le livre de \cite{Washington} sur les courbes elliptiques qui présente souvent avec des outils plus simples (et des méthodes parfois calculatoires!) les résultats nécessaires à l'étude des courbes elliptiques. 
+La majeure partie de ce rapport sera consacrée à la présentation des outils mathématiques utilisés par SIDH en s'appuyant principalement sur le livre \emph{The Arithmetic of Elliptic Curves} de \cite{Silverman}. Ce livre a l'avantage d'être utilisé comme une oeuvre de référence par la communauté mathématique de la cryptographie des courbes elliptiques, dans le sens où plusieurs articles que j'ai pu rencontrer renvoient le lecteur souhaitant une preuve des résultats énoncés directement au texte de Silverman. Ce texte possède l'inconvénient d'utiliser régulièrement des outils de géométrie algébrique ou de la théorie de Galois, ce qui le rend difficilement accessible à un étudiant de Licence. J'ai aussi consulté le livre de \cite{Washington} sur les courbes elliptiques qui présente souvent avec des outils plus simples (et des méthodes parfois calculatoires!) les résultats nécessaires à l'étude des courbes elliptiques. 
 
 \section{Qu'est-ce qu'une courbe elliptique?}
 
@@ -193,7 +193,7 @@ Le point spécifié de la courbe projective dans la définition formelle est le 
 J'espère avoir pu vous convaincre qu'une courbe elliptique donnée par la deuxième définition constitue bien une courbe elliptique au sens de la première définition. Une preuve de l'équivalence peut être trouvée dans \cite{Silverman}, à la proposition III.3.1.
 
 Je pense qu'il était important de mentionner le fait que les courbes elliptiques soient des objets d'étude important de la géométrie algébrique. Par exemple la preuve par Andrew Wiles la conjecture de Shimura-Taniyama-Weil concernant des courbes elliptiques a permis la démonstration du dernier théorème de Fermat. En revanche, l'étude de la cryptographie utilisant les courbes elliptiques peut se faire, quitte à admettre certains résultats, uniquement à partir de la seconde définition. 
-Le lecteur peut maintenant oublier la partie précédente puisque que lorsque l'on considérera une courbe elliptique $E$ définie sur $K$, ce que l'on notera $E/K$, cela signifiera que l'on s'est donné une équation $y^2 = x^3 + ax + b$, $a$ et $b$ étant des éléments de $K$ tels que $\Delta =-16(4a^3+ 27b^2)$ soit non nulle, et que l'on étudiera l'ensemble des solutions de cette équation dans $\ol K^2\cup \{\infty\}$ avec la convention que $\infty$ est solution de l'équation.
+Le lecteur peut maintenant oublier la partie précédente puisque que lorsque l'on considérera une courbe elliptique $E$ définie sur $K$, ce que l'on notera $E/K$, cela signifiera que l'on s'est donné une équation $y^2 = x^3 + ax + b$, $a$ et $b$ étant des éléments de $K$ tels que $\Delta =-16(4a^3+ 27b^2)$ soit non nul, et que l'on étudiera l'ensemble des solutions de cette équation dans $\ol K^2\cup \{\infty\}$ avec la convention que $\infty$ est solution de l'équation.
 
 
 \subsection{Loi de groupe}
@@ -442,15 +442,29 @@ Notons dès à présent qu'étant donné deux courbes elliptiques définies sur 
   Soit $\phi : E_1\to E_2$ un morphisme et $m\in\Z$. Soit $P\in E_1$. $(\phi \circ [m]_{E_1})(P) = \phi(P + \ldots + P) = \phi(P) + \ldots + \phi(P) = ([m]_{E_2} \circ \phi)(P)$.
 \end{proof}
 
+\begin{thm}
+  \label{forme_iso}
+  Soient $E_1$ et $E_2$ deux courbes elliptiques définies sur $K$. Un isomorphisme de courbes elliptiques entre $E_1$ et $E_2$ est toujours de la forme $(x, y)\mapsto (u^2x, u^3y)$ avec $u\in \ol K$.  
+\end{thm}
+
+\begin{proof}
+  Voir la proposition III.3.1 (b) dans \cite{Silverman}.
+\end{proof}
+
 \subsection{$j$-invariant}
+
+Dans cette partie noue introduisons la notion de $j$-invariant :
+
 
 \begin{deff}
   Soit $E/K : y^2 = x^3 + ax + b$ une courbe elliptique définie sur $K$. Son discriminant $\Delta$ est non nul et défini par $\Delta = -16(4a^3 + 27b^2)$. Son $j$-invariant est défini par : $$j = -1728\frac{(4a)^3}{\Delta} = 1728\frac{4a^3}{4a^3 + 27b^2}$$ 
 \end{deff}
 
-\begin{prop}
+Cette quantité a la particularité de caractériser complètement les classes de $\ol K$-isomorphismes de courbes elliptiques définies sur $K$.
+
+\begin{thm}
 Soient deux courbes elliptiques $E_1$ et $E_2$ définies sur un corps $K$ par $y^2 = x^3 + a_1x+ b_1$ et $y^2 = x^3 + a_2x + b_2$ respectivement. Notons $j_1$ et $j_2$ leurs $j$-invariants respectifs. Les courbes $E_1$ et $E_2$ sont isomorphes sur $\ol K$ si et seulement si $j_1 = j_2$.
-\end{prop}
+\end{thm}
 
 \begin{proof}
   Supposons d'abord que $j_1 = j_2$ et explicitons un isomorphisme entre $E_1$ et $E_2$. Dans le cas où $a_1$ est différent de $0$, $j_1$ est différent de $0$ et donc $j_2$ et $a_2$ le sont aussi. Il existe donc $\mu \in \ol K$ tel que $a_2 = \mu^4 a_1$. Ainsi,
@@ -459,8 +473,12 @@ Soient deux courbes elliptiques $E_1$ et $E_2$ définies sur un corps $K$ par $y
 
   Dans le cas où $a_1 = 0$, $j_2 = j_1 = 0$, donc $a_2 = 0$. Puisque les discriminants de $E_1$ et $E_2$ sont tous deux non nuls, $b_1$ et $b_2$ sont différents de $0$. Il existe donc $\mu \in \ol K$ tel que $b_2 = \mu^6 b_1$, on peut donc conclure comme précédemment.
 
-  Montrons maintenant la réciproque : supposons $E_1$ et $E_2$ isomorphes et montrons que $j_1 = j_2$.
+  Pour montrer la réciproque, nous utilisons le théorème \ref{forme_iso} que nous n'avons pas démontré ici. Si $E_1$ et $E_2$ sont isomorphes, alors il existe $u\in \ol K$ tel que pour tout $(x, y)\in \ol K ^2$ $(x, y)\in E_1$ si et seulement si $(u^2x, u^3y)\in E_2$. Ainsi pour tout $(x, y)\in \ol K ^2$, $$u^6 (x^3 + a_1 x + b_1) = u^6 y^2 = (u^3y)^2 = (u^2x)^3 + a_2(u^2x) + b_2 = u^6 (x^3 + a_2u^{-4}x + u^{-6}b_2) $$ Le corps $\ol K$ étant infini $E_1$ est infini et ceci montre que $a_1 = a_2u^{-4}$ et $b_1 = u^{-6}b_2$. Alors $$j_1 = 1728\frac{4a_1^3}{4a_1^3 + 27b_1^2} = 1728 \frac{4u^{-12}a_2^3}{4u^{-12}a_2^3 + 27u^{-12}b_2} = 1728 \frac{4a_2^3}{4a_2^3 + 27b_2^2} = j_2$$
 \end{proof}
+
+\begin{rem}
+  Deux cas particuliers sont intéressants. Les courbes de la forme $E/K: y^2 = x^3 + b$ avec $b \neq 0$ sont de $j$-invariant $0$. Les courbes de la forme $E/K : y^2 = x^3 + ax$ sont elles de $j$-invariant $1728$.
+\end{rem}
 
 \subsection{Degré}
 
@@ -525,7 +543,7 @@ propriétés que nous allons utiliser sont les suivantes :
   \begin{enumerate}
     \item Le degré de séparabilité est multiplicatif : $[M : K]_s = [M : L]_s [L : K]_s$.
     \item Pour une extension algébrique $L/K$, $[L : K]_s$ divise $[L : K]$. On note $[L:K]_i$ l'unique entier tel que $[L:K]_s[L:K]_i=[L:K]$. C'est le degré d'inséparabilité de l'extension. 
-    \item Le degré d'inséparabilité est multiplicatif.
+    \item Le degré d'inséparabilité est multiplicatif et est égal à une puissance de la caractéristique.
     \item L’extension L/K est séparable si et seulement si $[L : K]_s = [L : K]$ si et seulement si $[L:K]_i = 1$.
     \item On dit que l'extension $L/K$ est purement inséparable si $[L:K]_s = 1$.
     \item Une extension purement inséparable non triviale est inséparable.
@@ -651,7 +669,7 @@ On définit ici la $m$-torsion d'une isogénie pour $m\in\Z$.
 
 \begin{proof}
 Soit $d$ un diviseur de $m$. 
-Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d'inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d'inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
+Par la proposition \ref{propriétés_duale}, $\deg([d]) = d^2$ . Puisque $p$ ne divise pas $d^2$ , et puisque le degré d'inséparabilité de $[d]$ doit être une puissance de $p$ divisant $d^2$ , le degré d'inséparabilité de $[d]$ vaut $1$. Ainsi $[d]$ est séparable. Donc par le théorème \ref{cardinal_noyau}, $d^2 = \deg([d]) = \deg_s([d]) = \#\Ker([d]) = \#E[d]$. 
 Avec cette condition sur les cardinaux des $E[d]$ et sachant $E[m]$ est abélien, on peut conclure par le lemme \ref{groupes_abéliens} que $E[m] \simeq {\Z}/{m\Z} \times  {\Z}/{m\Z}$.
 \end{proof}
 
@@ -677,10 +695,11 @@ Le but de cette partie est de compter le nombre de points dans $\F_{q^n}$ d'une 
 \subsection{Pairing de Weil, trace d'une isogénie}
 
 Le pairing de Weil est un outil dont on va admettre l'existence et qui va nous permettre de prouver la proposition \ref{dettr}.
-
 \begin{deff}
   Soit $\phi\in \End(E)$, et soit $l$ un nombre premier. $\phi$ induit un endomorphisme $\phi_l : E[l] \to E[l]$. Si $l\neq p$, $\phi_l$ est un endomorphisme du $\Z/l\Z$-espace vectoriel de dimension $2$ $E[l]$. 
 \end{deff}
+
+Ici $l$ est un nombre premier différent de $p$. 
 
 \begin{prop}
   \label{pairing}
@@ -700,7 +719,7 @@ Le pairing de Weil est un outil dont on va admettre l'existence et qui va nous p
 \end{lem}
 
 \begin{proof}
-  Ici $l$ est un nombre premier différent de $p$. L'image de  $e_l(S,\cdot)$ est un sous groupe de $\mathbb{U}_l$ : cela ne peut être que \{1\} ou $\U_l$. Mais puisque $S$ est non nul, le caractère non dégénéré du pairing de Weil $e_l$ implique que l'image ne peut pas être réduite à \{1\}. L'application est donc surjective.
+  L'image de  $e_l(S,\cdot)$ est un sous groupe de $\mathbb{U}_l$ : cela ne peut être que \{1\} ou $\U_l$. Mais puisque $S$ est non nul, le caractère non dégénéré du pairing de Weil $e_l$ implique que l'image ne peut pas être réduite à \{1\}. L'application est donc surjective.
 \end{proof}
 
 \begin{lem}
@@ -747,7 +766,7 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 \end{thm}
 
 \begin{proof}
-  {\color{red} Ce serait bien de trouver une démonstration pour celle-là !}
+  Voir le théorème III.4.10 (c) dans \cite{Silverman}.
 \end{proof}
 
 \begin{lem}
@@ -762,6 +781,7 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 \end{proof}
 
 \begin{prop}
+  \label{cardinalité}
   Soit $E/\F_q$ une courbe elliptique. Alors $\# E(\F_q) = q+1-\tr(\pi_q)$.
 \end{prop}
 
@@ -788,7 +808,7 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 
 \begin{thm}
   \label{récurrence}
-  Soit $\phi$ un endomorphisme de $E/\F_q$ une courbe elliptique et $\pi_q$ le morphisme de Frobenius. Pour $n\in\N$ notons $t_n = \tr(\pi_{q^n}) = \tr(\pi_q^n)$. Alors pour tout $n\in\N$, $t_{n+2} = t_1t_{n+1} - qt_n$.
+  Soit $\phi$ un endomorphisme de $E/\F_q$ une courbe elliptique et $\pi_q$ le morphisme de Frobenius. Pour $n\in\N$ notons $t_n = \tr(\pi_{q^n}) = \tr(\pi_q^n)$. Alors $t_0=1$ et pour tout $n\in\N$, $t_{n+2} = t_1t_{n+1} - qt_n$.
 \end{thm}
 
 \begin{proof}
@@ -808,22 +828,22 @@ La trace du morphisme de Frobenius $\pi_q$ d'une courbe elliptique définie sur 
 Le théorème \ref{hasse} donne une borne sur le nombre de points dans $\F_q$ d'une courbe elliptique définie sur $\F_q$.
 
 \begin{deff}[Forme quadratique]
-  Soit $G$ un groupe abélien et $d:G\to \Z$. On dit que $d$ est une forme quadratique si pour tout $g \in G$, $d(g) = d(-g)$ et si l'application $G\times G \to \mathbb R$, définie par  $\langle g, h\rangle_d = \frac{1}{2}(d(g+h) - d(g) -d(h))$ est bilinéaire.
+  Soit $G$ un groupe abélien et $d:G\to \Z$. On dit que $d$ est une forme quadratique si pour tout $g \in G$, $d(g) = d(-g)$ et si l'application $G\times G \to \mathbb Z$, définie par  $\langle g, h\rangle_d = d(g+h) - d(g) -d(h)$ est bilinéaire.
 
   Si de plus $d(g) = 0$ si et seulement si $g=0$, on dit que $d$ est définie. Si $d(g) \ge 0$ pour tout $g\in G$, on dit que $d$ est positive.
 \end{deff}
 
 \begin{rem}
-  Soit $g, h\in G$ et $n\in \Z$. On remarque que $\langle g, -g\rangle_d = \frac{1}{2}(d(g + (-g)) - d(g) -d(-g)) =\frac{1}{2}( d(0) - d(g) -d(g)) = -d(g)$, donc $d(g) = -\langle g, -g\rangle_d = \langle g, g\rangle_d$. On remarque aussi que par définition $\langle\cdot,\cdot\rangle_d$ est symétrique. Ainsi on peut développer les formes quadratiques de façon usuelle : $d(g+h) =  d(g) + 2\langle g, h\rangle_d + d(h)$ et $d(ng) = n^2d(g)$.
+  Soit $g, h\in G$ et $n\in \Z$. On remarque que $\langle g, -g\rangle_d =d(g + (-g)) - d(g) -d(-g) = d(0) - d(g) -d(g) = -2d(g)$, donc $2d(g) = -\langle g, -g\rangle_d = \langle g, g\rangle_d$. On remarque aussi que par définition $\langle\cdot,\cdot\rangle_d$ est symétrique. Ainsi on peut développer les formes quadratiques de façon usuelle : $d(g+h) =  d(g) + \langle g, h\rangle_d + d(h)$ et $d(ng) = n^2d(g)$.
 \end{rem}
 
 \begin{lem}[Inégalité de Cauchy-Schwarz]
   \label{Cauchy-Schwarz}
-  Soit $G$ un groupe abélien. Et $d:G\to \mathbb Z$ une forme quadratique définie positive. Alors $|d(g+h) - d(g) -d(h)|\le 2\sqrt{d(g)d(h)}$ pour tout $g, h\in G$.  
+  Soit $G$ un groupe abélien. Et $d:G\to \mathbb Z$ une forme quadratique définie positive. Alors $|\langle g, h\rangle_d|\le 2\sqrt{d(g)d(h)}$ pour tout $g, h\in G$.  
 \end{lem}
 
 \begin{proof}
-    Soit $g, h\in G$. On peut supposer $g\neq 0$, l'inégalité dans le cas $g=0$ étant triviale. Puisque $d$ est positive, pour tout $m, n\in \Z$ on a $0 \le d(mg + nh) = m^2d(g) + 2mn\langle g, h\rangle_d + n^2d(h)$. En particulier choisissons $m = -\langle g, h\rangle_d$ et $n=d(g)$. On obtient $0 \le  \langle g, h\rangle_d^2d(g) -2d(g)\langle g, h\rangle_d^2 + d(g)^2d(h) = d(g)(-\langle g, h\rangle_d^2 + d(g)d(h))$. Ainsi, puisque $g\neq 0$, $d(g)\neq 0$ et donc $\langle g, h\rangle_d^2 \le d(g)d(h)$. On en déduit directement le résultat énoncé.
+  Soit $g, h\in G$. On peut supposer $g\neq 0$, l'inégalité dans le cas $g=0$ étant triviale. Puisque $d$ est positive, pour tout $m, n\in \Z$ on a $0 \le d(mg + nh) = m^2d(g) + mn\langle g, h\rangle_d + n^2d(h)$. En particulier choisissons $m = -\langle g, h\rangle_d$ et $n=2d(g)$. On obtient $0 \le \langle g, h\rangle_d^2d(g) -2d(g)\langle g, h\rangle_d^2 + 4d(g)^2d(h) = d(g)(-\langle g, h\rangle_d^2 + 4d(g)d(h))$. Ainsi, puisque $g\neq 0$, $d(g)\neq 0$ et donc $\langle g, h\rangle_d^2 \le 4d(g)d(h)$. On en déduit directement le résultat énoncé.
   \end{proof}
 
 
@@ -833,7 +853,7 @@ Le théorème \ref{hasse} donne une borne sur le nombre de points dans $\F_q$ d'
 \end{prop}
 
 \begin{proof}
-  On remarque premièrement que par définition, le degré est défini positif. Soit $\phi$ un endomorphisme de $E$ non constant. On remarque que $(-\phi)^*K(E) = \phi^*K(E)$, (on utilise le fait que $K(E)$ est un corps, et que $[-1]$ est un endomorphisme) donc $\deg(-\phi) = \deg(\phi)$. Il ne reste plus qu'à montrer la bilinéarité de $\langle \phi, \psi\rangle = \frac{1}{2}(\deg(\phi+\psi) - \deg(\phi) -\deg(\psi))$. On utilise pour cela le morphisme d'anneaux injectif $[\cdot] :\Z\to \End E$. En remarquant que $[\langle \phi, \psi\rangle] = \h{(\phi + \psi)}(\phi + \psi) - \h\phi\phi -\h\psi\psi =  (\h\phi + \h\psi)(\phi + \psi) - \h\phi\phi -\h\psi\psi = \h\phi\psi + \h\psi\phi$, on voit clairement que $\langle\cdot,\cdot\rangle$ est bilinéaire.
+  On remarque premièrement que par définition, le degré est défini positif. Soit $\phi$ un endomorphisme de $E$ non constant. On remarque que $(-\phi)^*K(E) = \phi^*K(E)$, (on utilise le fait que $K(E)$ est un corps, et que $[-1]$ est un endomorphisme) donc $\deg(-\phi) = \deg(\phi)$. Il ne reste plus qu'à montrer la bilinéarité de $\langle \phi, \psi\rangle = \deg(\phi+\psi) - \deg(\phi) -\deg(\psi)$. On utilise pour cela le morphisme d'anneaux injectif $[\cdot] :\Z\to \End E$. En remarquant que $[\langle \phi, \psi\rangle] = \h{(\phi + \psi)}(\phi + \psi) - \h\phi\phi -\h\psi\psi =  (\h\phi + \h\psi)(\phi + \psi) - \h\phi\phi -\h\psi\psi = \h\phi\psi + \h\psi\phi$, on voit clairement que $\langle\cdot,\cdot\rangle$ est bilinéaire.
 \end{proof}
 
 \begin{thm}[Borne de Hasse]
@@ -855,7 +875,7 @@ Le théorème \ref{hasse} donne une borne sur le nombre de points dans $\F_q$ d'
 On s'intéresse maintenant particulièrement aux courbes elliptiques supersingulières que nous allons définir et qui seront utilisées dans le protocole SIDH.
 
 \begin{deff}
-  Une courbe elliptique $E/Fq$ ($q$ étant une puissance de $p$) est dite supersingulière si $E[p]$ est réduit à $\infty$. 
+  Une courbe elliptique $E/\F_q$ ($q$ étant une puissance de $p$) est dite supersingulière si $E[p]$ est réduit à $\infty$. 
 \end{deff}
 \begin{prop}
   \label{pihatsep}
@@ -898,7 +918,7 @@ Alors $t_{p-1} = t_1^{p-1} \equiv 1\ [p]$, donc $\#E(\F_{q^{p-1}}) \equiv 0\ [p]
 \end{prop}
 
 \begin{proof}
-  Puisque $E$ est supersingulière, $\h{\pi_p} : E^{(p)} \to  E$ est purement inséparable, donc $\h{\pi_p} = \psi \circ \pi_p$ avec $\psi : E^{(p^2}) \to E$ une isogénie de degré $1$. Une telle isogénie est un isomorphisme, donc $ E^{(p^2}) $ est $\ol{\F_p}$-isomorphe à $E$. Ainsi $j(E) = j( E^{(p^2}) ) = j(E)^{p^2}$ donc $X^{p^2} - X$ annule $j(E)$, ce qui revient à dire que $j(E)$ appartient à $\F_{p^2}$.
+  Puisque $E$ est supersingulière, $\h{\pi_p} : E^{(p)} \to  E$ est purement inséparable, donc $\h{\pi_p} = \psi \circ \pi_p$ avec $\psi : E^{(p^2}) \to E$ une isogénie de degré $1$. Une telle isogénie est un isomorphisme, donc $ E^{(p^2)} $ est $\ol{\F_p}$-isomorphe à $E$. Ainsi $j(E) = j( E^{(p^2)} ) = j(E)^{p^2}$ donc $X^{p^2} - X$ annule $j(E)$, ce qui revient à dire que $j(E)$ appartient à $\F_{p^2}$.
 Deux courbes sont isomorphes si et seulement si elles possèdent le même $j$-invariant, ce qui démontre la fin de la proposition.
 \end{proof}
 
@@ -912,8 +932,18 @@ Le but de cette partie est de montrer que le graphes des isogénies entre $\over
 \end{deff}
 
 \begin{rem}
-  Par le théorème d'existence de l'isogénie duale assure que s'il existe une isogénie dans un sens, il existe une isogénie dans l'autre. En revanche, étant donné deux représentant particuliers de deux sommets du graphe reliés par une arête, il n'existe pas forcément une isogénie entre ces deux représentants.
+  Le théorème d'existence de l'isogénie duale assure que s'il existe une isogénie dans un sens, il existe une isogénie dans l'autre. En revanche, étant donné deux représentant particuliers de deux sommets du graphe reliés par une arête, il n'existe pas forcément une isogénie entre ces deux représentants.
 \end{rem}
+
+\begin{prop}
+  Soit $E/\F_p$ une courbe elliptique supersingulière définie sur $\F_p$. Alors $\# E(\F_p) = p+ 1$ et $\# E (\F_{p^2}) = (p + 1)^2$.
+\end{prop}
+
+\begin{proof}
+  Comme dans le théorème \ref{récurrence}, notons $t_1$ et $t_2$ les traces des morphismes $\pi_p$ et $\pi_{p^2}$. Utilisons d'abord la borne de Hasse (théorème \ref{hasse}), qui affirme que $-2\sqrt{p} \le t_1\le 2\sqrt{p}$. Ensuite, en utilisant la proposition \ref{pimodp}, le fait que $E$ soit supersingulière indique que $t_1\equiv 0\ [p]$. Puisque de plus $p\ge 5$, $p> 2\sqrt{p}$. Ainsi la seule possibilité est $t_1 = 0$.
+
+  En appliquant le théorème récurrence on obtient $t_2 = t_1t_0-pt_0 = 0-2p = -2p$. Enfin en appliquant la proposition \ref{cardinalité} on obtient $\# E(\F_p) = p + 1 - t_1 = p+1$ et $\# E (\F_{p^2}) = p +1 -t_1 = p + 1 + 2p = (p + 1)^2$.
+\end{proof}
 
 \begin{prop}
 \label{cardsuper} 
@@ -953,7 +983,7 @@ Ainsi $\pi_{p^2} = \psi^{-1} \circ [p]$.
 \vspace{1em}
 Dans le cas où $\tr(\pi_{p^2}) = 0$, $\pi_{p^2}^2 + [p^2] = 0$ donc $-[p^2] = \pi_{p^2}^2 = (\psi^{-1} \circ [p])^2 = \psi^{-2} \circ [p^2]$ puisque tout morphisme commute avec $[m]$. Alors $(\psi^{-2} +1)\circ [p^2] = 0\in \End(E)$ donc $[p^2]$ étant surjective, $\psi^2 = -\text{Id}$.
 Ainsi $\psi$ est d'ordre $4$, donc par le théorème III.10.1 (Silverman) (caractéristique $\neq 2, 3$) $j(E) = 1728$.
-Ainsi $E$ est $\overline{\F_p}$-isomorphe à une courbe $y^2=x^3 + ax$ qui est de cardinal $(q+1)^2$.
+Ainsi $E$ est $\overline{\F_p}$-isomorphe à une courbe $y^2=x^3 + ax$ qui est de cardinal $(q+1)^2$. On a utilisé ici un des cas particuliers 
 
 \vspace{1em}
 Dans les dernier cas, où $\tr(\pi_{p^2}) = \pm p$, $X^2 \pm p X +p^2$ annule $\pi_{p^2}^2$ et puisque $X^6 - p^6 = p^6 ((\frac{X}{p})^6 - 1) = (X-1)(X+1)(X^2 -pX + p^2)(X^2 + pX + p^2)$, $\pi_{p^2}^6 = [p^6]$. Ainsi $[p^6] = \pi_{p^2}^6  = (\psi^{-1} \circ [p])^6 = \psi^{-6} \circ [p^6]$, donc $\psi^6 = \text{Id}$. Le théorème III.10.1 permet de conclure si l'ordre de $\psi$ est $3$ ou $6$, il suffit donc de montrer que l'ordre de $\psi$ ne peut être ni $1$, ni $2$.
@@ -1047,51 +1077,13 @@ $\#E_0(\F_{p^2}) = (p+1)^2$.
 \end{proof}
 
 
-Montrons maintenant que la courbe $E_0$ est supersingulière.
+Montrons maintenant que la courbe $E_0$ est supersingulière. Puisque $t_2 = -2p$, $t_2 \equiv 0\ [p]$, donc par la proposition \ref{pimodp}, $E_0$ est supersingulière.
 
-\begin{thm}
-  Soit $K$ un corps de caractéristique $p\ge 2$, et soit $E/K$ une courbe elliptique. $\mathrm{End}(E)$ est isomorphe soit à un ordre d'un corps quadratique, soit à un ordre dans une algèbre de quaternions. 
-\end{thm}
-
-\begin{proof}
-  Voir le théorème V.3.1 dans \cite{Silverman}.
-\end{proof}
-
-\begin{thm}
-  Soit $E/\F_q$ une courbe elliptique, $E$ est supersingulière si et seulement si $\End(E)$ est un ordre dans une algèbre de quaternions.
-\end{thm}
-
-\begin{proof}
-  Voir le théorème V.3.1a dans \cite{Silverman}.
-\end{proof}
-
-\begin{cor}
-  $E_0$ est supersingulière.
-\end{cor}
-
-\begin{proof}
-Ainsi, pour prouver qu'une courbe elliptique est supersingulière, il suffit de trouver deux endomorphismes qui ne commutent pas.
-Considérons le morphisme de Frobenius $\pi_p : E_0/\F_{p^2} \to E_0^{(p)}/\F_{p^2}$, $(x, y) \mapsto (x^p, y^p)$. 
-Puisque $E_0$ est définie sur $\F_{p}$, $\pi_p$ est un endomorphisme de $E/\F_{p^2}$.
-
-Soit $j$ une racine de $X^2 + X + 1$. 
-Par définition, $j$ appartient à $\F_{p^2}$. 
-Dans quelles conditions est-ce que $j$ appartient à $\F_{p}$ ? 
-$j^3 = -j^2 -j = 1$, donc $j$ est d'ordre $3$. 
-Si $j\in \F_{p}$ alors $3\ |\ p-1$ par le théorème de Lagrange, soit $p\equiv 1\ [3]$. 
-Par contraposition, si $p \equiv 2\ [3]$ alors $j\in\F_{p^2}\setminus\F_{p}$.
-
-Considérons l'endomorphisme $\psi : E_0 \to E_0$, $(x, y) \mapsto (jx, y)$. 
-Remarquons que puisque $j^3 = 1$, $\psi$ est bien défini.
-De plus $\pi_p(\psi(x, y)) = \pi_p(jx, y) = (j^px^p, y^p)$, mais $\psi(\pi_p(x, y)) = \psi(x^p, y^p) = (jx^p, y^p)$. 
-Puisque $j^p\neq j$, $\pi_p \circ \psi \neq \psi \circ \pi_p$, donc End($E$) n'est pas commutatif.
-Ainsi $E$ est supersingulière.
-\end{proof}
 
 
 \subsection{Torsions de la courbe initiale}
 \label{torsion_init}
- Dans la partie \ref{torsion_init} nous comptons le nombre de sous groupes cycliques de la $2^a$ ou $3^b$-torsion de $E_0$. On souhaite que ce nombre soit important pour le protocole cryptographique.
+Dans la partie \ref{torsion_init} nous comptons le nombre de sous groupes cycliques de la $2^a$ ou $3^b$-torsion de $E_0$. On souhaite que ce nombre soit important pour le protocole cryptographique.
 
 On s'intéresse maintenant à la structure des groupes de torsion de $E_0$ sur $\F_{p^2}$. Pour cela nous avons d'abord besoin d'informations sur la structure de groupes des points $\F_{p^2}$ rationnels de la courbe $E_0$. 
 
@@ -1272,6 +1264,10 @@ La sécurité du protocole repose sur le fait qu'il est difficile de retrouver $
 La proposition \ref{nombre_cycliques} assure qu'il y a suffisamment de sous groupes cycliques dans les $2^a$ et $3^b$-torsions de $E_0$ pour qu'il y ait suffisamment de courbes $E_A$ et $E_B$ différentes possibles. La proposition \ref{recherche_base} permet en tirant des éléments au hasard de trouver rapidement une base des torsions.
 
 Des technicités apparaissent dans le calcul de $\phi_A(P_B)$, $\phi_A(Q_B)$ et de $E_A$ par Alice (et de leurs analogues pour Bob). Les formules de Vélu utilisant une somme sur tous les éléments du noyau, $2^a$ étant grand, il est impossibles de les utiliser directement pour calculer $\phi_A$. La solution est de décomposer $\phi_A$ en $a$ isogénies de degré au plus $2$.
+
+\section*{Conclusion}
+
+J'espère que ce rapport vous aura éclairé comme une sur les courbes elliptiques et sur la cryptographie utilisant les isogénies entre courbes supersingulière. Il se trouve que le protocole SIDH qui semblait être d'une sécurité suffisante a été montré inutilisable à cause d'une nouvelle attaque par \cite{castryck} publiée début août. Le protocole SIDH aura été un des quatre derniers protocoles retenus par le National Institute of Standards and Technology, l'organisme américain chargé de désigner les protocoles qui seront utilisés sur internet.
 
 
 
